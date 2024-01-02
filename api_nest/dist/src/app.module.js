@@ -11,6 +11,7 @@ const common_1 = require("@nestjs/common");
 const auth_module_1 = require("./auth/auth.module");
 const mongoose_1 = require("@nestjs/mongoose");
 const config_1 = require("@nestjs/config");
+const jwt_1 = require("@nestjs/jwt");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -19,6 +20,11 @@ exports.AppModule = AppModule = __decorate([
         imports: [
             config_1.ConfigModule.forRoot(),
             mongoose_1.MongooseModule.forRoot(process.env.MONGO_DB),
+            jwt_1.JwtModule.register({
+                global: true,
+                secret: process.env.JWT_SECRET_KEY,
+                signOptions: { expiresIn: '1h' },
+            }),
             auth_module_1.AuthModule,
         ],
         controllers: [],

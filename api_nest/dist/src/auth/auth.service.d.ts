@@ -26,12 +26,13 @@ import { CreateAuthDto } from './dto/create-auth.dto';
 import { GetUserDto } from './dto/get-user.dto';
 import { ScrumMaster } from './entities/user.entity';
 import { Model } from 'mongoose';
+import { JwtService } from '@nestjs/jwt';
 export declare class AuthService {
     private readonly scrumMasterModel;
-    constructor(scrumMasterModel: Model<ScrumMaster>);
+    private readonly jwtService;
+    constructor(scrumMasterModel: Model<ScrumMaster>, jwtService: JwtService);
     create(createAuthDto: CreateAuthDto): Promise<void>;
     findOne(getUserDto: GetUserDto): Promise<{
-        logged: boolean;
-        message: any;
+        token: string;
     }>;
 }
