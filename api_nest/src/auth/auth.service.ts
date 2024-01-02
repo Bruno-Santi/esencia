@@ -6,12 +6,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { encodePassword } from 'common/password-crypt';
 import { passwordCompare } from 'common/password-compare';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(ScrumMaster.name)
     private readonly scrumMasterModel: Model<ScrumMaster>,
+    private readonly jwtService: JwtService,
   ) {}
 
   async create(createAuthDto: CreateAuthDto) {
@@ -33,13 +35,16 @@ export class AuthService {
 
       const user = await this.scrumMasterModel.findOne({ email: email });
 
+      if (!user) throw new BadRequestException(`Invalid email or password`);
       const passwordValid = await passwordCompare(password, user.password);
       if (!passwordValid)
         throw new BadRequestException(`Invalid email or password`);
-
+      const token = this.jwtService.sign(
+        { sub: user._id },
+        { secret: process.env.JWT_SECRET_KEY },
+      );
       return {
-        logged: true,
-        message: user._id,
+        token: token,
       };
     } catch (error) {
       throw new BadRequestException(error.message);

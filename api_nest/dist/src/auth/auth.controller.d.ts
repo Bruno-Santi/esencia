@@ -6,7 +6,6 @@ export declare class AuthController {
     constructor(authService: AuthService);
     create(createAuthDto: CreateAuthDto): Promise<void>;
     findOne(getUserDto: GetUserDto): Promise<{
-        logged: boolean;
-        message: any;
+        token: string;
     }>;
 }
