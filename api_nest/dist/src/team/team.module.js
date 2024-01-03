@@ -32,6 +32,7 @@ exports.TeamModule = TeamModule = __decorate([
             ]),
             auth_module_1.AuthModule,
         ],
+        exports: [team_service_1.TeamService],
     })
 ], TeamModule);
 //# sourceMappingURL=team.module.js.map

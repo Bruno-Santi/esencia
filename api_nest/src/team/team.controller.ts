@@ -5,7 +5,7 @@ import { CreateTeamDto } from './dto/create-team.dto';
 import { JwtAuthGuard } from 'common/jwt-guard/jwt-guard.guard';
 import { ParseMongoIdPipe } from '../../common/pipes/parse-mongo-id.pipe';
 import { Types } from 'mongoose';
-
+@UseGuards(JwtAuthGuard)
 @Controller('team')
 export class TeamController {
   constructor(
@@ -15,7 +15,6 @@ export class TeamController {
   ) {}
 
   @Post(':scrumId')
-  @UseGuards(JwtAuthGuard)
   create(
     @Body() createTeamDto: CreateTeamDto,
     @Param('scrumId', ParseMongoIdPipe) scrumId: Types.ObjectId,
@@ -23,7 +22,6 @@ export class TeamController {
     return this.teamService.create(createTeamDto, scrumId);
   }
   @Get(':scrumId')
-  @UseGuards(JwtAuthGuard)
   GetTeams(@Param('scrumId', ParseMongoIdPipe) scrumId: Types.ObjectId) {
     return this.teamService.findAllTeams(scrumId);
   }

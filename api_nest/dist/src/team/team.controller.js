@@ -35,7 +35,6 @@ let TeamController = class TeamController {
 exports.TeamController = TeamController;
 __decorate([
     (0, common_1.Post)(':scrumId'),
-    (0, common_1.UseGuards)(jwt_guard_guard_1.JwtAuthGuard),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Param)('scrumId', parse_mongo_id_pipe_1.ParseMongoIdPipe)),
     __metadata("design:type", Function),
@@ -44,13 +43,13 @@ __decorate([
 ], TeamController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(':scrumId'),
-    (0, common_1.UseGuards)(jwt_guard_guard_1.JwtAuthGuard),
     __param(0, (0, common_1.Param)('scrumId', parse_mongo_id_pipe_1.ParseMongoIdPipe)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [mongoose_1.Types.ObjectId]),
     __metadata("design:returntype", void 0)
 ], TeamController.prototype, "GetTeams", null);
 exports.TeamController = TeamController = __decorate([
+    (0, common_1.UseGuards)(jwt_guard_guard_1.JwtAuthGuard),
     (0, common_1.Controller)('team'),
     __metadata("design:paramtypes", [team_service_1.TeamService,
         jwt_guard_guard_1.JwtAuthGuard,
