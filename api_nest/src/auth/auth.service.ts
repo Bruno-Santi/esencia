@@ -3,7 +3,7 @@ import { CreateAuthDto } from './dto/create-auth.dto';
 import { GetUserDto } from './dto/get-user.dto';
 import { ScrumMaster } from './entities/user.entity';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { encodePassword } from 'common/password-crypt';
 import { passwordCompare } from 'common/password-compare';
 import { JwtService } from '@nestjs/jwt';
@@ -21,7 +21,9 @@ export class AuthService {
       const password = await encodePassword(createAuthDto.password);
       const newUser = await { ...createAuthDto, password };
       const user = await this.scrumMasterModel.create(newUser);
-      console.log(user);
+      return {
+        payload: `User ${user.email} created successfully!`,
+      };
     } catch (error) {
       if (error.code === 11000)
         throw new BadRequestException(`Email already in use`);
@@ -46,6 +48,26 @@ export class AuthService {
       return {
         token: token,
       };
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  async findScrumMaster(scrumId) {
+    try {
+      const convertedScrumId = new Types.ObjectId(scrumId);
+
+      const scrumMaster = await this.scrumMasterModel.findOne({
+        _id: convertedScrumId,
+      });
+
+      if (!scrumMaster) {
+        throw new BadRequestException(
+          `Scrum master with ${scrumId} doesn't exist`,
+        );
+      }
+
+      return true;
     } catch (error) {
       throw new BadRequestException(error.message);
     }

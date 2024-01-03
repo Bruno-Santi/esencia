@@ -25,7 +25,7 @@ exports.AuthModule = AuthModule = __decorate([
                 {
                     name: user_entity_1.ScrumMaster.name,
                     schema: user_entity_1.ScrumMasterSchema,
-                    collection: 'auth',
+                    collection: 'scrumMaster',
                 },
             ]),
             jwt_1.JwtModule,

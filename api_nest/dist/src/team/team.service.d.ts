@@ -22,20 +22,19 @@
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { GetUserDto } from './dto/get-user.dto';
-import { ScrumMaster } from './entities/user.entity';
+import { CreateTeamDto } from './dto/create-team.dto';
 import { Model } from 'mongoose';
-import { JwtService } from '@nestjs/jwt';
-export declare class AuthService {
-    private readonly scrumMasterModel;
-    private readonly jwtService;
-    constructor(scrumMasterModel: Model<ScrumMaster>, jwtService: JwtService);
-    create(createAuthDto: CreateAuthDto): Promise<{
-        payload: string;
+import { Team } from './entities/team.entity';
+import { AuthService } from 'src/auth/auth.service';
+export declare class TeamService {
+    private readonly teamModel;
+    private readonly authService;
+    constructor(teamModel: Model<Team>, authService: AuthService);
+    create(createTeamDto: CreateTeamDto, scrumId: any): Promise<import("mongoose").Document<unknown, {}, Team> & Team & {
+        _id: import("mongoose").Types.ObjectId;
     }>;
-    findOne(getUserDto: GetUserDto): Promise<{
-        token: string;
-    }>;
-    findScrumMaster(scrumId: any): Promise<boolean>;
+    findAllTeams(scrumId: any): Promise<(import("mongoose").Document<unknown, {}, Team> & Team & {
+        _id: import("mongoose").Types.ObjectId;
+    })[]>;
+    searchScrumMaster: (scrumId: any) => Promise<void>;
 }
