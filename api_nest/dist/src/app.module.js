@@ -13,6 +13,7 @@ const mongoose_1 = require("@nestjs/mongoose");
 const config_1 = require("@nestjs/config");
 const jwt_1 = require("@nestjs/jwt");
 const team_module_1 = require("./team/team.module");
+const members_module_1 = require("./members/members.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -28,6 +29,7 @@ exports.AppModule = AppModule = __decorate([
             }),
             auth_module_1.AuthModule,
             team_module_1.TeamModule,
+            members_module_1.MembersModule,
         ],
         exports: [],
         controllers: [],

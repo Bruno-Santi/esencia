@@ -20,5 +20,6 @@ import { Team, TeamSchema } from './entities/team.entity';
     ]),
     AuthModule,
   ],
+  exports: [TeamService],
 })
 export class TeamModule {}

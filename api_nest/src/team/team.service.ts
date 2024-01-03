@@ -57,4 +57,8 @@ export class TeamService {
 
     if (!user) throw new BadRequestException(`User ${scrumId} doesn't exist`);
   };
+  searchTeam = async (teamId) => {
+    const team = await this.teamModel.findById(teamId);
+    if (!team) throw new BadRequestException(`Team ${teamId} doesn't exist`);
+  };
 }

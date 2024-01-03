@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { TeamModule } from './team/team.module';
+import { MembersModule } from './members/members.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { TeamModule } from './team/team.module';
 
     AuthModule,
     TeamModule,
+    MembersModule,
   ],
   exports: [],
   controllers: [],
