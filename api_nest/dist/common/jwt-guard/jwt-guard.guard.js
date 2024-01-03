@@ -20,7 +20,7 @@ let JwtAuthGuard = class JwtAuthGuard {
         const request = context.switchToHttp().getRequest();
         const token = request.headers.authorization;
         if (!token) {
-            return false;
+            throw new common_1.BadRequestException(`You must provide a token`);
         }
         try {
             const decoded = this.jwtService.verify(token.replace('Bearer ', ''));
@@ -28,7 +28,7 @@ let JwtAuthGuard = class JwtAuthGuard {
             return true;
         }
         catch (error) {
-            return false;
+            throw new common_1.BadRequestException(`Invalid token`);
         }
     }
 };

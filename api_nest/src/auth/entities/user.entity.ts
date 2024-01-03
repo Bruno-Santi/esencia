@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-@Schema({ collection: 'auth' })
+@Schema({ collection: 'scrumMaster' })
 export class ScrumMaster extends Document {
   @Prop({
     unique: false,

@@ -22,20 +22,14 @@
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { GetUserDto } from './dto/get-user.dto';
-import { ScrumMaster } from './entities/user.entity';
-import { Model } from 'mongoose';
-import { JwtService } from '@nestjs/jwt';
-export declare class AuthService {
-    private readonly scrumMasterModel;
-    private readonly jwtService;
-    constructor(scrumMasterModel: Model<ScrumMaster>, jwtService: JwtService);
-    create(createAuthDto: CreateAuthDto): Promise<{
-        payload: string;
-    }>;
-    findOne(getUserDto: GetUserDto): Promise<{
-        token: string;
-    }>;
-    findScrumMaster(scrumId: any): Promise<boolean>;
+import { Document } from 'mongoose';
+export declare class Team extends Document {
+    scrumId: string;
+    name: string;
+    logo?: string;
 }
+export declare const TeamSchema: import("mongoose").Schema<Team, import("mongoose").Model<Team, any, any, any, Document<unknown, any, Team> & Team & {
+    _id: import("mongoose").Types.ObjectId;
+}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, Team, Document<unknown, {}, import("mongoose").FlatRecord<Team>> & import("mongoose").FlatRecord<Team> & {
+    _id: import("mongoose").Types.ObjectId;
+}>;

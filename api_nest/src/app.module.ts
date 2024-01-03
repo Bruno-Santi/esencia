@@ -3,6 +3,8 @@ import { AuthModule } from './auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
+import { TeamModule } from './team/team.module';
+import { ScrumMaster, ScrumMasterSchema } from './auth/entities/user.entity';
 
 @Module({
   imports: [
@@ -13,8 +15,11 @@ import { JwtModule } from '@nestjs/jwt';
       secret: process.env.JWT_SECRET_KEY,
       signOptions: { expiresIn: '1h' },
     }),
+
     AuthModule,
+    TeamModule,
   ],
+  exports: [],
   controllers: [],
   providers: [],
 })

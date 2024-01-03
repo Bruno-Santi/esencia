@@ -22,20 +22,20 @@
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { GetUserDto } from './dto/get-user.dto';
-import { ScrumMaster } from './entities/user.entity';
-import { Model } from 'mongoose';
-import { JwtService } from '@nestjs/jwt';
-export declare class AuthService {
-    private readonly scrumMasterModel;
-    private readonly jwtService;
-    constructor(scrumMasterModel: Model<ScrumMaster>, jwtService: JwtService);
-    create(createAuthDto: CreateAuthDto): Promise<{
-        payload: string;
+import { TeamService } from './team.service';
+import { CreateTeamDto } from './dto/create-team.dto';
+import { JwtAuthGuard } from 'common/jwt-guard/jwt-guard.guard';
+import { ParseMongoIdPipe } from '../../common/pipes/parse-mongo-id.pipe';
+import { Types } from 'mongoose';
+export declare class TeamController {
+    private readonly teamService;
+    private readonly JwtGuardGuard;
+    private readonly ParseMongoIdPipe;
+    constructor(teamService: TeamService, JwtGuardGuard: JwtAuthGuard, ParseMongoIdPipe: ParseMongoIdPipe);
+    create(createTeamDto: CreateTeamDto, scrumId: Types.ObjectId): Promise<import("mongoose").Document<unknown, {}, import("./entities/team.entity").Team> & import("./entities/team.entity").Team & {
+        _id: Types.ObjectId;
     }>;
-    findOne(getUserDto: GetUserDto): Promise<{
-        token: string;
-    }>;
-    findScrumMaster(scrumId: any): Promise<boolean>;
+    GetTeams(scrumId: Types.ObjectId): Promise<(import("mongoose").Document<unknown, {}, import("./entities/team.entity").Team> & import("./entities/team.entity").Team & {
+        _id: Types.ObjectId;
+    })[]>;
 }

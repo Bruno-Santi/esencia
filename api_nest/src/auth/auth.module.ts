@@ -13,7 +13,7 @@ import { JwtModule } from '@nestjs/jwt';
       {
         name: ScrumMaster.name,
         schema: ScrumMasterSchema,
-        collection: 'auth',
+        collection: 'scrumMaster',
       },
     ]),
     JwtModule,

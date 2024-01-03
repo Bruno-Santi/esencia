@@ -1,4 +1,9 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  BadRequestException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
@@ -10,7 +15,7 @@ export class JwtAuthGuard implements CanActivate {
     const token = request.headers.authorization;
 
     if (!token) {
-      return false;
+      throw new BadRequestException(`You must provide a token`);
     }
 
     try {
@@ -18,7 +23,7 @@ export class JwtAuthGuard implements CanActivate {
       request.user = decoded;
       return true;
     } catch (error) {
-      return false;
+      throw new BadRequestException(`Invalid token`);
     }
   }
 }

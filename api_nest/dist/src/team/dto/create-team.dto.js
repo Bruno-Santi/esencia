@@ -9,32 +9,19 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ScrumMasterSchema = exports.ScrumMaster = void 0;
-const mongoose_1 = require("@nestjs/mongoose");
-const mongoose_2 = require("mongoose");
-let ScrumMaster = class ScrumMaster extends mongoose_2.Document {
-};
-exports.ScrumMaster = ScrumMaster;
+exports.CreateTeamDto = void 0;
+const class_validator_1 = require("class-validator");
+class CreateTeamDto {
+}
+exports.CreateTeamDto = CreateTeamDto;
 __decorate([
-    (0, mongoose_1.Prop)({
-        unique: false,
-    }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.MinLength)(3),
     __metadata("design:type", String)
-], ScrumMaster.prototype, "name", void 0);
+], CreateTeamDto.prototype, "name", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({
-        unique: true,
-    }),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
-], ScrumMaster.prototype, "email", void 0);
-__decorate([
-    (0, mongoose_1.Prop)({
-        unique: false,
-    }),
-    __metadata("design:type", String)
-], ScrumMaster.prototype, "password", void 0);
-exports.ScrumMaster = ScrumMaster = __decorate([
-    (0, mongoose_1.Schema)({ collection: 'scrumMaster' })
-], ScrumMaster);
-exports.ScrumMasterSchema = mongoose_1.SchemaFactory.createForClass(ScrumMaster);
-//# sourceMappingURL=user.entity.js.map
+], CreateTeamDto.prototype, "logo", void 0);
+//# sourceMappingURL=create-team.dto.js.map
