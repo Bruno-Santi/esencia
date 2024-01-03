@@ -4,7 +4,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { TeamModule } from './team/team.module';
-import { ScrumMaster, ScrumMasterSchema } from './auth/entities/user.entity';
 
 @Module({
   imports: [
