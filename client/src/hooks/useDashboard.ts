@@ -44,17 +44,12 @@ export const useDashboard = () => {
     longRecommendation,
   } = useSelector(({ dashboard }) => dashboard);
 
-  const startSettingUser = () => {
-    dispatch(onSetUser(user));
-  };
-
   const startSettingTeams = async () => {
     try {
-      const { data } = await api.get(`/users`);
-      const { team_list } = data;
-
-      dispatch(onSetUserTeams({ userTeams: team_list }));
-      localStorage.setItem("userTeams", JSON.stringify(team_list));
+      const { data } = await api.get(`/api/team/${user.id}`);
+      console.log(data);
+      dispatch(onSetUserTeams({ userTeams: data }));
+      localStorage.setItem("userTeams", JSON.stringify(data.teams));
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -293,7 +288,7 @@ export const useDashboard = () => {
     dataAmount,
     user,
     isLoading,
-    startSettingUser,
+
     startAddingMember,
     membersActiveTeam,
     startSettingTeams,

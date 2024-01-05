@@ -8,15 +8,18 @@ import { MembersRoutes } from "../members/routes/";
 import { useEffect, useState } from "react";
 
 export const AppRouter = () => {
-  const { status } = useAuthSlice();
+  const { status, startLogingOut } = useAuthSlice();
   const searchParams = new URLSearchParams(location.search);
   const [tokenParams, setTokenParams] = useState("");
 
   const isAuthenticated = status === "authenticated";
-  const { startCheckingUser } = useAuthSlice();
+  const token = localStorage.getItem("token");
+  useEffect(() => {
+    if (!token) startLogingOut();
+  }, []);
   useEffect(() => {
     setTokenParams(searchParams.get("token"));
-    startCheckingUser();
+
     if (status === "authenticated") localStorage.setItem("isAuthenticated", "true");
   }, []);
 

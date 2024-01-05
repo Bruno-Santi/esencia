@@ -21,28 +21,28 @@ let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
     }
-    create(createAuthDto) {
-        return this.authService.create(createAuthDto);
-    }
     findOne(getUserDto) {
         return this.authService.findOne(getUserDto);
+    }
+    create(createAuthDto) {
+        return this.authService.create(createAuthDto);
     }
 };
 exports.AuthController = AuthController;
 __decorate([
-    (0, common_1.Post)(),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_auth_dto_1.CreateAuthDto]),
-    __metadata("design:returntype", void 0)
-], AuthController.prototype, "create", null);
-__decorate([
-    (0, common_1.Get)(),
+    (0, common_1.Post)('login'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [get_user_dto_1.GetUserDto]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "findOne", null);
+__decorate([
+    (0, common_1.Post)('register'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [create_auth_dto_1.CreateAuthDto]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "create", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)('auth'),
     __metadata("design:paramtypes", [auth_service_1.AuthService])

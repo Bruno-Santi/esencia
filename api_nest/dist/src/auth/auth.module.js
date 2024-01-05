@@ -13,6 +13,7 @@ const auth_controller_1 = require("./auth.controller");
 const user_entity_1 = require("./entities/user.entity");
 const mongoose_1 = require("@nestjs/mongoose");
 const jwt_1 = require("@nestjs/jwt");
+const team_module_1 = require("../team/team.module");
 let AuthModule = class AuthModule {
 };
 exports.AuthModule = AuthModule;
@@ -29,6 +30,7 @@ exports.AuthModule = AuthModule = __decorate([
                 },
             ]),
             jwt_1.JwtModule,
+            team_module_1.TeamModule,
         ],
         exports: [auth_service_1.AuthService, mongoose_1.MongooseModule],
     })

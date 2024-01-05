@@ -22,7 +22,7 @@ export const dashboardSlice = createSlice({
   initialState,
   reducers: {
     onSetUser: (state, { payload }) => {
-      state.user = payload.user;
+      state.user = payload;
       state.isLoading = false;
     },
     onLogOutUser: (state) => {
@@ -53,7 +53,7 @@ export const dashboardSlice = createSlice({
         userTeams: UserTeams[];
       }>
     ) => {
-      state.userTeams = action.payload.userTeams;
+      state.userTeams = action.payload.userTeams || [];
       state.isLoading = false;
       state.modalOpen = false;
     },

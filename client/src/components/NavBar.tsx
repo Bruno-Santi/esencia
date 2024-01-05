@@ -19,9 +19,7 @@ export const NavBar = () => {
         <div className='w-full flex justify-between items-center'>
           <div className='flex mt-2 ml-24'>
             <FaRegUserCircle className='text-tertiary h-12 w-12 -mx-2 mr-1' />
-            <span className='text-tertiary my-auto  ml-2 font-poppins text-lg'>
-              {user?.first_name} {user?.last_name}
-            </span>
+            <span className='text-tertiary my-auto  ml-2 font-poppins text-lg'>{user?.name}</span>
           </div>
           {activeTeam && (
             <div className=''>

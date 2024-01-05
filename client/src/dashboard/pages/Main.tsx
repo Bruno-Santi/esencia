@@ -5,12 +5,13 @@ import { ActiveTeam, NoTeams } from "../components";
 import { useDocumentTitle } from "../../hooks";
 import css from "@emotion/styled";
 import { ClipLoader } from "react-spinners";
+import { useAuthSlice } from "../../hooks/useAuthSlice";
 export const Main = () => {
   const { startSettingUser, startSettingTeams, userTeams, dataLoading, startToggleModal, modalOpen } = useDashboard();
+  const { startLogginOut } = useAuthSlice();
   useDocumentTitle("Dashboard | Esencia.app");
   useEffect(() => {
     const fetchData = async () => {
-      await startSettingUser();
       await startSettingTeams();
     };
 
