@@ -25,7 +25,7 @@ export const RegisterForm = () => {
           className='h-12 w-64 rounded-md p-2 text-sm font-thin  border-2 duration-500 text-primary focus:outline-none focus:border-2 focus:border-secondary/80 focus:font-bold'
           type='text'
           placeholder='Name'
-          {...register("first_name", {
+          {...register("name", {
             required: "This field is required",
             maxLength: 20,
           })}

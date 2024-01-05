@@ -59,8 +59,6 @@ let TeamService = class TeamService {
         try {
             await this.searchScrumMaster(scrumId);
             const teams = await this.teamModel.find({ scrumId: scrumId });
-            if (!teams.length)
-                throw new common_1.BadRequestException(`The scrum master ${scrumId} doesn't have any teams`);
             return teams;
         }
         catch (error) {
@@ -72,6 +70,7 @@ exports.TeamService = TeamService;
 exports.TeamService = TeamService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(team_entity_1.Team.name)),
+    __param(1, (0, common_1.Inject)((0, common_1.forwardRef)(() => auth_service_1.AuthService))),
     __metadata("design:paramtypes", [mongoose_2.Model,
         auth_service_1.AuthService])
 ], TeamService);

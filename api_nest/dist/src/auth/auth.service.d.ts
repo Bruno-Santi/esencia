@@ -25,17 +25,29 @@
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { GetUserDto } from './dto/get-user.dto';
 import { ScrumMaster } from './entities/user.entity';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
+import { Team } from 'src/team/entities/team.entity';
+import { TeamService } from 'src/team/team.service';
 export declare class AuthService {
     private readonly scrumMasterModel;
     private readonly jwtService;
-    constructor(scrumMasterModel: Model<ScrumMaster>, jwtService: JwtService);
+    private readonly teamService;
+    private readonly teamModel;
+    constructor(scrumMasterModel: Model<ScrumMaster>, jwtService: JwtService, teamService: TeamService, teamModel: Model<Team>);
     create(createAuthDto: CreateAuthDto): Promise<{
         payload: string;
     }>;
     findOne(getUserDto: GetUserDto): Promise<{
         token: string;
+        user: {
+            id: any;
+            name: string;
+            email: string;
+        };
+        teams: (import("mongoose").Document<unknown, {}, Team> & Team & {
+            _id: Types.ObjectId;
+        })[];
     }>;
     findScrumMaster(scrumId: any): Promise<boolean>;
 }

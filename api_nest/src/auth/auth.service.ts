@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  forwardRef,
+} from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { GetUserDto } from './dto/get-user.dto';
 import { ScrumMaster } from './entities/user.entity';
@@ -7,6 +12,8 @@ import { Model, Types } from 'mongoose';
 import { encodePassword } from 'common/password-crypt';
 import { passwordCompare } from 'common/password-compare';
 import { JwtService } from '@nestjs/jwt';
+import { Team } from 'src/team/entities/team.entity';
+import { TeamService } from 'src/team/team.service';
 
 @Injectable()
 export class AuthService {
@@ -14,6 +21,10 @@ export class AuthService {
     @InjectModel(ScrumMaster.name)
     private readonly scrumMasterModel: Model<ScrumMaster>,
     private readonly jwtService: JwtService,
+    @Inject(forwardRef(() => TeamService))
+    private readonly teamService: TeamService,
+    @InjectModel(Team.name)
+    private readonly teamModel: Model<Team>,
   ) {}
 
   async create(createAuthDto: CreateAuthDto) {
@@ -45,8 +56,16 @@ export class AuthService {
         { sub: user._id },
         { secret: process.env.JWT_SECRET_KEY },
       );
+      const teams = await this.teamService.findAllTeams(user._id);
+
       return {
         token: token,
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+        },
+        teams,
       };
     } catch (error) {
       throw new BadRequestException(error.message);

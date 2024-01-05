@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TeamService } from './team.service';
 import { TeamController } from './team.controller';
 import { JwtAuthGuard } from 'common/jwt-guard/jwt-guard.guard';
@@ -18,8 +18,9 @@ import { Team, TeamSchema } from './entities/team.entity';
         collection: 'teams',
       },
     ]),
-    AuthModule,
+
+    forwardRef(() => AuthModule),
   ],
-  exports: [TeamService],
+  exports: [TeamService, MongooseModule],
 })
 export class TeamModule {}

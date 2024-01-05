@@ -5,11 +5,10 @@ import { useEffect } from "react";
 import { FeedBack } from "../components";
 
 export const DashboardRoutes = () => {
-  const { startSettingUser, startSettingTeams } = useDashboard();
+  const { startSettingTeams } = useDashboard();
 
   useEffect(() => {
     const fetchData = async () => {
-      await startSettingUser();
       await startSettingTeams();
     };
 

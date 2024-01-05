@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  forwardRef,
+} from '@nestjs/common';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -10,6 +15,7 @@ export class TeamService {
   constructor(
     @InjectModel(Team.name)
     private readonly teamModel: Model<Team>,
+    @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
   ) {}
   async create(createTeamDto: CreateTeamDto, scrumId) {
@@ -41,10 +47,6 @@ export class TeamService {
     try {
       await this.searchScrumMaster(scrumId);
       const teams = await this.teamModel.find({ scrumId: scrumId });
-      if (!teams.length)
-        throw new BadRequestException(
-          `The scrum master ${scrumId} doesn't have any teams`,
-        );
 
       return teams;
     } catch (error) {

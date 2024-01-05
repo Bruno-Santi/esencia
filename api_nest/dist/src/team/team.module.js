@@ -30,9 +30,9 @@ exports.TeamModule = TeamModule = __decorate([
                     collection: 'teams',
                 },
             ]),
-            auth_module_1.AuthModule,
+            (0, common_1.forwardRef)(() => auth_module_1.AuthModule),
         ],
-        exports: [team_service_1.TeamService],
+        exports: [team_service_1.TeamService, mongoose_1.MongooseModule],
     })
 ], TeamModule);
 //# sourceMappingURL=team.module.js.map
