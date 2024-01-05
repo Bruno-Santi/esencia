@@ -19,6 +19,6 @@ import { JwtAuthGuard } from 'common/jwt-guard/jwt-guard.guard';
     ]),
     TeamModule,
   ],
-  exports: [MongooseModule],
+  exports: [MembersModule, MongooseModule],
 })
 export class MembersModule {}

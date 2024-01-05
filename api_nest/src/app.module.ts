@@ -5,6 +5,8 @@ import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { TeamModule } from './team/team.module';
 import { MembersModule } from './members/members.module';
+import { SurveyModule } from './survey/survey.module';
+import { SendGridModule } from '@ntegral/nestjs-sendgrid';
 
 @Module({
   imports: [
@@ -15,10 +17,13 @@ import { MembersModule } from './members/members.module';
       secret: process.env.JWT_SECRET_KEY,
       signOptions: { expiresIn: '1h' },
     }),
-
+    SendGridModule.forRoot({
+      apiKey: process.env.SENDGRID_API_KEY,
+    }),
     AuthModule,
     TeamModule,
     MembersModule,
+    SurveyModule,
   ],
   exports: [],
   controllers: [],

@@ -5,16 +5,19 @@ import { Document } from 'mongoose';
 export class ScrumMaster extends Document {
   @Prop({
     unique: false,
+    required: true,
   })
   name: string;
 
   @Prop({
     unique: true,
+    required: true,
   })
   email: string;
 
   @Prop({
     unique: false,
+    required: true,
   })
   password: string;
 }
