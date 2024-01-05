@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateMemberDto } from './dto/create-member.dto';
 import { TeamService } from 'src/team/team.service';
+import { CreateMemberDto } from './dto/create-member.dto';
 import { Member } from './entities/member.entity';
 import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
@@ -9,6 +9,7 @@ import { InjectModel } from '@nestjs/mongoose';
 export class MembersService {
   constructor(
     @InjectModel(Member.name) private readonly memberModel: Model<Member>,
+
     private readonly teamService: TeamService,
   ) {}
   async create(createMemberDto: CreateMemberDto) {
@@ -51,5 +52,30 @@ export class MembersService {
     } catch (error) {
       throw new BadRequestException(error.message);
     }
+  }
+
+  async deleteTeamMember(memberId: string) {
+    const convertedMemberId = new Types.ObjectId(memberId);
+
+    try {
+      const member = await this.memberModel.findOneAndDelete(convertedMemberId);
+      if (!member)
+        throw new BadRequestException(`The member ${memberId} doesn't exist`);
+      return { deleted: 'ok' };
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  async deleteTeamMembers(teamId) {
+    const convertedTeamId = new Types.ObjectId(teamId);
+
+    const members = await this.memberModel.deleteMany({
+      teamId: convertedTeamId,
+    });
+    return {
+      deleted: 'ok',
+      members: members.deletedCount,
+    };
   }
 }

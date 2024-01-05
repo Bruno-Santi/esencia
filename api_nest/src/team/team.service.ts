@@ -29,7 +29,7 @@ export class TeamService {
       const team = await this.teamModel.create({
         ...createTeamDto,
         scrumId: scrumId,
-        logo: null,
+        logo: createTeamDto.logo || null,
       });
 
       return team;

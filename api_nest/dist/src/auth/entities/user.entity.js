@@ -18,18 +18,21 @@ exports.ScrumMaster = ScrumMaster;
 __decorate([
     (0, mongoose_1.Prop)({
         unique: false,
+        required: true,
     }),
     __metadata("design:type", String)
 ], ScrumMaster.prototype, "name", void 0);
 __decorate([
     (0, mongoose_1.Prop)({
         unique: true,
+        required: true,
     }),
     __metadata("design:type", String)
 ], ScrumMaster.prototype, "email", void 0);
 __decorate([
     (0, mongoose_1.Prop)({
         unique: false,
+        required: true,
     }),
     __metadata("design:type", String)
 ], ScrumMaster.prototype, "password", void 0);
