@@ -60,5 +60,6 @@ export class TeamService {
   searchTeam = async (teamId) => {
     const team = await this.teamModel.findById(teamId);
     if (!team) throw new BadRequestException(`Team ${teamId} doesn't exist`);
+    return team;
   };
 }
