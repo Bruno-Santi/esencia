@@ -31,6 +31,7 @@ let TeamService = class TeamService {
             const team = await this.teamModel.findById(teamId);
             if (!team)
                 throw new common_1.BadRequestException(`Team ${teamId} doesn't exist`);
+            return team;
         };
     }
     async create(createTeamDto, scrumId) {
