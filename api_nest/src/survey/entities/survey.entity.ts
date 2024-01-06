@@ -4,7 +4,7 @@ import { Document } from 'mongoose';
 @Schema({ collection: 'surveys' })
 export class Survey extends Document {
   @Prop({
-    required: true,
+    required: false,
   })
   userId: string;
   @Prop({

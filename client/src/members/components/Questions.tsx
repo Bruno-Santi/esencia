@@ -1,9 +1,9 @@
 import { useQuestions } from "../../hooks";
 import { questions } from "../data/questions";
 
-export const Questions = (team_id, token) => {
+export const Questions = (token, team_id) => {
   //@ts-expect-error 'efefe'
-  const { rangeValues, changesMade, handleChange, handleSubmit } = useQuestions(team_id, token);
+  const { rangeValues, changesMade, handleChange, handleSubmit } = useQuestions(token, team_id);
   return (
     <div className='flex flex-col'>
       <div className='w-4/6 m-auto flex flex-col mt-12 h-fit bg-gray-600 rounded-md'>

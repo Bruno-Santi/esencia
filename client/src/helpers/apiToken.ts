@@ -13,14 +13,20 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    const storedToken = localStorage.getItem("authToken");
-    if (storedToken) {
-      const cleanedToken = storedToken.replace(/^"(.*)"$/, "$1");
+    const storedTokenScrum = localStorage.getItem("authToken");
+    if (storedTokenScrum) {
+      const cleanedToken = storedTokenScrum.replace(/^"(.*)"$/, "$1");
+      config.headers.Authorization = `Bearer ${cleanedToken}`;
+    }
+    const storedTokenUser = localStorage.getItem("userToken");
+    if (storedTokenUser) {
+      const cleanedToken = storedTokenUser.replace(/^"(.*)"$/, "$1");
       config.headers.Authorization = `Bearer ${cleanedToken}`;
     }
     return config;
   },
   (error) => {
+    console.log(error);
     return Promise.reject(error);
   }
 );

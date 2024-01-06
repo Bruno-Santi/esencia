@@ -30,11 +30,13 @@ export class SurveyService {
           { sub: member._id },
           { secret: process.env.JWT_SECRET_KEY },
         );
+        const convertedUserId = new Types.ObjectId(member._id);
         const emailData = await sendMail(
           token,
           teamId,
           member.name,
           member.email,
+          convertedUserId,
         );
         await this.client.send(emailData);
       }
@@ -42,6 +44,8 @@ export class SurveyService {
         payload: `Survey sent to ${teamId} successfully`,
       };
     } catch (error) {
+      console.log(error);
+
       throw new BadRequestException(error.message);
     }
   }
@@ -66,6 +70,7 @@ export class SurveyService {
         created: 'ok',
       };
     } catch (error) {
+      console.log(error);
       throw new BadRequestException(error.message);
     }
   }

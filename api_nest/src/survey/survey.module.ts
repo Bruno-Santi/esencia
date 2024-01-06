@@ -1,15 +1,17 @@
-import { Module } from '@nestjs/common';
+import { Module, UseGuards } from '@nestjs/common';
 import { SurveyService } from './survey.service';
 import { SurveyController } from './survey.controller';
 import { MembersModule } from 'src/members/members.module';
 import { SendGridModule } from '@ntegral/nestjs-sendgrid';
-import { JwtService } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Survey, surveySchema } from './entities/survey.entity';
 import { TeamModule } from 'src/team/team.module';
+import { JwtAuthGuard } from 'common/jwt-guard/jwt-guard.guard';
+
 @Module({
   controllers: [SurveyController],
-  providers: [SurveyService, JwtService],
+  providers: [SurveyService, JwtAuthGuard],
   imports: [
     SendGridModule.forRoot({
       apiKey: process.env.SENDGRID_API_KEY,
@@ -21,6 +23,7 @@ import { TeamModule } from 'src/team/team.module';
         collection: 'surveys',
       },
     ]),
+    JwtModule,
     MembersModule,
     TeamModule,
   ],
