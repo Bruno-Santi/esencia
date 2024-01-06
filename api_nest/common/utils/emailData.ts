@@ -84,7 +84,7 @@ export const sendMail = (token, teamId, memberName, memberEmail, memberId) => {
                   <h2 class='title'>Welcome ${memberName} to Esencia Survey</h2>
                   <p class='subtitle'>You're invited to complete the Daily Survey. Your feedback is valuable and helps us improve our team's performance. Thank you for your participation!</p>
                   <div class='button-container'>
-                     <a class='access-button' href='https://esencia.app/api/survey?token=${token}&team_id=${teamId}&user_id=${memberId}' target='_blank'>Access to survey</a>
+                     <a class='access-button' href='https://esencia.app/members/survey?token=${token}&team_id=${teamId}&user_id=${memberId}' target='_blank'>Access to survey</a>
                   </div>
               </div>
           </body>
