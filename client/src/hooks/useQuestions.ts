@@ -3,7 +3,7 @@ import { useNavigateTo } from ".";
 import { Navigate, useNavigate } from "react-router-dom";
 import api from "../helpers/apiToken";
 
-export const useQuestions = ({ team_id, token }) => {
+export const useQuestions = ({ token, team_id, user_id }) => {
   const navigate = useNavigate();
   const [isSendend, setIsSendend] = useState(false);
   const [changesMade, setChangesMade] = useState(false);
@@ -29,9 +29,7 @@ export const useQuestions = ({ team_id, token }) => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setRangeValues((prevValues) => [
-      ...prevValues.map((item) =>
-        item.id === name ? { ...item, value: parseInt(value, 10) } : item
-      ),
+      ...prevValues.map((item) => (item.id === name ? { ...item, value: parseInt(value, 10) } : item)),
     ]);
     setChangesMade(true);
   };
@@ -49,16 +47,22 @@ export const useQuestions = ({ team_id, token }) => {
     }, {});
 
     const dailySurvey = {
-      user_id: team_id,
-      team_id: token,
+      team_id: team_id,
       sprint: 1,
       comment: "",
       ...requestBody,
     };
-
+    const { question1, question2, question3, question4 } = requestBody;
     try {
-      const resp = await api.post(`/survey/daily_survey`, {
-        daily_survey: dailySurvey,
+      const resp = await api.post(`/api/survey`, {
+        user_id,
+        team_id,
+        sprint: 1,
+        comment: "",
+        question1,
+        question2,
+        question3,
+        question4,
       });
       console.log("todo bien " + resp);
     } catch (error) {
@@ -72,7 +76,7 @@ export const useQuestions = ({ team_id, token }) => {
     //% FACU_EDIT
     //! Estás cambiando el "team_id" por "token"?
 
-    navigate(`/members/comments?token=${team_id}&team_id=${token}`, {
+    navigate(`/members/comments?token=${token}&team_id=${team_id}`, {
       state: { dailySurvey },
     });
   };

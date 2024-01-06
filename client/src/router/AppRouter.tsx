@@ -13,32 +13,35 @@ export const AppRouter = () => {
   const [tokenParams, setTokenParams] = useState("");
 
   const isAuthenticated = status === "authenticated";
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("authToken");
+  const userToken = localStorage.getItem("userToken");
   useEffect(() => {
-    if (!token) startLogingOut();
+    if (!token && !userToken) startLogingOut();
   }, []);
-  useEffect(() => {
-    setTokenParams(searchParams.get("token"));
 
+  useEffect(() => {
     if (status === "authenticated") localStorage.setItem("isAuthenticated", "true");
+    setTokenParams(searchParams.get("token"));
   }, []);
 
   useEffect(() => {
-    if (tokenParams) localStorage.setItem("authToken", tokenParams);
+    if (tokenParams) localStorage.setItem("userToken", JSON.stringify(tokenParams));
   }, [tokenParams]);
+
   const firstLogging = localStorage.getItem("firstLoggin");
   const isAuthenticated1 = localStorage.getItem("isAuthenticated");
 
+  console.log("userToken:", userToken);
   return (
     <div>
       <Routes>
-        {isAuthenticated1 || tokenParams ? (
+        {isAuthenticated1 || token ? (
           <>
             {/* Rutas para usuarios autenticados */}
             <Route element={<LandingPage />} path={"/"} />
             <Route element={<OnBoardingRoutes />} path={`/onboarding/*`} />
             <Route element={<DashboardRoutes />} path={`/dashboard/*`} />
-            <Route element={<MembersRoutes />} path={`/members/*`} />
+
             {firstLogging === "0" ? (
               <Route element={<Navigate to={"/onboarding"} />} path={`/auth/*`} />
             ) : (
@@ -48,10 +51,11 @@ export const AppRouter = () => {
         ) : (
           <>
             {/* Rutas para usuarios no autenticados */}
+            {userToken && <Route element={<MembersRoutes />} path={`/members/*`} />}
             <Route element={<LandingPage />} path={"/"} />
             <Route element={<AuthRoutes />} path={`/auth/*`} />
-            <Route element={<Navigate to='/' />} path={`/dashboard/*`} />
-            <Route element={<Navigate to='/' />} path={`/onboarding/*`} />
+            <Route element={<Navigate to='/auth/login' />} path={`/dashboard/`} />
+            <Route element={<Navigate to='/auth/login' />} path={`/onboarding/`} />
           </>
         )}
       </Routes>

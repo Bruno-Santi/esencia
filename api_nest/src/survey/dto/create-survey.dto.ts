@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateSurveyDto {
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   user_id: string;
   @IsNotEmpty()
