@@ -4,7 +4,9 @@ import { useDashboard } from "../../hooks/useDashboard";
 
 export const TeamList: React.FC<TeamListProps> = ({ id, name, logo }) => {
   const { startSettingActiveTeam, activeTeam, closeModal } = useDashboard();
-  const isActive = activeTeam?.id === id;
+  const isActive = activeTeam?._id === id;
+  console.log(id);
+  console.log(activeTeam?._id);
   return (
     <div className='sm:flex sm:space-x-2 '>
       <div

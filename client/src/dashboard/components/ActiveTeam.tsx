@@ -6,7 +6,7 @@ import { useEffect } from "react";
 export const ActiveTeam = () => {
   const { activeTeam, startGettingMembers, isLoading } = useDashboard();
   useEffect(() => {
-    if (activeTeam) startGettingMembers(activeTeam.id);
+    if (activeTeam) startGettingMembers(activeTeam._id);
   }, []);
 
   return (

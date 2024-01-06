@@ -100,7 +100,7 @@ export const DashboardUi = () => {
           </div>
           <div className='mx-auto flex justify-center mt-2'>
             <button
-              onClick={() => buttonGetData(activeTeam.id, true)}
+              onClick={() => buttonGetData(activeTeam._id, true)}
               className='btn-primary flex p-2 text-lg rounded-lg hover:text-primary hover:bg-tertiary duration-700'
             >
               Refresh Data{" "}
@@ -120,7 +120,7 @@ export const DashboardUi = () => {
             <span className='font-poppins text-primary flex mt-4 ml-4 text-2xl'>Avaible Actions</span>
             <button
               disabled={surveyLoading}
-              onClick={() => startCreatingSurvey(activeTeam.name, activeTeam.id)}
+              onClick={() => startCreatingSurvey(activeTeam.name, activeTeam._id)}
               className={
                 !surveyLoading
                   ? "btn-primary font-poppins md:text-base md:p-1 lg:text-xl rounded-md lg:p-2 duration-700 hover:bg-amber-100 hover:text-primary"

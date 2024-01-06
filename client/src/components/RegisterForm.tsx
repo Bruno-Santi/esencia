@@ -5,7 +5,7 @@ import { useAuthSlice } from "../hooks/useAuthSlice";
 import { renderErrorMessage } from "../helpers/renderErrorMessage";
 
 export const RegisterForm = () => {
-  const { loading, startRegisteringUser, errorMessage } = useAuthSlice();
+  const { loading, startRegisteringUser, errorMessage, cleanErrorMessage } = useAuthSlice();
   const { handleNavigate } = useNavigateTo();
   const {
     register,
@@ -83,7 +83,10 @@ export const RegisterForm = () => {
           <Divider width={"w-[400px]"} />
         </div>
         <span
-          onClick={() => handleNavigate("/auth/login")}
+          onClick={() => {
+            cleanErrorMessage();
+            handleNavigate("/auth/login");
+          }}
           className='text-tertiary font-normal mt-6 font-poppins cursor-pointer text-lg m-auto  duration-500 hover:text-secondary '
         >
           Have an account? <span>Log In</span>

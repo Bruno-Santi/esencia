@@ -81,12 +81,13 @@ export const useDashboard = () => {
   };
   const starGettingData = async (id: string, triggered?: boolean) => {
     dispatch(onSetDataLoading(true));
+    console.log(id);
+
     setTimeout(async () => {
       try {
         const surveyData = await getTeamData(id);
         console.log(surveyData);
 
-        startGettingLongRecommendation(id);
         const datalocal = localStorage.getItem("surveyData");
         if (datalocal) localStorage.removeItem("surveyData");
         if (surveyData.error) {
@@ -139,7 +140,6 @@ export const useDashboard = () => {
   };
 
   const startSettingActiveTeam = async (id: number) => {
-    await startGettingLongRecommendation(id);
     modalOpen && startToggleModal();
     const dataToSave = {
       metricsForToday: [],
@@ -160,14 +160,14 @@ export const useDashboard = () => {
     );
   };
 
-  const startCreatingTeam = async (newTeam: UserTeams) => {
+  const startCreatingTeam = async (newTeam: UserTeams, scrumId) => {
     newTeam.logo =
       newTeam.logo ||
       "https://res.cloudinary.com/di92lsbym/image/upload/c_thumb,w_200,g_face/v1701895638/team-logo_2_fq5yev.png";
-    const team = { team: newTeam };
 
+    const { name, logo } = newTeam;
     try {
-      const resp = await api.post("/teams/", team);
+      const resp = await api.post(`/api/team/${scrumId}`, { name, logo });
       const createdTeam = resp.data;
 
       dispatch(onCreateTeam(createdTeam.team));
@@ -178,7 +178,7 @@ export const useDashboard = () => {
       dispatch(onSetUserTeams({ userTeams: updatedUserTeams }));
       closeModal();
     } catch (error) {
-      console.log(error);
+      toastWarning(error.response.data.message);
     }
   };
   const startAddingMember = async (userData, teamId) => {
@@ -186,16 +186,17 @@ export const useDashboard = () => {
     setCreatingLoading(true);
     try {
       const formData = {
-        team_id: teamId,
-        user: {
-          first_name: userData.first_name,
-          last_name: userData.last_name || "",
-          email: userData.email,
-        },
+        teamId: teamId,
+
+        name: userData.first_name,
+
+        email: userData.email,
       };
-      const response = await api.post(`/teams/members/`, formData);
-      if (response.data.user) {
-        toast.success(`${formData.user.first_name} added to the team `, {
+      console.log(formData);
+
+      const response = await api.post(`/api/members/`, formData);
+      if (response.data.created) {
+        toast.success(`${formData.name} added to the team `, {
           position: "bottom-center",
           autoClose: 5000,
           hideProgressBar: false,
@@ -208,12 +209,13 @@ export const useDashboard = () => {
         return startGettingMembers(teamId);
       }
 
-      toast.warning(`${formData.user.email} has already been added to the some team`);
-      console.log(response.data.user);
+      toast.warning(`${formData.email} has already been added to the some team`);
 
       startGettingMembers(teamId);
       setCreatingLoading(false);
     } catch (error) {
+      console.log(error);
+
       toastWarning("Error while creating members");
       console.error("Error adding member:", error);
       setCreatingLoading(false);
@@ -221,9 +223,10 @@ export const useDashboard = () => {
   };
   const startGettingMembers = async (id) => {
     try {
-      const { data } = await api.get(`/teams/members/${id}`);
+      const { data } = await api.get(`/api/members/${id}`);
 
-      dispatch(onSetActiveTeamMembers({ members: data.user_list }));
+      dispatch(onSetActiveTeamMembers({ members: data.members }));
+
       return data;
     } catch (error) {
       console.log(error);
@@ -239,7 +242,7 @@ export const useDashboard = () => {
       if (!users) {
         toastWarning(`The team ${teamName} doesn't have any member.`);
       } else {
-        const response = await api.post(`/survey/send_all_members/${teamId}`);
+        const response = await api.post(`/api/survey/${teamId}`);
         console.log(response);
         setSurveyLoading(false);
         return toastSuccess(`Survey sended to the team: ${teamName}`);
@@ -266,7 +269,7 @@ export const useDashboard = () => {
     try {
       const data = { user_id: memberId, team_id: teamId };
 
-      const resp = await api.delete("/teams/members", { data });
+      const resp = await api.delete(`/api/members/${memberId}`);
       toast.success(`${memberName} deleted successfully`);
       await startGettingMembers(teamId);
       console.log(resp);

@@ -3,15 +3,15 @@ import { useForm } from "react-hook-form";
 import { useImageUpload } from "../../hooks";
 import { MdUploadFile } from "react-icons/md";
 import { useDashboard } from "../../hooks/useDashboard";
+import { useAuthSlice } from "../../hooks/useAuthSlice";
 
 export const TeamForm: React.FC<{
   closeModal: () => void;
 }> = ({ closeModal }) => {
   const fileInputRef = useRef(null);
-
+  const { user } = useAuthSlice();
   const { startCreatingTeam } = useDashboard();
-  const { imageSelected, handleImageClick, handleFileChange, isLoading } =
-    useImageUpload(fileInputRef);
+  const { imageSelected, handleImageClick, handleFileChange, isLoading } = useImageUpload(fileInputRef);
   const {
     register,
     handleSubmit,
@@ -22,15 +22,12 @@ export const TeamForm: React.FC<{
       ...data,
       logo: imageSelected || null,
     };
-    startCreatingTeam(formData);
+    startCreatingTeam(formData, user.id);
     closeModal();
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className='flex flex-col mx-auto text-center space-y-12'
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col mx-auto text-center space-y-12'>
       <label htmlFor='teamName' className='text-manrope text-2xl mt-4 '>
         Your team name <span className='text-sm'>(*)</span>{" "}
       </label>
