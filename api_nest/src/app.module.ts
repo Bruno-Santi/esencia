@@ -7,6 +7,7 @@ import { TeamModule } from './team/team.module';
 import { MembersModule } from './members/members.module';
 import { SurveyModule } from './survey/survey.module';
 import { SendGridModule } from '@ntegral/nestjs-sendgrid';
+import { DataModule } from './data/data.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { SendGridModule } from '@ntegral/nestjs-sendgrid';
     TeamModule,
     MembersModule,
     SurveyModule,
+    DataModule,
   ],
   exports: [],
   controllers: [],

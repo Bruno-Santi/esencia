@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 export const MembersTable = () => {
   const { activeTeam, membersActiveTeam, startGettingMembers, startDeletingMember } = useDashboard();
   const handleAccept = (userId, memberName) => {
-    startDeletingMember(userId, activeTeam.id, memberName);
+    startDeletingMember(userId, activeTeam._id, memberName);
   };
 
   const handleCancel = () => toast.error("Cancelled");
@@ -33,7 +33,7 @@ export const MembersTable = () => {
     () => [
       {
         Header: "Name",
-        accessor: "first_name",
+        accessor: "name",
       },
       {
         Header: "Email",
@@ -45,8 +45,7 @@ export const MembersTable = () => {
         accessor: "delete",
         Cell: ({ row }) => (
           <span className='text-red-600 cursor-pointer  text-lg lg:text-2xl'>
-            <FiTrash2 onClick={() => startDeletingMemberInComponent(row.original.id, row.original.first_name)} />
-       
+            <FiTrash2 onClick={() => startDeletingMemberInComponent(row.original._id, row.original.name)} />
           </span>
         ),
       },

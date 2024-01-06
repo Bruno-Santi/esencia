@@ -16,6 +16,7 @@ const team_module_1 = require("./team/team.module");
 const members_module_1 = require("./members/members.module");
 const survey_module_1 = require("./survey/survey.module");
 const nestjs_sendgrid_1 = require("@ntegral/nestjs-sendgrid");
+const data_module_1 = require("./data/data.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -36,6 +37,7 @@ exports.AppModule = AppModule = __decorate([
             team_module_1.TeamModule,
             members_module_1.MembersModule,
             survey_module_1.SurveyModule,
+            data_module_1.DataModule,
         ],
         exports: [],
         controllers: [],

@@ -25,7 +25,7 @@ export const AddMemberModal: React.FC<{
 
   const onSubmit = (data) => {
     setModalKey(Date.now());
-    const teamId = activeTeam.id;
+    const teamId = activeTeam._id;
     startAddingMember(data, teamId);
 
     closeAddMember();

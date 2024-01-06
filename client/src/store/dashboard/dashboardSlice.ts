@@ -63,7 +63,7 @@ export const dashboardSlice = createSlice({
         id: number;
       }>
     ) => {
-      const userTeam = state.userTeams.find((team) => team.id === action.payload.id);
+      const userTeam = state.userTeams.find((team) => team._id === action.payload.id);
       state.activeTeam = userTeam;
       state.isLoading = false;
       state.modalOpen = false;

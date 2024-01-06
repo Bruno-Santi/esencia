@@ -49,9 +49,9 @@ export const useAuthSlice = () => {
       if (!firstLog) localStorage.setItem("firstLoggin", "0");
       firstLog == "1" ? handleNavigate("/dashboard") : handleNavigate("/onboarding");
     } catch (error) {
-      console.error(error);
+      console.log(error.response.data);
 
-      const errorMessage = error.response?.data?.payload || error.message;
+      const errorMessage = error.response?.data?.message || error.message;
 
       dispatch(onLogOut(errorMessage));
     }
@@ -67,8 +67,9 @@ export const useAuthSlice = () => {
       dispatch(clearErrorMessage());
       console.log(resp);
     } catch (error) {
-      const { payload } = error.response.data;
-      dispatch(onLogOut(payload));
+      console.log(error.response.data.message);
+
+      dispatch(onLogOut(error.response.data.message));
     }
   };
 
