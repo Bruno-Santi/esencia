@@ -7,6 +7,7 @@ export const useQuestions = ({ token, team_id, user_id }) => {
   const navigate = useNavigate();
   const [isSendend, setIsSendend] = useState(false);
   const [changesMade, setChangesMade] = useState(false);
+  const [loading, setLoading] = useState();
   const [rangeValues, setRangeValues] = useState([
     {
       id: "question1",
@@ -48,11 +49,12 @@ export const useQuestions = ({ token, team_id, user_id }) => {
 
     const dailySurvey = {
       team_id: team_id,
-      sprint: 1,
+      sprint: 2,
       comment: "",
       ...requestBody,
     };
     const { question1, question2, question3, question4 } = requestBody;
+    setLoading(true);
     try {
       const resp = await api.post(`/api/survey`, {
         user_id,
@@ -65,7 +67,9 @@ export const useQuestions = ({ token, team_id, user_id }) => {
         question4,
       });
       console.log("todo bien " + resp);
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
 
@@ -87,5 +91,6 @@ export const useQuestions = ({ token, team_id, user_id }) => {
     changesMade,
     handleChange,
     handleSubmit,
+    loading,
   };
 };

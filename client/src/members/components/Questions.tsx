@@ -3,7 +3,7 @@ import { questions } from "../data/questions";
 
 export const Questions = (token, team_id) => {
   //@ts-expect-error 'efefe'
-  const { rangeValues, changesMade, handleChange, handleSubmit } = useQuestions(token, team_id);
+  const { rangeValues, changesMade, handleChange, handleSubmit, loading } = useQuestions(token, team_id);
   return (
     <div className='flex flex-col'>
       <div className='w-4/6 m-auto flex flex-col mt-12 h-fit bg-gray-600 rounded-md'>
@@ -51,9 +51,9 @@ export const Questions = (token, team_id) => {
 
       <button
         onClick={handleSubmit}
-        disabled={!changesMade}
+        disabled={!changesMade || loading}
         className={
-          changesMade
+          changesMade && !loading
             ? "btn-primary font-poppins p-2 w-[150px] m-auto mt-6 rounded-md"
             : "btn-secondary font-poppins cursor-not-allowed p-2 w-[150px] m-auto mt-6 rounded-md"
         }
