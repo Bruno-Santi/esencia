@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useParams, useSearchParams } from "react-router-dom";
 import { LandingPage } from "../components";
 import { AuthRoutes } from "../auth/routes/AuthRoutes";
 import { DashboardRoutes } from "../dashboard/routes/DashboardRoutes";
@@ -8,11 +8,11 @@ import { MembersRoutes } from "../members/routes/";
 import { useEffect, useState } from "react";
 
 export const AppRouter = () => {
+  const [searchParams1] = useSearchParams();
   const { status, startLogingOut } = useAuthSlice();
   const searchParams = new URLSearchParams(location.search);
   const [tokenParams, setTokenParams] = useState("");
   const [loading, setLoading] = useState(true);
-  const isAuthenticated = status === "authenticated";
   const token = localStorage.getItem("authToken");
   const userToken = localStorage.getItem("userToken");
 
@@ -21,16 +21,28 @@ export const AppRouter = () => {
   }, []);
 
   useEffect(() => {
-    if (tokenParams) return localStorage.setItem("userToken", JSON.stringify(tokenParams));
+    console.log(searchParams.get("token"));
+    console.log(searchParams1.get("token"));
+
     setTokenParams(searchParams.get("token"));
+    if (tokenParams) localStorage.setItem("userToken", searchParams.get("token"));
   }, [tokenParams]);
   useEffect(() => {
-    if (userToken) setLoading(false);
+    if (tokenParams) setLoading(false);
+    if (token) setLoading(false);
   }, [tokenParams]);
   useEffect(() => {
-    if (!token && !userToken) startLogingOut();
-    setLoading(false);
+    if (!token && !userToken) {
+      startLogingOut();
+      setLoading(false);
+    }
   }, []);
+  useEffect(() => {
+    if (!token && !userToken && status !== "authenticated") {
+      startLogingOut();
+      setLoading(false);
+    }
+  }, [token, userToken, status]);
   const firstLogging = localStorage.getItem("firstLoggin");
   const isAuthenticated1 = localStorage.getItem("isAuthenticated");
 
