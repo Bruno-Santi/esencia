@@ -237,12 +237,11 @@ export const useDashboard = () => {
     try {
       const users = await startGettingMembers(teamId);
 
-      console.log(users);
       if (!users) {
         toastWarning(`The team ${teamName} doesn't have any member.`);
       } else {
         const response = await api.post(`/api/survey/${teamId}`);
-        console.log(response);
+
         setSurveyLoading(false);
         return toastSuccess(`Survey sended to the team: ${teamName}`);
       }

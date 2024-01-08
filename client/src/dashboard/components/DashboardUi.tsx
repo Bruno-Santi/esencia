@@ -130,7 +130,7 @@ export const DashboardUi = () => {
               Pulse Survey
             </button>
             <button
-              onClick={() => handleSendRetro(activeTeam.id)}
+              onClick={() => handleNavigate("/dashboard/retro")}
               className='btn-primary font-poppins md:text-base md:p-1 lg:text-xl rounded-md
               lg:p-2 duration-700 hover:bg-amber-100
                hover:text-primary'
