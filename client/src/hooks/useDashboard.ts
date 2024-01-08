@@ -132,7 +132,7 @@ export const useDashboard = () => {
         localStorage.setItem("surveyData", JSON.stringify(dataToSave));
       } catch (error) {
         console.log(error);
-        toastWarning("Error while getting data");
+        toastWarning("No data yet");
       } finally {
         dispatch(onSetDataLoading(false));
       }
@@ -168,11 +168,10 @@ export const useDashboard = () => {
     const { name, logo } = newTeam;
     try {
       const resp = await api.post(`/api/team/${scrumId}`, { name, logo });
-      const createdTeam = resp.data;
 
-      dispatch(onCreateTeam(createdTeam.team));
+      dispatch(onCreateTeam(resp.data));
 
-      const updatedUserTeams = userTeams ? [...userTeams, createdTeam.team] : [createdTeam.team];
+      const updatedUserTeams = userTeams ? [...userTeams, resp.data] : [...resp.data];
 
       localStorage.setItem("userTeams", JSON.stringify(updatedUserTeams));
       dispatch(onSetUserTeams({ userTeams: updatedUserTeams }));
