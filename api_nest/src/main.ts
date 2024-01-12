@@ -5,7 +5,14 @@ import { IoAdapter } from '@nestjs/platform-socket.io';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableCors();
+  
+  // Configuración específica de CORS
+  app.enableCors({
+    origin: 'https://www.esencia.app',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,  // Permite el envío de cookies y encabezados de autenticación
+  });
+
   app.setGlobalPrefix('api');
 
   app.useGlobalPipes(
@@ -18,7 +25,9 @@ async function bootstrap() {
       },
     }),
   );
+
   await app.listen(3000);
   app.useWebSocketAdapter(new IoAdapter(app));
 }
+
 bootstrap();
