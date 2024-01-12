@@ -16,7 +16,7 @@ const SOCKET_EVENTS = {
   COMPLETE_RETRO_REDIRECT: "completeRetroRedirect",
   STICKY_NOTE_RATED: "stickyNoteRated",
 };
-const socketManager = new Manager("https://esencia.app/socket.io/socket.io.js");
+const socketManager = new Manager("https://esencia.app");
 const socket = socketManager.socket("/retro");
 export const useSocket = () => {
   const [serverStatus, setServerStatus] = useState();
