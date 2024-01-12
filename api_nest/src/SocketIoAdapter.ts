@@ -12,10 +12,12 @@ export class SocketIoAdapter extends IoAdapter {
       return next();
     });
 
-    // Configurar CORS para el servidor WebSocket
-    server.server.on('connection', (socket) => {
-      // Configurar CORS aquí también si es necesario
-    });
+    // Verificar si la propiedad 'engine' está presente antes de usarla
+    if (server.server && server.server.engine) {
+      server.server.engine.on('connection', (socket) => {
+        // Configurar CORS aquí también si es necesario
+      });
+    }
 
     return server;
   }
