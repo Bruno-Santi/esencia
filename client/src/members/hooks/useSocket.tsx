@@ -16,7 +16,8 @@ const SOCKET_EVENTS = {
   COMPLETE_RETRO_REDIRECT: "completeRetroRedirect",
   STICKY_NOTE_RATED: "stickyNoteRated",
 };
-
+const socketManager = new Manager("https://esencia.app/socket.io/socket.io.js");
+const socket = socketManager.socket("/retro");
 export const useSocket = () => {
   const [serverStatus, setServerStatus] = useState();
   const [membersConnected, setMembersConnected] = useState(0);
@@ -31,7 +32,7 @@ export const useSocket = () => {
   const user_id = localStorage.getItem("user_id");
   const scrum_id = localStorage.getItem("scrum_id");
   const token = localStorage.getItem("authToken");
-  const socket = new Manager("https://esencia.app/socket.io/socket.io.js").socket("/retro");
+
 
   const addListeners = () => {
     socket.once(SOCKET_EVENTS.CONNECT, handleConnect);
