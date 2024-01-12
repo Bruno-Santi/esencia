@@ -1,23 +1,19 @@
 import { IoAdapter } from '@nestjs/platform-socket.io';
-import { Server } from 'socket.io';
+import { ServerOptions } from 'socket.io';
 
 export class SocketIoAdapter extends IoAdapter {
-  createIOServer(port: number, options?: any): any {
+  createIOServer(port: number, options?: ServerOptions): any {
     const server = super.createIOServer(port, options);
 
-    // Configuración CORS para los sockets
     server.use((socket, next) => {
+      // Configura CORS aquí según tus necesidades
       const allowedOrigins = ['https://www.esencia.app'];
-
       const origin = socket.handshake.headers.origin;
       if (allowedOrigins.includes(origin)) {
-        // Permitir el origen si está en la lista de permitidos
-        socket.handshake.headers.origin = origin;
-        return next();
+        socket.request.headers.origin = origin;
       }
 
-      // Rechazar la conexión si el origen no está permitido
-      return next(new Error('Not allowed by CORS'));
+      return next();
     });
 
     return server;
