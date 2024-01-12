@@ -17,6 +17,7 @@ const members_module_1 = require("./members/members.module");
 const survey_module_1 = require("./survey/survey.module");
 const nestjs_sendgrid_1 = require("@ntegral/nestjs-sendgrid");
 const data_module_1 = require("./data/data.module");
+const retro_module_1 = require("./retro/retro.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -38,6 +39,7 @@ exports.AppModule = AppModule = __decorate([
             members_module_1.MembersModule,
             survey_module_1.SurveyModule,
             data_module_1.DataModule,
+            retro_module_1.RetroModule,
         ],
         exports: [],
         controllers: [],

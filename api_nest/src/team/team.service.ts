@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Team } from './entities/team.entity';
 import { AuthService } from 'src/auth/auth.service';
 
@@ -60,7 +60,12 @@ export class TeamService {
     if (!user) throw new BadRequestException(`User ${scrumId} doesn't exist`);
   };
   searchTeam = async (teamId) => {
-    const team = await this.teamModel.findById(teamId);
+    const convertedTeamId = new Types.ObjectId(teamId);
+    console.log(teamId);
+
+    const team = await this.teamModel.find({ _id: teamId });
+    console.log(team);
+
     if (!team) throw new BadRequestException(`Team ${teamId} doesn't exist`);
     return team;
   };

@@ -47,7 +47,12 @@
   position: relative;
   z-index: 1002;
 }
-
+.sticky-content {
+  background: #ffd60a;
+  padding: 40px;
+  height: 25%;
+  width: 25%;
+}
 .close-button {
   position: absolute;
   top: 10px;

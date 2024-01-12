@@ -1,15 +1,19 @@
-import JSConfetti from "js-confetti";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const FinishedSurvey = () => {
-  const jsConfetti = new JSConfetti();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    jsConfetti.addConfetti({
-      emojis: ["🎉", "🎉", "🎊"],
-      emojiSize: 60,
-      confettiNumber: 60,
-    });
+    localStorage.removeItem("user_id");
+    localStorage.removeItem("token");
+    localStorage.removeItem("team_id");
+    localStorage.removeItem("userToken");
+    return () => {
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
+    };
   }, []);
 
   return (

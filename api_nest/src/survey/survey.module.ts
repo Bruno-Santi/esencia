@@ -1,9 +1,9 @@
-import { Module, UseGuards } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { SurveyService } from './survey.service';
 import { SurveyController } from './survey.controller';
 import { MembersModule } from 'src/members/members.module';
 import { SendGridModule } from '@ntegral/nestjs-sendgrid';
-import { JwtModule, JwtService } from '@nestjs/jwt';
+import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Survey, surveySchema } from './entities/survey.entity';
 import { TeamModule } from 'src/team/team.module';

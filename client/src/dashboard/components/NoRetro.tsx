@@ -2,20 +2,28 @@ import { FaRegEdit } from "react-icons/fa";
 import { useState } from "react";
 import { FaRegSave } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { useNavigateTo } from "../../hooks/useNavigateTo";
+import { useAuthSlice } from "../../hooks/useAuthSlice";
+import { useDashboard } from "../../hooks/useDashboard";
+import { useNavigate } from "react-router-dom";
+import { useSocket } from "../../members/hooks/useSocket";
 
 export const NoRetro = () => {
+  const { sendRetroToServer, completeRetro, handleSendRetro } = useSocket();
   const initialQuestions = {
     c1: "What went well?",
     c2: "What went wrong?",
     c3: "What need to be improved?",
     c4: "What should we start doing?",
   };
-
+  const navigate = useNavigate();
   const [questions, setQuestions] = useState({ ...initialQuestions });
   const [editMode, setEditMode] = useState(null);
-
+  const { user } = useAuthSlice();
+  const { activeTeam } = useDashboard();
+  const token = localStorage.getItem("authToken");
   const handleEditClick = (field) => setEditMode(field);
-
+  const handleNavigateTo = useNavigateTo();
   const handleSaveClick = () => {
     const trimmedValue = questions[editMode].trim();
     if (trimmedValue === "") {
@@ -195,11 +203,16 @@ export const NoRetro = () => {
       </div>
       <div className=''>
         <button
-          onClick={handleSubmit}
+          onClick={() => {
+            console.log(activeTeam._id);
+
+            handleSendRetro(initialQuestions, activeTeam._id);
+          }}
           className='btn-primary  duration-700 hover:bg-primary p-4 mt-16 rounded-md text-lg  '
         >
           Send Retro
         </button>
+
       </div>
     </div>
   );

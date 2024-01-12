@@ -23,7 +23,7 @@
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
 import { CreateTeamDto } from './dto/create-team.dto';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Team } from './entities/team.entity';
 import { AuthService } from 'src/auth/auth.service';
 export declare class TeamService {
@@ -31,13 +31,13 @@ export declare class TeamService {
     private readonly authService;
     constructor(teamModel: Model<Team>, authService: AuthService);
     create(createTeamDto: CreateTeamDto, scrumId: any): Promise<import("mongoose").Document<unknown, {}, Team> & Team & {
-        _id: import("mongoose").Types.ObjectId;
+        _id: Types.ObjectId;
     }>;
     findAllTeams(scrumId: any): Promise<(import("mongoose").Document<unknown, {}, Team> & Team & {
-        _id: import("mongoose").Types.ObjectId;
+        _id: Types.ObjectId;
     })[]>;
     searchScrumMaster: (scrumId: any) => Promise<void>;
-    searchTeam: (teamId: any) => Promise<import("mongoose").Document<unknown, {}, Team> & Team & {
-        _id: import("mongoose").Types.ObjectId;
-    }>;
+    searchTeam: (teamId: any) => Promise<(import("mongoose").Document<unknown, {}, Team> & Team & {
+        _id: Types.ObjectId;
+    })[]>;
 }
