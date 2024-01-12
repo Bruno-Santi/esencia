@@ -29,14 +29,17 @@ async function bootstrap() {
 
   const httpServer = await app.listen(3000);
 
-  // Pasa la instancia del servidor HTTP al adaptador de WebSockets
-  app.useWebSocketAdapter(new IoAdapter(httpServer, {
+  // Crea una instancia de IoAdapter y establece la configuración CORS
+  const ioAdapter = new IoAdapter(httpServer);
+  ioAdapter.createIOServer({
     cors: {
       origin: 'https://www.esencia.app',
       methods: ['GET', 'POST'],
       credentials: true,
     },
-  }));
+  });
+
+  app.useWebSocketAdapter(ioAdapter);
 }
 
 bootstrap();
