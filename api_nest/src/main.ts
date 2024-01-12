@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import {SocketIoAdapter} from './SocketIoAdapter'
 
-import { IoAdapter } from '@nestjs/platform-socket.io';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors()
@@ -22,7 +22,7 @@ async function bootstrap() {
 
 
 
-   app.useWebSocketAdapter(new IoAdapter(app)); 
+   app.useWebSocketAdapter(new SocketIoAdapter(app)); 
 
   await app.listen(3000);
 
