@@ -191,7 +191,7 @@ export const useSocket = () => {
 
   const redirectToRetro = (teamId) => {
     const tokenSinComillas = token.replace(/^"|"$/g, "");
-    const retroUrl = `http://localhost:5175/members/retro?token=${tokenSinComillas}&team_id=${teamId}&scrum_id=${user.id}`;
+    const retroUrl = `https://esencia.app/members/retro?token=${tokenSinComillas}&team_id=${teamId}&scrum_id=${user.id}`;
     window.location.href = retroUrl;
   };
 
