@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import { SocketIoAdapter } from './SocketIoAdapter';
 
+import { IoAdapter } from '@nestjs/platform-socket.io';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
@@ -19,10 +19,13 @@ async function bootstrap() {
     }),
   );
 
-  const httpServer = await app.listen(3000);
 
-  // Pasa la instancia del servidor HTTP y el adaptador de WebSockets al adaptador de sockets personalizado
-  app.useWebSocketAdapter(new SocketIoAdapter(httpServer));
+
+
+   app.useWebSocketAdapter(new IoAdapter(app)); 
+
+  await app.listen(3000);
+
 
   console.log(`Application is running on: ${await app.getUrl()}`);
 }
