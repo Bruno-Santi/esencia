@@ -16,7 +16,7 @@ const SOCKET_EVENTS = {
   COMPLETE_RETRO_REDIRECT: "completeRetroRedirect",
   STICKY_NOTE_RATED: "stickyNoteRated",
 };
- const socket = new Manager("https://esencia-api.onrender.com/socket.io/socket.io.js").socket("/retro");
+ const socket = new Manager("https://www.esencia-api.onrender.com/socket.io/socket.io.js").socket("/retro");
 
 export const useSocket = () => {
   const [serverStatus, setServerStatus] = useState();
