@@ -32,6 +32,11 @@ export const AppRouter = () => {
     if (token) setLoading(false);
   }, [tokenParams]);
   useEffect(() => {
+    const userToken = localStorage.getItem("userToken");
+    if (userToken) setLoading(false);
+  }, []);
+
+  useEffect(() => {
     if (!token && !userToken) {
       startLogingOut();
       setLoading(false);
@@ -43,6 +48,7 @@ export const AppRouter = () => {
       setLoading(false);
     }
   }, [token, userToken, status]);
+  const authToken = localStorage.getItem("authToken");
   const firstLogging = localStorage.getItem("firstLoggin");
   const isAuthenticated1 = localStorage.getItem("isAuthenticated");
 
@@ -76,7 +82,7 @@ export const AppRouter = () => {
               <Route element={<LandingPage />} path={"/"} />
               <Route element={<OnBoardingRoutes />} path={`/onboarding/*`} />
               <Route element={<DashboardRoutes />} path={`/dashboard/*`} />
-
+              <Route element={<MembersRoutes />} path={`/members/*`} />
               {firstLogging === "0" ? (
                 <Route element={<Navigate to={"/onboarding"} />} path={`/auth/*`} />
               ) : (
