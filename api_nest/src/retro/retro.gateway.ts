@@ -10,7 +10,7 @@ import {
 import { RetroService } from './retro.service';
 import { Server, Socket } from 'socket.io';
 
-@WebSocketGateway({ cors: true, namespace: '/retro' })
+@WebSocketGateway({ cors: {origin: '*'} , namespace: '/retro' })
 export class RetroGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(private readonly retroService: RetroService) {}
 
