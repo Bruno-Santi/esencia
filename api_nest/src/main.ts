@@ -1,17 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import { IoAdapter } from '@nestjs/platform-socket.io';
+import { SocketIoAdapter } from './SocketIoAdapter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
-  // Configuración específica de CORS para el servidor HTTP
-  app.enableCors({
-    origin: 'https://www.esencia.app',
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true,
-  });
 
   app.setGlobalPrefix('api');
 
@@ -28,13 +21,10 @@ async function bootstrap() {
 
   const httpServer = await app.listen(3000);
 
-  // Pasa la instancia del servidor HTTP al adaptador de WebSockets
-  app.useWebSocketAdapter(new IoAdapter(httpServer));
+  // Pasa la instancia del servidor HTTP y el adaptador de WebSockets al adaptador de sockets personalizado
+  app.useWebSocketAdapter(new SocketIoAdapter(httpServer));
 
-  await app.listen(3000);
-}
-
-bootstrap();
+  console.log(`Application is running on: ${await app.getUrl()}`);
 }
 
 bootstrap();
