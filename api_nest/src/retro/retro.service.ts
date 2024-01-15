@@ -141,6 +141,7 @@ export class RetroService {
         notes.length = 0;
       });
     }
+    console.log(stickyNotesMap);
   }
 
   private updateStickyNotesInMemory(
