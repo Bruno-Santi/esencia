@@ -165,7 +165,7 @@ export const useSocket = () => {
       socket.off(SOCKET_EVENTS.CONNECT); // Remove the 'connect' event handler
       socket.off("getStickyNotes");
     };
-  }, []);
+  }, [completeRetro]);
 
   const sendStickyNote = (column, value) => {
     socket.emit("saveStickyNote", {

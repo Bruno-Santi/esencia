@@ -15,7 +15,7 @@ export const Retro = ({ token, team_id, user_id, scrum_id }) => {
     serverStatus,
     handleDeleteNote,
     membersConnected,
-    disconnectServer,
+
     teamLength,
     stickyNotes,
     completeRetro,
@@ -42,14 +42,7 @@ export const Retro = ({ token, team_id, user_id, scrum_id }) => {
   };
 
   useEffect(() => {
-    console.log("Component mounted");
     addListeners();
-    console.log(team_id);
-
-    return () => {
-      console.log("Component unmounted");
-      disconnectServer();
-    };
   }, []);
 
   if (serverStatus === "Disconnected") return <NoServer />;
