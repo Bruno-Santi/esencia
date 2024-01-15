@@ -42,7 +42,10 @@ export const Retro = ({ token, team_id, user_id, scrum_id }) => {
   };
 
   useEffect(() => {
+
     addListeners();
+
+
   }, []);
 
   if (serverStatus === "Disconnected") return <NoServer />;
