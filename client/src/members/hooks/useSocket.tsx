@@ -49,7 +49,7 @@ export const useSocket = () => {
 
     socket.on(SOCKET_EVENTS.STICKY_NOTE_RATED, handleStickyNoteRated);
 
-    socket.once(SOCKET_EVENTS.CONNECT, () => {
+    socket.on(SOCKET_EVENTS.CONNECT, () => {
       socket.emit("getStickyNotes", { user_id, team_id });
     });
     socket.on("completeRetroRedirect", ({ redirectUrl }) => {
@@ -162,6 +162,8 @@ export const useSocket = () => {
       socket.off(SOCKET_EVENTS.STICKY_NOTE_DELETED, handleStickyNoteDeleted);
       socket.off(SOCKET_EVENTS.COMPLETE_RETRO_REDIRECT);
       socket.off(SOCKET_EVENTS.STICKY_NOTE_RATED, handleStickyNoteRated);
+      socket.off(SOCKET_EVENTS.COMPLETE_RETRO_REDIRECT, handleCompleteRetroRedirect);
+
       socket.off(SOCKET_EVENTS.CONNECT); // Remove the 'connect' event handler
       socket.off("getStickyNotes");
     };
@@ -204,6 +206,9 @@ export const useSocket = () => {
     redirectToRetro(teamId);
   };
 
+  const handleCompleteRetroRedirect = ({ redirectUrl }) => {
+    window.location.href = redirectUrl;
+  };
   return {
     serverStatus,
     membersConnected,
