@@ -96,57 +96,58 @@ export class RetroGateway implements OnGatewayConnection, OnGatewayDisconnect {
         scrum_id?: string;
         team_id?: string;
       }) => {
-        console.log(user_id, scrum_id, team_id);
-        console.log(team_id);
+        console.log(
+          `Received setUserId for user_id: ${user_id}, scrum_id: ${scrum_id}, team_id: ${team_id}`,
+        );
 
         if (!this.retroService.isClientRegistered(client)) {
-          console.log(`Received setUserId for ${user_id}`);
-          if (user_id) {
-            await this.retroService.registerClient(client, user_id);
-            console.log(
-              'Connected clients:',
-              this.retroService.getConnectedClients(),
-            );
-          }
-          if (scrum_id) {
-            await this.retroService.registerClient(client, scrum_id);
-            console.log(
-              'Connected clients:',
-              this.retroService.getConnectedClients(),
-            );
-          }
-
-          const userLength = this.retroService.getConnectedClients();
-
-          console.log(userLength);
-
-          this.wss.emit('userLength', userLength);
-
-          if (team_id) {
-            client.join(team_id);
-          }
-
-          const allStickyNotes =
-            await this.retroService.getAllStickyNotes(team_id);
-          this.wss.emit('stickyNotes', allStickyNotes);
-
-          const user = await this.retroService.getUserById(user_id);
-
-          if (user) {
-            console.log(user);
-
-            const teamId = await this.retroService.getTeamIdByUserId(user_id);
-          } else {
-            console.log(`User not found for user_id: ${user_id}`);
-          }
-
-          if (team_id) {
-            const teamLength = await this.retroService.getTeamLength(team_id);
-            this.wss.emit('teamLength', teamLength);
-          }
+          await this.handleUserConnection(client, user_id, scrum_id, team_id);
         }
       },
     );
+  }
+
+  async handleUserConnection(
+    client: Socket,
+    user_id?: string,
+    scrum_id?: string,
+    team_id?: string,
+  ) {
+    if (user_id) {
+      await this.retroService.registerClient(client, user_id);
+      console.log(
+        `Connected clients: ${this.retroService.getConnectedClients()}`,
+      );
+    }
+
+    if (scrum_id) {
+      await this.retroService.registerClient(client, scrum_id);
+      console.log(
+        `Connected clients: ${this.retroService.getConnectedClients()}`,
+      );
+    }
+
+    const userLength = this.retroService.getConnectedClients();
+    console.log(`Total connected users: ${userLength}`);
+    this.wss.emit('userLength', userLength);
+
+    if (team_id) {
+      client.join(team_id);
+      const allStickyNotes = await this.retroService.getAllStickyNotes(team_id);
+      this.wss.emit('stickyNotes', allStickyNotes);
+
+      const user = await this.retroService.getUserById(user_id);
+
+      if (user) {
+        console.log(user);
+        const teamId = await this.retroService.getTeamIdByUserId(user_id);
+      } else {
+        console.log(`User not found for user_id: ${user_id}`);
+      }
+
+      const teamLength = await this.retroService.getTeamLength(team_id);
+      this.wss.emit('teamLength', teamLength);
+    }
   }
 
   async handleDisconnect(client: Socket) {
