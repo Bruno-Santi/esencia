@@ -61,7 +61,7 @@ export const Retro = ({ token, team_id, user_id, scrum_id }) => {
       {user && (
         <button
           onClick={() => completeRetro(team_id)}
-          className='btn-primary flex p-2 rounded-md justify-center m-auto'
+          className='btn-primary flex p-2 my-4 rounded-md justify-center m-auto'
         >
           Complete Retro
         </button>

@@ -16,7 +16,7 @@ const SOCKET_EVENTS = {
   COMPLETE_RETRO_REDIRECT: "completeRetroRedirect",
   STICKY_NOTE_RATED: "stickyNoteRated",
 };
- const socket = new Manager("https://esencia-api.onrender.com/socket.io/socket.io.js").socket("/retro");
+const socket = new Manager("https://esencia-api.onrender.com/socket.io/socket.io.js").socket("/retro");
 
 export const useSocket = () => {
   const [serverStatus, setServerStatus] = useState();
@@ -33,7 +33,6 @@ export const useSocket = () => {
   const scrum_id = localStorage.getItem("scrum_id");
   const token = localStorage.getItem("authToken");
 
-
   const addListeners = () => {
     socket.once(SOCKET_EVENTS.CONNECT, handleConnect);
     socket.on(SOCKET_EVENTS.DISCONNECT, handleDisconnect);
@@ -48,11 +47,13 @@ export const useSocket = () => {
       window.location.href = redirectUrl;
     });
 
-    // Nuevo listener para el evento 'stickyNoteRated'
     socket.on(SOCKET_EVENTS.STICKY_NOTE_RATED, handleStickyNoteRated);
 
     socket.once(SOCKET_EVENTS.CONNECT, () => {
       socket.emit("getStickyNotes", { user_id, team_id });
+    });
+    socket.on("completeRetroRedirect", ({ redirectUrl }) => {
+      window.location.href = redirectUrl;
     });
   };
 

@@ -10,7 +10,7 @@ import {
 import { RetroService } from './retro.service';
 import { Server, Socket } from 'socket.io';
 
-@WebSocketGateway({ cors: {origin: '*'} , namespace: '/retro' })
+@WebSocketGateway({ cors: { origin: '*' }, namespace: '/retro' })
 export class RetroGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(private readonly retroService: RetroService) {}
 
@@ -74,10 +74,11 @@ export class RetroGateway implements OnGatewayConnection, OnGatewayDisconnect {
       await this.retroService.completeRetroAndSendStickyNotes(team_id);
 
       this.wss.to(team_id).emit('retroCompleted', { team_id });
+      const redirectUrl = 'https://esencia.app/members/retro/finished';
+      this.wss.to(team_id).emit('completeRetroRedirect', { redirectUrl });
 
       this.emitTeamLength(team_id);
 
-      const redirectUrl = 'https://esencia.app/members/retro/finished';
       this.wss.to(team_id).emit('completeRetroRedirect', { redirectUrl });
     } catch (error) {
       console.error('Error completing retro:', error);
