@@ -63,27 +63,33 @@ export class RetroGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
-  @SubscribeMessage('completeRetro')
-  async handleCompleteRetro(
-    @MessageBody() { team_id }: any,
-    @ConnectedSocket() client: Socket,
-  ) {
-    console.log(team_id);
+@SubscribeMessage('completeRetro')
+async handleCompleteRetro(
+  @MessageBody() { team_id }: any,
+  @ConnectedSocket() client: Socket,
+) {
+  console.log(team_id);
 
-    try {
-      await this.retroService.completeRetroAndSendStickyNotes(team_id);
+  try {
+    // Completar la retroalimentación y enviar notas adhesivas
+    await this.retroService.completeRetroAndSendStickyNotes(team_id);
 
-      this.wss.to(team_id).emit('retroCompleted', { team_id });
-      const redirectUrl = 'https://esencia.app/members/retro/finished';
-      this.wss.to(team_id).emit('completeRetroRedirect', { redirectUrl });
+    // Emitir eventos a los clientes en el equipo
+    this.wss.to(team_id).emit('retroCompleted', { team_id });
+    const redirectUrl = 'https://esencia.app/members/retro/finished';
+    this.wss.to(team_id).emit('completeRetroRedirect', { redirectUrl });
 
-      this.emitTeamLength(team_id);
 
-      this.wss.to(team_id).emit('completeRetroRedirect', { redirectUrl });
-    } catch (error) {
-      console.error('Error completing retro:', error);
-    }
+
+    // Desconectar a todos los clientes del equipo después de un tiempo (por ejemplo, 5 segundos)
+    setTimeout(() => {
+      this.wss.of('/retro').in(team_id).disconnectSockets();
+    }, 5000);
+  } catch (error) {
+    console.error('Error completing retro:', error);
   }
+}
+
   async handleConnection(client: Socket) {
     client.on(
       'setUserId',
