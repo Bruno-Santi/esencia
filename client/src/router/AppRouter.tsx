@@ -13,8 +13,9 @@ export const AppRouter = () => {
   const searchParams = new URLSearchParams(location.search);
   const [tokenParams, setTokenParams] = useState("");
   const [loading, setLoading] = useState(true);
-  const token = localStorage.getItem("authToken");
-  const userToken = localStorage.getItem("userToken");
+  const authToken = localStorage.getItem("authToken");
+  const userToken = searchParams.get("token");
+  const token = searchParams.get("token");
 
   useEffect(() => {
     if (status === "authenticated") localStorage.setItem("isAuthenticated", "true");
@@ -28,10 +29,10 @@ export const AppRouter = () => {
     if (tokenParams) localStorage.setItem("userToken", searchParams.get("token"));
   }, [tokenParams]);
   useEffect(() => {
-    console.log(token);
+    console.log(userToken);
 
     if (tokenParams) setLoading(false);
-    if (token) setLoading(false);
+    if (authToken) setLoading(false);
   }, [tokenParams]);
   useEffect(() => {
     const userToken = localStorage.getItem("userToken");
@@ -39,18 +40,18 @@ export const AppRouter = () => {
   }, []);
 
   useEffect(() => {
-    if (!token && !userToken) {
+    if (!authToken && !userToken) {
       startLogingOut();
       setLoading(false);
     }
   }, []);
   useEffect(() => {
-    if (!token && !userToken && status !== "authenticated") {
+    if (!authToken && !userToken && status !== "authenticated") {
       startLogingOut();
       setLoading(false);
     }
   }, [token, userToken, status]);
-  const authToken = localStorage.getItem("authToken");
+
   const firstLogging = localStorage.getItem("firstLoggin");
   const isAuthenticated1 = localStorage.getItem("isAuthenticated");
 
@@ -78,7 +79,7 @@ export const AppRouter = () => {
         </div>
       ) : (
         <Routes>
-          {isAuthenticated1 || token ? (
+          {isAuthenticated1 || authToken ? (
             <>
               {/* Rutas para usuarios autenticados */}
               <Route element={<LandingPage />} path={"/"} />
