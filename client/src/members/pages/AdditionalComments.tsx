@@ -5,12 +5,13 @@ import { useLocation } from "react-router-dom";
 import { useNavigateTo, useQuestions } from "../../hooks";
 import api, { baseURL } from "../../helpers/apiToken";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export const AdditionalComments = () => {
   const { handleNavigate } = useNavigateTo();
   const navigate = useNavigate();
   const userToken = localStorage.getItem("userToken");
-
+  const [loading, setLoading] = useState(false);
   const location = useLocation();
   const dailySurvey = location.state?.dailySurvey;
   const [comment, setComment] = useState<string>(dailySurvey.comment || "");
@@ -48,7 +49,24 @@ export const AdditionalComments = () => {
   }, []);
 
   const [params, setParams] = useState({ token: "", team_id: "" });
-
+  const sendFunction = async (data) => {
+    if (userToken) {
+      const headers = {
+        Authorization: `Bearer ${userToken}`,
+      };
+      setLoading(true);
+      try {
+        const resp = await api.post("/api/survey", data, { headers });
+        navigate("/members/finished");
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        console.error(error);
+      }
+    } else {
+      console.error("No se encontró el token del usuario en el localStorage");
+    }
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = {
@@ -56,20 +74,11 @@ export const AdditionalComments = () => {
       comment: comment || "",
     };
 
-    if (userToken) {
-      const headers = {
-        Authorization: `Bearer ${userToken}`,
-      };
-
-      try {
-        const resp = await api.post("/api/survey", data, { headers });
-        navigate("/members/finished");
-      } catch (error) {
-        console.error(error);
-      }
-    } else {
-      console.error("No se encontró el token del usuario en el localStorage");
-    }
+    toast.promise(sendFunction(data), {
+      pending: "Enviando encuesta... ⏳",
+      success: "Encuesta enviada!. Redireccionando...🚀",
+      error: "Error al enviar la encuesta ☹️",
+    });
   };
 
   return (
@@ -91,7 +100,7 @@ export const AdditionalComments = () => {
             Omitir
           </button>
           <button
-            disabled={!comment}
+            disabled={!comment || loading}
             onClick={handleSubmit}
             className={
               comment
