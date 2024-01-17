@@ -85,6 +85,7 @@ export class RetroGateway implements OnGatewayConnection, OnGatewayDisconnect {
       console.error('Error starting retro:', error);
     }
   }
+
   @SubscribeMessage('completeRetro')
   async handleCompleteRetro(
     @MessageBody() { team_id }: any,
@@ -108,6 +109,7 @@ export class RetroGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
+
   @SubscribeMessage('disconnectTeam')
   async handleDisconnectTeam(
     @MessageBody() { team_id }: any,
@@ -126,6 +128,7 @@ export class RetroGateway implements OnGatewayConnection, OnGatewayDisconnect {
       console.error('Error disconnecting team:', error);
     }
   }
+
   async handleConnection(client: Socket) {
     client.on(
       'setUserId',

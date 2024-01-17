@@ -52,7 +52,7 @@ export const useSocket = () => {
     socket.on(SOCKET_EVENTS.COMPLETE_RETRO_REDIRECT, ({ redirectUrl }) => {
       window.location.href = redirectUrl;
     });
-
+    socket.on("retroCompleted", retroCompleted);
     socket.on(SOCKET_EVENTS.STICKY_NOTE_RATED, handleStickyNoteRated);
     socket.on(SOCKET_EVENTS.DISCONNECT_TEAM, handleDisconnectTeam); // Agregado el nuevo evento
 
@@ -128,7 +128,9 @@ export const useSocket = () => {
       prevNotes.map((note) => (note.value === updatedStickyNote.value ? { ...note, ...updatedStickyNote } : note))
     );
   };
-
+  const retroCompleted = () => {
+    console.log("completado");
+  };
   const handleDisconnect = () => {
     socket.emit("setUserId", { user_id });
     setServerStatus("Disconnected");
@@ -252,3 +254,4 @@ export const useSocket = () => {
     editStickyNote,
   };
 };
+
