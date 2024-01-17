@@ -20,7 +20,7 @@ const SOCKET_EVENTS = {
   EDIT_STICKY_NOTE: "editStickyNote",
   STICKY_NOTE_EDITED: "stickyNoteEdited",
 };
-const socket = new Manager("http://localhost:3000/socket.io/socket.io.js").socket("/retro");
+const socket = new Manager("http://www.esencia.app/socket.io/socket.io.js").socket("/retro");
 
 export const useSocket = () => {
   const [serverStatus, setServerStatus] = useState("");
