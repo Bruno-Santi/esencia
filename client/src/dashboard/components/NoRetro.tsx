@@ -7,23 +7,26 @@ import { useAuthSlice } from "../../hooks/useAuthSlice";
 import { useDashboard } from "../../hooks/useDashboard";
 import { useNavigate } from "react-router-dom";
 import { useSocket } from "../../members/hooks/useSocket";
+import { useCreateRetro } from "../../members/hooks/useCreateRetro";
 
 export const NoRetro = () => {
-  const { sendRetroToServer, completeRetro, handleSendRetro } = useSocket();
+  const { user } = useAuthSlice();
+  const { activeTeam } = useDashboard();
+  const scrum_id = user.id;
+  const team_id = activeTeam._id;
+  const token = localStorage.getItem("authToken");
   const initialQuestions = {
     c1: "What went well?",
     c2: "What went wrong?",
     c3: "What need to be improved?",
     c4: "What should we start doing?",
   };
-  const navigate = useNavigate();
+  const { handleNewRetro } = useCreateRetro();
   const [questions, setQuestions] = useState({ ...initialQuestions });
   const [editMode, setEditMode] = useState(null);
-  const { user } = useAuthSlice();
-  const { activeTeam } = useDashboard();
-  const token = localStorage.getItem("authToken");
+
   const handleEditClick = (field) => setEditMode(field);
-  const handleNavigateTo = useNavigateTo();
+
   const handleSaveClick = () => {
     const trimmedValue = questions[editMode].trim();
     if (trimmedValue === "") {
@@ -33,15 +36,6 @@ export const NoRetro = () => {
     }
 
     setEditMode(null);
-  };
-  const handleSubmit = () => {
-    console.log({ questions });
-    const functionThatReturnPromise = () => new Promise((resolve) => setTimeout(resolve, 3000));
-    toast.promise(functionThatReturnPromise, {
-      pending: "Sending retro",
-      success: "Retro sended successfully. Redirecting... 👌",
-      error: "Promise rejected 🤯",
-    });
   };
 
   return (
@@ -204,15 +198,12 @@ export const NoRetro = () => {
       <div className=''>
         <button
           onClick={() => {
-            console.log(activeTeam._id);
-
-            handleSendRetro(initialQuestions, activeTeam._id);
+            handleNewRetro(token, team_id, scrum_id);
           }}
           className='btn-primary  duration-700 hover:bg-primary p-4 mt-16 rounded-md text-lg  '
         >
           Send Retro
         </button>
-
       </div>
     </div>
   );

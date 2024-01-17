@@ -37,7 +37,7 @@ export declare class TeamService {
         _id: Types.ObjectId;
     })[]>;
     searchScrumMaster: (scrumId: any) => Promise<void>;
-    searchTeam: (teamId: any) => Promise<(import("mongoose").Document<unknown, {}, Team> & Team & {
+    searchTeam: (teamId: any) => Promise<import("mongoose").Document<unknown, {}, Team> & Team & {
         _id: Types.ObjectId;
-    })[]>;
+    }>;
 }

@@ -1,9 +1,37 @@
+import { useNavigate } from "react-router-dom";
 import { useQuestions } from "../../hooks";
 import { questions } from "../data/questions";
+import { useEffect } from "react";
 
-export const Questions = (token, team_id) => {
-  //@ts-expect-error 'efefe'
-  const { rangeValues, changesMade, handleChange, handleSubmit, loading } = useQuestions(token, team_id);
+export const Questions = ({ token, team_id, user_id }) => {
+  const navigate = useNavigate();
+  const { rangeValues, changesMade, handleChange, loading, handleNavigateToComment } = useQuestions(
+    token,
+    team_id,
+    user_id
+  );
+
+  const handleContinue = () => {
+    // Puedes realizar alguna validación adicional aquí antes de continuar
+    // Por ejemplo, asegurarte de que se hayan realizado cambios (changesMade) antes de continuar
+    if (changesMade) {
+      // Navegar a la interfaz de comentarios con el estado actual de rangeValues
+      navigate("/members/comments", {
+        state: { dailySurvey: { team_id, sprint: 2, comment: "", ...getRangeValuesObject() } },
+      });
+    }
+  };
+
+  const getRangeValuesObject = () => {
+    // Convertir los valores de rango a un objeto
+    return questions.reduce((acc, { id }) => {
+      return {
+        ...acc,
+        [id]: rangeValues.find((item) => item.id === id)?.value || 0,
+      };
+    }, {});
+  };
+
   return (
     <div className='flex flex-col'>
       <div className='w-4/6 m-auto flex flex-col mt-12 h-fit bg-gray-600 rounded-md'>
@@ -50,7 +78,7 @@ export const Questions = (token, team_id) => {
       </div>
 
       <button
-        onClick={handleSubmit}
+        onClick={handleNavigateToComment}
         disabled={!changesMade || loading}
         className={
           changesMade && !loading
@@ -58,7 +86,7 @@ export const Questions = (token, team_id) => {
             : "btn-secondary font-poppins cursor-not-allowed p-2 w-[150px] m-auto mt-6 rounded-md"
         }
       >
-        Continue
+        Continuar
       </button>
     </div>
   );

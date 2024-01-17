@@ -86,7 +86,10 @@ export const LineCharts = () => {
   return (
     <div>
       <div>
-        <canvas ref={chartContainer} style={{ marginBottom: "10px", width: "90%", height: "6.5em", margin: "auto" }} />
+        <canvas
+          ref={chartContainer}
+          style={{ marginBottom: "10px", width: "100%", height: "10em", margin: "auto", padding: 10 }}
+        />
       </div>
     </div>
   );

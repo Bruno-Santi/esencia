@@ -1,4 +1,11 @@
-import { BadRequestException, Controller, Get, Param } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+} from '@nestjs/common';
 import { RetroService } from './retro.service';
 
 @Controller('retro-email')
@@ -18,5 +25,11 @@ export class RetroEmailController {
     }
 
     console.log(teamId);
+  }
+
+  @Post('/create')
+  createRetro(@Body() retroData: any) {
+    // `retroData` ahora contiene los datos enviados en el cuerpo de la solicitud
+    return this.retroService.createRetro(retroData);
   }
 }

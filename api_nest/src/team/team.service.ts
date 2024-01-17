@@ -63,8 +63,8 @@ export class TeamService {
     const convertedTeamId = new Types.ObjectId(teamId);
     console.log(teamId);
 
-    const team = await this.teamModel.find({ _id: teamId });
-    console.log(team);
+    const team = await this.teamModel.findOne({ _id: teamId });
+    console.log(team.name);
 
     if (!team) throw new BadRequestException(`Team ${teamId} doesn't exist`);
     return team;

@@ -23,6 +23,8 @@ export class SurveyService {
   async createNewSurvey(teamId) {
     const convertedTeamId = new Types.ObjectId(teamId);
     const members = await this.memberModel.find({ teamId: convertedTeamId });
+    const team = await this.teamService.searchTeam(convertedTeamId);
+    console.log(team);
 
     try {
       for (const member of members) {
@@ -37,6 +39,7 @@ export class SurveyService {
           member.name,
           member.email,
           convertedUserId,
+          team.name,
         );
         await this.client.send(emailData);
       }

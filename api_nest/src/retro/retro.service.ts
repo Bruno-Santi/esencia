@@ -9,26 +9,32 @@ import { InjectSendGrid, SendGridService } from '@ntegral/nestjs-sendgrid';
 import { MembersService } from 'src/members/members.service';
 import { InjectModel } from '@nestjs/mongoose';
 import { Member } from 'src/members/entities/member.entity';
+import axios from 'axios';
 
 interface Vote {
   user_id: string;
   value: 'thumb_up' | 'thumb_down';
 }
 
-interface StickyNote {
+type StickyNote = {
   user_id: string;
   team_id: string;
   column: string;
   value: string;
   thumb_up: number;
   thumb_down: number;
-  votes: { user_id: string; value: string }[];
+  votes: any[];
+};
+interface Retro {
+  id: string;
 }
-
 @Injectable({ scope: Scope.DEFAULT })
 export class RetroService {
   private connectedClients: Map<Socket, string> = new Map();
   private stickyNotes: Map<string, Map<string, StickyNote[]>> = new Map();
+  private retros: Map<string, Retro> = new Map();
+  private scrumMasterTeamMap: Record<string, string> = {};
+  private retroStartedTeams: Set<string> = new Set();
 
   constructor(
     private readonly teamService: TeamService,
@@ -45,6 +51,26 @@ export class RetroService {
   removeClient(client: Socket) {
     this.connectedClients.delete(client);
   }
+  async getStickyNote(
+    user_id: string,
+    team_id: string,
+    column: string,
+    value: string,
+  ): Promise<StickyNote | undefined> {
+    const teamNotes = this.stickyNotes.get(team_id);
+    if (!teamNotes) {
+      return undefined;
+    }
+
+    const columnNotes = teamNotes.get(column);
+    if (!columnNotes) {
+      return undefined;
+    }
+
+    return columnNotes.find(
+      (note) => note.user_id === user_id && note.value === value,
+    );
+  }
 
   isClientRegistered(client: Socket): boolean {
     return this.connectedClients.has(client);
@@ -56,6 +82,63 @@ export class RetroService {
 
   getClientUserId(client: Socket) {
     return this.connectedClients.get(client);
+  }
+  async startRetro(teamId: string) {
+    this.retroStartedTeams.add(teamId);
+  }
+
+  // Método para completar la retro
+  async completeRetro(teamId: string) {
+    // Lógica para completar la retro
+    // ...
+
+    // Eliminar la marca de que la retro ha comenzado para el equipo
+    this.retroStartedTeams.delete(teamId);
+  }
+
+  // Método para verificar si la retro ha comenzado para un equipo
+  isRetroStarted(teamId: string): boolean {
+    const team_id = teamId.toString();
+    console.log(this.retroStartedTeams.has(team_id));
+
+    return this.retroStartedTeams.has(team_id);
+  }
+  async createRetro(data: any) {
+    console.log(data);
+
+    try {
+      const { token, team_id, scrum_id } = data;
+      console.log(scrum_id);
+      const convertedTeamId = new Types.ObjectId(team_id);
+      const tokenWithoutQuotes = token.replace(/^"|"$/g, '');
+
+      const team = await this.teamService.searchTeam(convertedTeamId);
+
+      console.log(team);
+
+      if (team) {
+        const { scrumId } = team;
+        this.scrumMasterTeamMap[scrumId] = team_id;
+        const teamIdString = team_id.toString();
+        this.retros.set(teamIdString, teamIdString);
+
+        console.log(this.retros);
+      }
+
+      const retroUrl = `https://esencia.app/members/retro?token=${tokenWithoutQuotes}&team_id=${team_id}&scrum_id=${scrum_id}`;
+      console.log(retroUrl);
+
+      return retroUrl;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  clearTeamIdForRetro(team_id: string): void {
+    // Eliminar la asociación del team_id para la retro actual
+    console.log(team_id);
+
+    this.retroStartedTeams.delete(team_id);
   }
 
   async rateStickyNote(
@@ -132,18 +215,35 @@ export class RetroService {
 
     return allStickyNotes;
   }
-
-  completeRetroAndSendStickyNotes(team_id: string) {
+  async completeRetroAndSendStickyNotes(team_id: string) {
     const stickyNotesMap = this.stickyNotes.get(team_id);
 
-    if (stickyNotesMap) {
-      stickyNotesMap.forEach((notes, column) => {
-        notes.length = 0;
-      });
-    }
-    console.log(stickyNotesMap);
-  }
+    const allColumns = ['c1', 'c2', 'c3', 'c4'];
 
+    const formattedStickyNotes = Object.fromEntries(
+      allColumns.map((column) => [
+        column,
+        (stickyNotesMap?.get(column) || []).map(
+          ({ value, thumb_up, thumb_down }) => ({
+            value,
+            thumb_up,
+            thumb_down,
+          }),
+        ),
+      ]),
+    );
+
+    console.log({ ...formattedStickyNotes });
+    try {
+      const resp = await axios.post(
+        `https://us-central1-esencia-app.cloudfunctions.net/retro`,
+        { ...formattedStickyNotes, team_id, sprint: 1 },
+      );
+      console.log(resp);
+    } catch (error) {
+      console.log(error);
+    }
+  }
   private updateStickyNotesInMemory(
     team_id: string,
     column: string,
@@ -231,8 +331,10 @@ export class RetroService {
   async getTeamLength(teamId) {
     console.log(teamId);
     const convertedTeamId = new Types.ObjectId(teamId);
-    const teams = await this.teamService.searchTeam(convertedTeamId);
-    return Object.keys(teams).length;
+    const teams = await this.memberModel.find({ teamId: convertedTeamId });
+    console.log(Object.keys(teams).length);
+
+    return Object.keys(teams).length + 1;
   }
   async getTeamIdByUserId(user_id) {
     try {
@@ -254,7 +356,7 @@ export class RetroService {
   async getUserById(user_id: string) {
     console.log(user_id);
 
-    if (user_id && user_id !== null) {
+    if (user_id && user_id !== 'null') {
       try {
         const convertedUserId = new Types.ObjectId(user_id);
         const member = await this.memberModel.findById(convertedUserId);

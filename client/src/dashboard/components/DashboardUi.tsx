@@ -3,17 +3,16 @@ import { LineCharts } from "./LineCharts";
 import { useDashboard } from "../../hooks/useDashboard";
 import { DataCollectionReport } from "./DataCollectionReport";
 import { useNavigateTo } from "../../hooks";
-import { toastSuccess, toastWarning } from "../../helpers";
+
 import { IoRefreshCircleOutline } from "react-icons/io5";
 
 import { useEffect, useRef } from "react";
 import { UsePagination } from "../../helpers/UsePagination";
-import { useNavigate } from "react-router-dom";
 
 export const DashboardUi = () => {
   const {
     startCreatingSurvey,
-    startCreatingRetro,
+
     linesMetrics,
     surveyLoading,
     activeTeam,
@@ -21,27 +20,13 @@ export const DashboardUi = () => {
     shortRecomendation,
     modalOpen,
     buttonGetData,
-    startGettingLongRecommendation,
-    startToggleModal,
-    dataLoading,
+
     longRecommendation,
   } = useDashboard();
-  const navigate = useNavigate();
+
   const { handleNavigate } = useNavigateTo();
   const containerRef = useRef();
-  const handleSendRetro = async (teamId) => {
-    try {
-      const resp = await startCreatingRetro(teamId);
-      toastSuccess("Retro created successfully. Redirecting");
 
-      setTimeout(() => {
-        const url = `https://finstory.github.io/esencia_retro/?team_id=${teamId}&access=23e23fd32F`;
-        window.open(url, "_blank");
-      }, 3000);
-    } catch (error) {
-      toastWarning("Error creating retro");
-    }
-  };
   const handleNavigateToFeedBack = () => {
     console.log(!Object.entries(longRecommendation.recommendation));
     handleNavigate("/dashboard/feedback");
@@ -60,7 +45,7 @@ export const DashboardUi = () => {
           <span className='font-poppins text-primary flex mt-4 ml-4 text-2xl'>Key team indicator</span>
           <span className='font-poppins font-extralight ml-4 text-lg'>For the last 15 days</span>
           <div className='flex items-center justify-center h-3/6'>
-            <span className='text-center font-poppins w-4/12 mt-10 my-auto text-primary/50 font-bold text-4xl'>
+            <span className='text-center font-poppins w-6/12 mt-10 my-auto text-primary/50 font-bold text-5xl'>
               <div className='flex justify-center -space-x-20 m-auto text-center'></div>
               {Object.keys(metricsForToday).length > 0 ? (
                 <div className={modalOpen ? "hidden" : ""}>
@@ -146,7 +131,7 @@ export const DashboardUi = () => {
               }
               onClick={handleNavigateToFeedBack}
             >
-              Feedback and Recognition
+              Sprint Feedback
             </button>
             <button
               className='btn-primary 

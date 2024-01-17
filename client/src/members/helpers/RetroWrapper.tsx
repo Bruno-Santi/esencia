@@ -18,19 +18,16 @@ const RetroWrapper = () => {
     localStorage.setItem("user_id", user_id);
     localStorage.setItem("scrum_id", scrum_id);
     console.log("team_id: " + team_id);
+    console.log(user_id);
+    console.log(scrum_id);
 
     setParams({ token, team_id, user_id, scrum_id });
   }, []);
 
   // Obtener valores del localStorage
-  const storedToken = localStorage.getItem("token");
-  const storedTeamId = localStorage.getItem("team_id");
-  const storedUserId = localStorage.getItem("user_id");
-  const storedScrumId = localStorage.getItem("scrum_id");
-  console.log(storedUserId, storedTeamId);
 
-  if (storedTeamId && storedToken) {
-    return <Retro token={storedToken} team_id={storedTeamId} user_id={storedUserId} scrum_id={storedScrumId} />;
+  if (params.team_id && params.token) {
+    return <Retro token={params.token} team_id={params.team_id} user_id={params.user_id} scrum_id={params.scrum_id} />;
   } else {
     return null;
   }
