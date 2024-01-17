@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Manager } from "socket.io-client";
 import { useAuthSlice } from "../../hooks/useAuthSlice";
+import { useDashboard } from "../../hooks/useDashboard";
 
 const SOCKET_EVENTS = {
   CONNECT: "connect",
@@ -15,27 +16,32 @@ const SOCKET_EVENTS = {
   STICKY_NOTE_DELETED: "stickyNoteDeleted",
   COMPLETE_RETRO_REDIRECT: "completeRetroRedirect",
   STICKY_NOTE_RATED: "stickyNoteRated",
+  DISCONNECT_TEAM: "disconnectTeam",
+  EDIT_STICKY_NOTE: "editStickyNote",
+  STICKY_NOTE_EDITED: "stickyNoteEdited",
 };
-const socket = new Manager("https://esencia-api.onrender.com/socket.io/socket.io.js").socket("/retro");
+const socket = new Manager("http://localhost:3000/socket.io/socket.io.js").socket("/retro");
 
 export const useSocket = () => {
-  const [serverStatus, setServerStatus] = useState();
+  const [serverStatus, setServerStatus] = useState("");
   const [membersConnected, setMembersConnected] = useState(0);
   const [teamLength, setTeamLength] = useState(0);
+  const { activeTeam } = useDashboard();
   const [stickyNotes, setStickyNotes] = useState([]);
-  const location = useLocation();
+
   const [userVotes, setUserVotes] = useState({});
   const { user } = useAuthSlice();
 
-  const storedToken = localStorage.getItem("token");
   const team_id = localStorage.getItem("team_id");
-  const user_id = localStorage.getItem("user_id");
+  let user_id = localStorage.getItem("user_id");
   const scrum_id = localStorage.getItem("scrum_id");
   const token = localStorage.getItem("authToken");
 
   const addListeners = () => {
     socket.once(SOCKET_EVENTS.CONNECT, handleConnect);
     socket.on(SOCKET_EVENTS.DISCONNECT, handleDisconnect);
+    socket.on(SOCKET_EVENTS.STICKY_NOTE_EDITED, handleStickyNoteEdited);
+
     socket.on(SOCKET_EVENTS.USER_LENGTH, handleClientsUpdated);
     socket.on(SOCKET_EVENTS.SET_TEAMS, () => handleSetTeams(team_id));
     socket.on(SOCKET_EVENTS.TEAM_LENGTH, handleTeamLength);
@@ -48,6 +54,7 @@ export const useSocket = () => {
     });
     socket.on("retroCompleted", retroCompleted);
     socket.on(SOCKET_EVENTS.STICKY_NOTE_RATED, handleStickyNoteRated);
+    socket.on(SOCKET_EVENTS.DISCONNECT_TEAM, handleDisconnectTeam); // Agregado el nuevo evento
 
     socket.on(SOCKET_EVENTS.CONNECT, () => {
       socket.emit("getStickyNotes", { user_id, team_id });
@@ -56,7 +63,6 @@ export const useSocket = () => {
       window.location.href = redirectUrl;
     });
   };
-
   const handleStickyNoteDeleted = ({ user_id, team_id, noteContent }) => {
     setStickyNotes((prevNotes) =>
       prevNotes.filter((note) => !(note.user_id === user_id && note.team_id === team_id && note.value === noteContent))
@@ -64,9 +70,12 @@ export const useSocket = () => {
   };
 
   const handleConnect = () => {
-    if (team_id) {
+    console.log(user_id, scrum_id, team_id);
+    if (team_id || activeTeam._id) {
       socket.emit("joinRoom", team_id);
+
       socket.emit("setUserId", { user_id, scrum_id, team_id });
+
       setServerStatus("Connected");
     }
   };
@@ -100,7 +109,20 @@ export const useSocket = () => {
       socket.emit("rateStickyNote", { user_id, team_id, column, vote, value });
     }
   };
+  const handleStickyNoteEdited = ({ user_id, team_id, noteContent, newNoteContent }) => {
+    setStickyNotes((prevNotes) =>
+      prevNotes.map((note) =>
+        note.user_id === user_id && note.team_id === team_id && note.value === noteContent
+          ? { ...note, value: newNoteContent }
+          : note
+      )
+    );
+  };
 
+  // Add a new function to emit the edit event
+  const editStickyNote = (user_id, team_id, noteContent, newNoteContent) => {
+    socket.emit(SOCKET_EVENTS.EDIT_STICKY_NOTE, { user_id, team_id, noteContent, newNoteContent });
+  };
   const handleStickyNoteRated = (updatedStickyNote) => {
     setStickyNotes((prevNotes) =>
       prevNotes.map((note) => (note.value === updatedStickyNote.value ? { ...note, ...updatedStickyNote } : note))
@@ -112,8 +134,7 @@ export const useSocket = () => {
   const handleDisconnect = () => {
     socket.emit("setUserId", { user_id });
     setServerStatus("Disconnected");
-    localStorage.removeItem("user_id");
-    localStorage.removeItem("team_id");
+    console.log("desconectado");
   };
 
   const handleTeamLength = (length) => {
@@ -121,7 +142,7 @@ export const useSocket = () => {
   };
 
   const handleDeleteNote = (noteContent) => {
-    console.log("holasdasdsa");
+    if (user_id === "null") user_id = scrum_id;
     socket.emit("deleteStickyNote", { user_id, team_id, noteContent });
     setStickyNotes((prevNotes) =>
       prevNotes.filter((note) => !(note.user_id === user_id && note.team_id === team_id && note.value === noteContent))
@@ -149,29 +170,26 @@ export const useSocket = () => {
     }
   };
 
+  const handleDisconnectTeam = () => {
+    socket.emit("setUserId", { user_id });
+
+    console.log("Disconnected from the team");
+  };
+
   useEffect(() => {
     addListeners();
+    console.log(stickyNotes);
 
-    return () => {
-      socket.off(SOCKET_EVENTS.CONNECT, handleConnect);
-      socket.off(SOCKET_EVENTS.DISCONNECT, handleDisconnect);
-      socket.off(SOCKET_EVENTS.USER_LENGTH, handleClientsUpdated);
-      socket.off(SOCKET_EVENTS.SET_TEAMS, handleSetTeams);
-      socket.off(SOCKET_EVENTS.TEAM_LENGTH, handleTeamLength);
-      socket.off(SOCKET_EVENTS.STICKY_NOTES_SAVED, handleStickyNotesSaved);
-      socket.off(SOCKET_EVENTS.STICKY_NOTES, handleStickyNotes);
-      socket.off(SOCKET_EVENTS.DELETE_STICKY_NOTES, handleDeleteNote);
-      socket.off(SOCKET_EVENTS.STICKY_NOTE_DELETED, handleStickyNoteDeleted);
-      socket.off(SOCKET_EVENTS.COMPLETE_RETRO_REDIRECT);
-      socket.off(SOCKET_EVENTS.STICKY_NOTE_RATED, handleStickyNoteRated);
-      socket.off(SOCKET_EVENTS.COMPLETE_RETRO_REDIRECT, handleCompleteRetroRedirect);
+    if (scrum_id) handleStartRetro(team_id);
 
-      socket.off(SOCKET_EVENTS.CONNECT); // Remove the 'connect' event handler
-      socket.off("getStickyNotes");
-    };
+    handleConnect();
   }, []);
 
+  const handleStartRetro = (team_id) => {
+    socket.emit("startRetro", { team_id });
+  };
   const sendStickyNote = (column, value) => {
+    if (user_id === "null") user_id = scrum_id;
     socket.emit("saveStickyNote", {
       user_id,
       team_id,
@@ -188,29 +206,37 @@ export const useSocket = () => {
 
   const completeRetro = (team_id) => {
     socket.emit("completeRetro", { team_id });
+    socket.emit("disconnectTeam", { team_id });
   };
 
-  const sendRetroToServer = async (questions, teamId) => {
-    socket.emit("sendRetro", { questions, teamId });
+  const sendRetroToServer = async (teamId) => {
+    socket.emit("sendRetro", { teamId });
     console.log(team_id);
   };
 
-  const redirectToRetro = (teamId) => {
+  const redirectToRetro = () => {
     const tokenSinComillas = token.replace(/^"|"$/g, "");
-    const retroUrl = `https://esencia.app/members/retro?token=${tokenSinComillas}&team_id=${teamId}&scrum_id=${user.id}`;
+    const retroUrl = `http://localhost:5173/members/retro?token=${tokenSinComillas}&team_id=${activeTeam._id}&scrum_id=${user.id}`;
+
     window.location.href = retroUrl;
   };
+  const handleSendRetro = async (team_id) => {
+    await handleStartRetro(team_id);
 
-  const handleSendRetro = async (questions, teamId) => {
-    console.log(teamId);
-    console.log({ questions });
-    await sendRetroToServer(questions, teamId);
-    redirectToRetro(teamId);
+    console.log(team_id);
+    handleConnect();
+    await sendRetroToServer(team_id);
+    redirectToRetro();
   };
 
   const handleCompleteRetroRedirect = ({ redirectUrl }) => {
     window.location.href = redirectUrl;
   };
+
+  useEffect(() => {
+    if (scrum_id) sendRetroToServer(team_id);
+  }, [scrum_id]);
+
   return {
     serverStatus,
     membersConnected,
@@ -225,6 +251,7 @@ export const useSocket = () => {
     handleDeleteNote,
     handleSendRetro,
     handleVote,
+    editStickyNote,
   };
 };
 

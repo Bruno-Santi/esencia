@@ -1,17 +1,23 @@
-import { SyntheticEvent, useEffect, useState } from "react";
+import { SyntheticEvent, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SurveyLayout } from "../../layaout";
 import { useLocation } from "react-router-dom";
-import { useNavigateTo } from "../../hooks";
-import { baseURL } from "../../helpers/apiToken";
+import { useNavigateTo, useQuestions } from "../../hooks";
+import api, { baseURL } from "../../helpers/apiToken";
 import axios from "axios";
 
 export const AdditionalComments = () => {
   const { handleNavigate } = useNavigateTo();
   const navigate = useNavigate();
+  const userToken = localStorage.getItem("userToken");
+
   const location = useLocation();
-  const dailySurvey = location.state?.dailySurvey || {};
+  const dailySurvey = location.state?.dailySurvey;
   const [comment, setComment] = useState<string>(dailySurvey.comment || "");
+  useEffect(() => {
+    console.log(dailySurvey);
+  }, []);
+
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       event.preventDefault();
@@ -32,21 +38,6 @@ export const AdditionalComments = () => {
     setComment(e.target.value);
   };
 
-  // ? AFTER_BRUNO
-
-  // const handleSubmit = (e: SyntheticEvent) => {
-  //   e.preventDefault();
-
-  //   const updatedFinalBody = {
-  //     ...dailySurvey,
-  //     comment: comment,
-  //   };
-  //   navigate("/members/finished");
-  //   console.log(updatedFinalBody);
-  // };
-
-  // ? END
-
   //% FACU_EDIT
 
   useEffect(() => {
@@ -58,36 +49,38 @@ export const AdditionalComments = () => {
 
   const [params, setParams] = useState({ token: "", team_id: "" });
 
-  const handleSubmit = async (e: SyntheticEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const config = {
-      method: "put",
-      maxBodyLength: Infinity,
-      url: `${baseURL}/survey/daily_survey_comment?comment=${comment}&team_id=${params.team_id}`,
-      headers: {
-        Authorization: `Bearer ${params.token}`,
-      },
+    const data = {
+      ...dailySurvey,
+      comment: comment || "",
     };
 
-    axios
-      .request(config)
-      .then((response) => console.log(JSON.stringify(response.data)))
-      .catch((error) => console.log(error));
+    if (userToken) {
+      const headers = {
+        Authorization: `Bearer ${userToken}`,
+      };
 
-    navigate("/members/finished");
+      try {
+        const resp = await api.post("/api/survey", data, { headers });
+        navigate("/members/finished");
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      console.error("No se encontró el token del usuario en el localStorage");
+    }
   };
-
-  //% END
 
   return (
     <SurveyLayout>
       <div className='w-4/6 m-auto flex flex-col mt-12 h-3/6 bg-gray-600 rounded-md text-tertiary font-poppins'>
         <span className='m-auto md:mt-8 lg:mt-16 md:text-lg lg:text-2xl'>
-          Would you like to leave any additional comments?
+          ¿Te gustaría dejar algún comentario adicional?
         </span>
         <textarea
           onChange={handleCommentChange}
-          placeholder='Put any comment here...'
+          placeholder='Deja tu comentario aquí.'
           className='bg-white rounded-md w-5/6 h-1/3 p-4 flex m-auto text-primary'
         ></textarea>
         <div className='flex w-1/3 space-x-6 m-auto'>
@@ -95,7 +88,7 @@ export const AdditionalComments = () => {
             onClick={() => handleNavigate("/members/finished")}
             className='btn-secondary mb-12 p-2 w-[150px] rounded-md m-auto'
           >
-            Skip
+            Omitir
           </button>
           <button
             disabled={!comment}
@@ -106,7 +99,7 @@ export const AdditionalComments = () => {
                 : "btn-secondary mb-12 p-2 w-[150px] rounded-md m-auto"
             }
           >
-            Continue
+            Continuar
           </button>
         </div>
       </div>

@@ -1,9 +1,16 @@
-export const sendMail = (token, teamId, memberName, memberEmail, memberId) => {
+export const sendMail = (
+  token,
+  teamId,
+  memberName,
+  memberEmail,
+  memberId,
+  teamName,
+) => {
   console.log(token, teamId, memberName, memberEmail);
 
   const emailData = {
     to: `${memberEmail}`,
-    subject: `${memberName} you're invited to fullfill EsenciaApp survey`,
+    subject: `${memberName} queremos saber tu opinión sobre el trabajo en ${teamName}`,
     from: 'santimariabruno@gmail.com',
     html: `<html>
       
@@ -81,10 +88,12 @@ export const sendMail = (token, teamId, memberName, memberEmail, memberId) => {
                       <img class='logo' src='https://res.cloudinary.com/di92lsbym/image/upload/c_thumb,w_200,g_face/v1704312320/ESENCIA_LOGO_mbsjht.png' />
                   </div>
               
-                  <h2 class='title'>Welcome ${memberName} to Esencia Survey</h2>
-                  <p class='subtitle'>You're invited to complete the Daily Survey. Your feedback is valuable and helps us improve our team's performance. Thank you for your participation!</p>
+          
+                  <p class='subtitle'>En ${teamName} nos interesa conocer qué tal lo estamos haciendo!
+
+                  Contesta la siguiente encuesta, no te tomará más de 2 minutos, y nos ayudarás a crear un mejor ambiente de trabajo.</p>
                   <div class='button-container'>
-                     <a class='access-button' href='https://esencia.app/members/survey?token=${token}&team_id=${teamId}&user_id=${memberId}' target='_blank'>Access to survey</a>
+                     <a class='access-button' href='https://esencia.app/members/survey?token=${token}&team_id=${teamId}&user_id=${memberId}' target='_blank'>Ir a la encuesta</a>
                   </div>
               </div>
           </body>

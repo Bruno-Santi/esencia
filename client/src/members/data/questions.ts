@@ -3,18 +3,19 @@ import { QUESTIONS } from "../interface";
 export const questions: QUESTIONS[] = [
   {
     id: "question1",
-    question: "On a scale of 1 to 10, how much do you feel you can genuinely be yourself within the team?",
+    question:
+      "En una escala del 1 al 10, ¿Qué tanta confianza sientes en poder realizar de la mejor manera tu trabajo?",
   },
   {
     id: "question2",
-    question: `How often have you felt truly passionate and engaged with the tasks you're undertaking? `,
+    question: `En una escala del 1 al 10, ¿Cuánta motivación sientes por lo desafiante del trabajo que estas haciendo?`,
   },
   {
     id: "question3",
-    question: "How easy do you find it to communicate and collaborate openly with your colleagues?",
+    question: "En una escala del 1 al 10, ¿Qué tan a gusto te sientes con el trabajo en equipo?",
   },
   {
     id: "question4",
-    question: "How would you rate the overall work atmosphere in your team on a scale of 1 to 10?",
+    question: "En una escala del 1 al 10, ¿Como clasificarías el ambiente de trabajo en general?",
   },
 ];

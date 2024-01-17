@@ -56,6 +56,7 @@ export const dashboardSlice = createSlice({
       state.userTeams = action.payload.userTeams || [];
       state.isLoading = false;
       state.modalOpen = false;
+      state.dataLoading = false;
     },
     onSetActiveTeam: (
       state,

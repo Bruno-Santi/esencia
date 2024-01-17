@@ -13,7 +13,7 @@ const MetricChart = ({ metricName, value, color }) => {
 
   const tooltipComponent = (
     <VictoryTooltip
-      style={{ fontSize: 14, zIndex: 0 }}
+      style={{ fontSize: 48, zIndex: 0 }}
       flyoutStyle={{ fill: "white", stroke: "gray", strokeWidth: 1 }}
       cornerRadius={5}
       flyoutPadding={10}
@@ -24,19 +24,17 @@ const MetricChart = ({ metricName, value, color }) => {
   );
 
   return (
-    <div className='-z-0 w-[150px]' style={{ width: 150, height: 100, margin: 16 }}>
+    <div className='-z-0 w-[170px]' style={{ width: 170, height: 110, margin: 25, padding: 6 }}>
       <VictoryPie
         data={data}
-        width={150}
-        height={100}
-        colorScale={[color, "#D3D3D3"]}
-        innerRadius={20}
+        colorScale={[color, "#D3D3D380"]}
+        innerRadius={120}
         labels={() => null}
         padding={7}
         labelComponent={tooltipComponent}
       />
       <div>
-        <p className='text-center text-xl pt-2'>{metricName}</p>
+        <p className='text-center text-lg pt-2'>{metricName}</p>
       </div>
       {tooltipContainer && createPortal(tooltipComponent, tooltipContainer)}
     </div>
@@ -55,7 +53,7 @@ export const Charts = () => {
       <MetricChart metricName='Team Collaboration' value={metricsForToday.team_collaboration} color='#36A2EB' />
 
       <MetricChart metricName='Work Engagement' value={metricsForToday.work_engagement} color='#FFCE56' />
-      <MetricChart metricName='Workspace Well-being Metric' value={metricsForToday.workspace} color='#4CAF50' />
+      <MetricChart metricName='Workspace Wellbeing' value={metricsForToday.workspace} color='#4CAF50' />
       <div id='tooltip-container' className='-z-10' style={{ position: "fixed", top: 0, left: 0 }} />
     </div>
   );

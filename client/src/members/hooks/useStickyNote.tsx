@@ -18,7 +18,6 @@ export const useStickyNote = () => {
     console.log(notes);
   };
 
-  const addNewNote = () => {};
   return {
     toggleModal,
     stickyModal,

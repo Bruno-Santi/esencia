@@ -8,6 +8,9 @@ import { useStickyNote } from "../hooks/useStickyNote";
 import { StickyModal } from "../components/StickyModal";
 import { useAuthSlice } from "../../hooks/useAuthSlice";
 import { useDashboard } from "../../hooks/useDashboard";
+import { set } from "react-hook-form";
+import { StickyModalModify } from "../components/StickyModalModify";
+import { useStickyNoteModify } from "../hooks/useStickyNoteModify";
 
 export const Retro = ({ token, team_id, user_id, scrum_id }) => {
   const {
@@ -21,11 +24,13 @@ export const Retro = ({ token, team_id, user_id, scrum_id }) => {
     completeRetro,
     handleVote,
   } = useSocket();
+
   const { toggleModal, stickyModal, notes } = useStickyNote();
+
   const { user } = useAuthSlice();
 
   const [userVotes, setUserVotes] = useState({});
-  const { activeTeam } = useDashboard();
+  const [noteValue, setNoteValue] = useState();
   const initialQuestions = {
     c1: "What went well?",
     c2: "What went wrong?",
@@ -42,10 +47,7 @@ export const Retro = ({ token, team_id, user_id, scrum_id }) => {
   };
 
   useEffect(() => {
-
     addListeners();
-
-
   }, []);
 
   if (serverStatus === "Disconnected") return <NoServer />;
@@ -54,6 +56,7 @@ export const Retro = ({ token, team_id, user_id, scrum_id }) => {
       {stickyModal && (
         <StickyModal handleClick={handleClick} selectedNote={selectedNote} user_id={user_id} team_id={team_id} />
       )}
+
       {user && (
         <button
           onClick={() => completeRetro(team_id)}
@@ -118,9 +121,13 @@ export const Retro = ({ token, team_id, user_id, scrum_id }) => {
 
                       {user_id == note.user_id && (
                         <div className='absolute bottom-2 right-2 flex space-x-2'>
-                          <button>
-                            <FaEdit />
+                          <button onClick={() => handleDeleteNoteByValue(note.value)}>
+                            <FaRegTrashAlt />
                           </button>
+                        </div>
+                      )}
+                      {scrum_id == note.user_id && (
+                        <div className='absolute bottom-2 right-2 flex space-x-2'>
                           <button onClick={() => handleDeleteNoteByValue(note.value)}>
                             <FaRegTrashAlt />
                           </button>
@@ -180,9 +187,13 @@ export const Retro = ({ token, team_id, user_id, scrum_id }) => {
 
                       {user_id == note.user_id && (
                         <div className='absolute bottom-2 right-2 flex space-x-2'>
-                          <button>
-                            <FaEdit />
+                          <button onClick={() => handleDeleteNoteByValue(note.value)}>
+                            <FaRegTrashAlt />
                           </button>
+                        </div>
+                      )}
+                      {scrum_id == note.user_id && (
+                        <div className='absolute bottom-2 right-2 flex space-x-2'>
                           <button onClick={() => handleDeleteNoteByValue(note.value)}>
                             <FaRegTrashAlt />
                           </button>
@@ -241,9 +252,13 @@ export const Retro = ({ token, team_id, user_id, scrum_id }) => {
 
                       {user_id == note.user_id && (
                         <div className='absolute bottom-2 right-2 flex space-x-2'>
-                          <button>
-                            <FaEdit />
+                          <button onClick={() => handleDeleteNoteByValue(note.value)}>
+                            <FaRegTrashAlt />
                           </button>
+                        </div>
+                      )}
+                      {scrum_id == note.user_id && (
+                        <div className='absolute bottom-2 right-2 flex space-x-2'>
                           <button onClick={() => handleDeleteNoteByValue(note.value)}>
                             <FaRegTrashAlt />
                           </button>
@@ -304,9 +319,13 @@ export const Retro = ({ token, team_id, user_id, scrum_id }) => {
 
                       {user_id == note.user_id && (
                         <div className='absolute bottom-2 right-2 flex space-x-2'>
-                          <button>
-                            <FaEdit />
+                          <button onClick={() => handleDeleteNoteByValue(note.value)}>
+                            <FaRegTrashAlt />
                           </button>
+                        </div>
+                      )}
+                      {scrum_id == note.user_id && (
+                        <div className='absolute bottom-2 right-2 flex space-x-2'>
                           <button onClick={() => handleDeleteNoteByValue(note.value)}>
                             <FaRegTrashAlt />
                           </button>

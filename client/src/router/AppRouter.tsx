@@ -28,6 +28,8 @@ export const AppRouter = () => {
     if (tokenParams) localStorage.setItem("userToken", searchParams.get("token"));
   }, [tokenParams]);
   useEffect(() => {
+    console.log(token);
+
     if (tokenParams) setLoading(false);
     if (token) setLoading(false);
   }, [tokenParams]);

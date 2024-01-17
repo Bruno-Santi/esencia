@@ -12,10 +12,10 @@ export const RetroLayout: React.FC<LayoutProps> = ({ children }) => {
       />
       <div className='flex flex-col'>
         <h4 className='text-tertiary font-normal tracking-tighter flex mt-6 md:text-2xl lg:text-5xl font-poppins mx-auto'>
-          Welcome!
+          ¡Bienvenido!
         </h4>
         <p className='text-center font-poppins font-extralight md:text-base lg:text-xl w-2/3 justify-center mx-auto mt-6 text-tertiary'>
-          You’ve been invited to fulfill a <span className='text-secondary font-normal'>Esencia</span> retro.
+          Fuiste invitado a participar en una <span className='text-secondary font-normal'>Esencia</span> retro.
         </p>
       </div>
 
