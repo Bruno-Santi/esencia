@@ -33,16 +33,16 @@ export const Questions = ({ token, team_id, user_id }) => {
   };
 
   return (
-    <div className='flex flex-col'>
-      <div className='w-4/6 m-auto flex flex-col mt-12 h-fit bg-gray-600 rounded-md'>
+    <div className='flex flex-col sm:p-4 md:w-4/6  m-auto'>
+      <div className='sm:w-full m-auto flex flex-col mt-6 h-fit bg-gray-600 rounded-md p-2 '>
         {questions.map(({ id, question }) => (
           <div
             key={id}
-            className='flex flex-col lg:p-6 md:p-2 lg:space-y-4 md:space-y-2 text-xl text-center text-tertiary font-poppins justify-center'
+            className='flex flex-col lg:p-6 md:p-2 lg:space-y-4 md:space-y-2 lg:text-xl md:text-[18px] sm:text-[18px] text-center text-tertiary font-poppins justify-center'
           >
             {question}
             <div className='flex items-center justify-between'>
-              <span role='img' className='lg:text-3xl md:text-lg' aria-label='Sad Emoji'>
+              <span role='img' className='lg:text-3xl md:text-lg sm:text-lg' aria-label='Sad Emoji'>
                 😟
               </span>
               <label
@@ -52,14 +52,14 @@ export const Questions = ({ token, team_id, user_id }) => {
                 {rangeValues.map(({ id: valueId, value }) => {
                   return valueId === id ? (
                     <div className='border-2 mt-2 rounded-full  border-secondary w-8 h-8'>
-                      <span key={valueId} className='text-xl '>
+                      <span key={valueId} className='text-xl'>
                         {value}
                       </span>
                     </div>
                   ) : null;
                 })}
               </label>
-              <span role='img' className='text-3xl' aria-label='Happy Emoji'>
+              <span role='img' className='lg:text-3xl md:text-lg sm:text-lg' aria-label='Happy Emoji'>
                 😊
               </span>
             </div>
@@ -71,7 +71,7 @@ export const Questions = ({ token, team_id, user_id }) => {
               type='range'
               min='0'
               max='10'
-              className=' custom-range'
+              className=' custom-range my-4'
             />
           </div>
         ))}

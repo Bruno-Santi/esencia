@@ -16,7 +16,7 @@ export const AppRouter = () => {
   const authToken = localStorage.getItem("authToken");
   const userToken = searchParams.get("token");
   const token = searchParams.get("token");
-
+  const userTokenLocal = localStorage.getItem("userToken");
   useEffect(() => {
     if (status === "authenticated") localStorage.setItem("isAuthenticated", "true");
   }, []);
@@ -45,12 +45,12 @@ export const AppRouter = () => {
       setLoading(false);
     }
   }, []);
-  useEffect(() => {
-    if (!authToken && !userToken && status !== "authenticated") {
-      startLogingOut();
-      setLoading(false);
-    }
-  }, [token, userToken, status]);
+  // useEffect(() => {
+  //   if (!authToken && status !== "authenticated") {
+  //     startLogingOut();
+  //     setLoading(false);
+  //   }
+  // }, [token, userToken, status]);
 
   const firstLogging = localStorage.getItem("firstLoggin");
   const isAuthenticated1 = localStorage.getItem("isAuthenticated");
@@ -83,9 +83,11 @@ export const AppRouter = () => {
             <>
               {/* Rutas para usuarios autenticados */}
               <Route element={<LandingPage />} path={"/"} />
+              {userToken && <Route element={<MembersRoutes />} path={`/members/*`} />}
+              {userTokenLocal && <Route element={<MembersRoutes />} path={`/members/*`} />}
               <Route element={<OnBoardingRoutes />} path={`/onboarding/*`} />
               <Route element={<DashboardRoutes />} path={`/dashboard/*`} />
-              <Route element={<MembersRoutes />} path={`/members/*`} />
+
               {firstLogging === "0" ? (
                 <Route element={<Navigate to={"/onboarding"} />} path={`/auth/*`} />
               ) : (
@@ -96,6 +98,8 @@ export const AppRouter = () => {
             <>
               {/* Rutas para usuarios no autenticados */}
               {userToken && <Route element={<MembersRoutes />} path={`/members/*`} />}
+              {userTokenLocal && <Route element={<MembersRoutes />} path={`/members/*`} />}
+
               <Route element={<LandingPage />} path={"/"} />
               <Route element={<AuthRoutes />} path={`/auth/*`} />
               <Route element={<Navigate to='/auth/login' />} path={`/dashboard/`} />
