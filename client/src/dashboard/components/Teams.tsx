@@ -8,7 +8,7 @@ export const Teams: React.FC = () => {
 
   return (
     <aside className='flex flex-col  m-auto justify-center my-auto mx-auto'>
-      <div className='my-auto ml-4 mt-4 space-y-6 '>
+      <div className='my-auto ml-6 mt-4 space-y-6 '>
         {userTeams?.map(({ _id, name, logo }: { _id: number; name: string; logo: string }) => (
           <div className=''>
             <TeamList key={_id} id={_id} name={name} logo={logo} />

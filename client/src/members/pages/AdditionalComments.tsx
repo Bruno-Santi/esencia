@@ -57,9 +57,9 @@ export const AdditionalComments = () => {
       setLoading(true);
       try {
         const resp = await api.post("/api/survey", data, { headers });
-        setTimeout(() => {
-          navigate("/members/finished");
-        }, 4000);
+
+        navigate("/members/finished");
+
         setLoading(false);
       } catch (error) {
         setLoading(false);

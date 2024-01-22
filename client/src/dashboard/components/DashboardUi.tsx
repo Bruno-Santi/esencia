@@ -8,6 +8,7 @@ import { IoRefreshCircleOutline } from "react-icons/io5";
 
 import { useEffect, useRef } from "react";
 import { UsePagination } from "../../helpers/UsePagination";
+import { TrendingTopics } from ".";
 
 export const DashboardUi = () => {
   const {
@@ -36,16 +37,29 @@ export const DashboardUi = () => {
 
   return (
     <>
-      <div className=' w-full md:grid lg:grid px-6 ml-16 sm:flex sm:flex-col  lg:py-6 md:py-20 grid-cols-12 grid-rows-2 gap-6'>
+      <div className=' w-full md:grid lg:grid px-6 ml-20 sm:flex sm:flex-col  lg:py-6 md:py-2 grid-cols-12 grid-rows-2 gap-6'>
         <div
           className='bg-tertiary shadow-lg
          shadow-primary/50  h-[400px]
       w-full lg:col-span-6 md:col-span-8   rounded-md'
         >
-          <span className='font-poppins text-primary flex mt-4 ml-4 text-2xl'>Key team indicator</span>
-          <span className='font-poppins font-extralight ml-4 text-lg'>For the last 15 days</span>
+          <div className='flex justify-between'>
+            <span className='font-poppins text-primary flex mt-4 ml-4 text-2xl'>Key team indicator</span>
+            <div className='w-2/4 h-2.5 mt-3'>
+              <div className='flex justify-between mb-1'>
+                <span className='text-base font-medium text-primary font-poppins'>General Satisfaction</span>
+              </div>
+              <div className='relative w-2/3 bg-gray-400 rounded-full h-4 '>
+                <div className='bg-quaternary h-4 rounded-full' style={{ width: "45%" }}>
+                  <div className='absolute inset-0 flex items-center justify-center'>
+                    <span className='text-xs font-medium text-white font-poppins'>45%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           <div className='flex items-center justify-center h-3/6'>
-            <span className='text-center font-poppins w-6/12 mt-10 my-auto text-primary/50 font-bold text-5xl'>
+            <span className='text-center font-poppins w-6/12 mt-16 my-auto text-primary/50 font-bold text-5xl'>
               <div className='flex justify-center -space-x-20 m-auto text-center'></div>
               {Object.keys(metricsForToday).length > 0 ? (
                 <div className={modalOpen ? "hidden" : ""}>
@@ -58,27 +72,33 @@ export const DashboardUi = () => {
           </div>
         </div>
 
-        <div
-          className='bg-quaternary shadow-lg
-         shadow-primary/50  h-[400px]
-      w-full lg:col-span-4 md:col-span-4  rounded-md'
-        >
-          <span className='font-poppins text-tertiary w-full my-auto place-items-center  text-2xl ml-4 mt-4 flex'>
-            Actionable Insights
-          </span>
+        <div className='bg-quaternary shadow-lg shadow-primary/50 h-[400px] w-full lg:col-span-4 md:col-span-4 rounded-md '>
+          <div className='flex relative'>
+            <span className='font-poppins text-tertiary w-full my-auto place-items-center text-2xl ml-4 mt-4'>
+              Actionable Insights
+            </span>
+            {Object.keys(shortRecomendation).length > 0 && (
+              <div className='relative bottom-0 ml-4 mt-2'>
+                <span className='w-full place-items-center my-auto text-tertiary text-sm'>
+                  Did you find this insight accurate? <a className='text-lg cursor-pointer'>👍</a>{" "}
+                  <a className='text-lg cursor-pointer'>👎</a>
+                </span>
+              </div>
+            )}
+          </div>
           <div
             ref={containerRef}
-            className='bg-tertiary w-5/6 mt-4 place-items-center  align-middle h-4/6 mx-auto  rounded-lg overflow-y-scroll'
+            className='bg-tertiary w-5/6 mt-4 place-items-center align-middle lg:h-4/6 md:h-[15em] mx-auto rounded-lg overflow-y-scroll'
           >
             <div
               ref={containerRef}
-              className='font-poppin p-3 w-6/6  scroll-p-12 overflow-x-hidden my-auto bg-tertiary  m-auto'
+              className='font-poppin p-3 w-6/6 scroll-p-12 overflow-x-hidden my-auto bg-tertiary m-auto'
             >
               {Object.keys(shortRecomendation).length > 0 ? (
                 <UsePagination shortRecomendation={shortRecomendation} containerRef={containerRef} />
               ) : (
                 <p className='text-center justify-center my-auto items-center font-poppins font-bold text-primary/50'>
-                  NO DATA YET, TRY TO MAKING A SURVEY FIRST
+                  NO DATA YET, TRY MAKING A SURVEY FIRST
                 </p>
               )}
             </div>
@@ -96,6 +116,7 @@ export const DashboardUi = () => {
             </button>
           </div>
         </div>
+
         <div
           className='bg-tertiary shadow-lg
          shadow-primary/50  h-[400px]
@@ -135,7 +156,7 @@ export const DashboardUi = () => {
             </button>
             <button
               className='btn-primary 
-                     font-poppins text-sm rounded-md p-2 md:p-1 duration-700 lg:p-2 lg:text-lg
+                     font-poppins text-sm rounded-md p-2 md:p-1 duration-700 lg:p-2 lg:text-xl
                       hover:bg-amber-100 hover:text-primary'
             >
               Reports
@@ -144,17 +165,11 @@ export const DashboardUi = () => {
         </div>
 
         <div
-          className='bg-tertiary shadow-lg
-         shadow-primary/50  h-[400px] mb-6
+          className=' h-[400px] mb-6
       w-full lg:col-span-4 md:col-span-2 row-span-2 rounded-md justify-center m-auto place-content-center'
         >
-          <span className='font-poppins text-primary flex mt-4 ml-4 md:text-lg text-2xl'>Data collection report</span>
-
-          <div className='flex items-center my-auto  font-extralight mx-auto justify-center h-3/6'>
-            <span className='text-center mt-28 font-bold font-poppins w-5/6  text-primary/50 md:text-lg text-4xl'>
-              <DataCollectionReport />
-            </span>
-          </div>
+          <TrendingTopics />
+          <DataCollectionReport />
         </div>
 
         <div
