@@ -11,3 +11,4 @@ export * from "./Teams";
 export * from "./NoRetro";
 export * from "./BackButton";
 export * from "./FeedBack";
+export * from "./TrendingTopics";

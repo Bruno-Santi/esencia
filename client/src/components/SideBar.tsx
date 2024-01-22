@@ -9,7 +9,7 @@ export const SideBar = () => {
   const { startToggleModal } = useDashboard();
   return (
     <div className='static sm:hidden md:block lg:block'>
-      <section className='fixed top-0 left-0 w-16 bg-quaternary h-full '>
+      <section className='fixed top-0 left-0 w-20 bg-quaternary h-full '>
         <div className='flex flex-col h-full'>
           <span className='text-tertiary font-poppins  text-md mx-auto mt-4'>Teams</span>
           <div className='w-40 justify-center '>
@@ -20,7 +20,7 @@ export const SideBar = () => {
               openModal();
               startToggleModal();
             }}
-            className='text-tertiary w-12 h-12 mx-auto fixed left-2 bottom-5 cursor-pointer hover:text-secondary duration-700'
+            className='text-secondary w-12 h-12 mx-auto fixed left-4 bottom-5 cursor-pointer hover:text-tertiary duration-700'
           />
           <div>{isOpen && <ModalTeam closeModal={closeModal} />}</div>
         </div>

@@ -234,7 +234,7 @@ export const useSocket = () => {
   };
 
   useEffect(() => {
-    if (scrum_id) sendRetroToServer(team_id);
+    if (scrum_id) return sendRetroToServer(team_id);
   }, [scrum_id]);
 
   return {
@@ -254,4 +254,3 @@ export const useSocket = () => {
     editStickyNote,
   };
 };
-
