@@ -12,6 +12,8 @@ import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({ cors: { origin: '*' }, namespace: '/retro' })
 export class RetroGateway implements OnGatewayConnection, OnGatewayDisconnect {
+  private isSendingRetro = false;
+  private retroSentEmitted = false;
   constructor(private readonly retroService: RetroService) {}
 
   @WebSocketServer() wss: Server;
@@ -109,7 +111,6 @@ export class RetroGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
-
   @SubscribeMessage('disconnectTeam')
   async handleDisconnectTeam(
     @MessageBody() { team_id }: any,
@@ -204,7 +205,7 @@ export class RetroGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.wss.emit('teamLength', teamLength);
       } else {
         console.log(`Retro not started for team_id: ${team_id}`);
-        client.disconnect(true); // Desconectar al cliente con un mensaje de error
+        // Desconectar al cliente con un mensaje de error
         return;
       }
     }
@@ -242,13 +243,28 @@ export class RetroGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @MessageBody() { teamId }: any,
     @ConnectedSocket() client: Socket,
   ) {
-    try {
-      console.log('Received sendRetro event:', teamId);
-      this.retroService.sendEmailToMembers(teamId);
+    // Verificar si la función ya está en ejecución
+    if (!this.isSendingRetro) {
+      try {
+        // Establecer la bandera para indicar que la función está en ejecución
+        this.isSendingRetro = true;
 
-      this.emitUpdates(client.id, 'retroSent', { teamId });
-    } catch (error) {
-      console.error('Error handling sendRetro event:', error);
+        console.log('Received sendRetro event:', teamId);
+        this.retroService.sendEmailToMembers(teamId);
+
+        if (!this.retroSentEmitted) {
+          this.emitUpdates(client.id, 'retroSent', { teamId });
+          this.retroSentEmitted = true;
+        }
+      } catch (error) {
+        console.error('Error handling sendRetro event:', error);
+      } finally {
+        this.isSendingRetro = false;
+      }
+    } else {
+      console.log(
+        'sendRetro event is already being processed. Ignoring this request.',
+      );
     }
   }
 

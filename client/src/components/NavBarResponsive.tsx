@@ -32,7 +32,7 @@ export const NavBarResponsive = () => {
           <span
             onClick={() => {
               openModal();
-              startGettingMembers(activeTeam.id);
+              startGettingMembers(activeTeam._id);
               startToggleModal();
             }}
             className='btn-primary rounded-lg p-1 h-fit text-sm font-poppins duration-700 hover:bg-tertiary hover:text-primary'

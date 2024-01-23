@@ -4,7 +4,7 @@ import { useStickyNote } from "../hooks/useStickyNote";
 import { useState } from "react";
 import { useSocket } from "../hooks/useSocket";
 
-export const StickyModal = ({ handleClick, selectedNote, user_id, team_id }) => {
+export const StickyModal = ({ handleClick, selectedNote }) => {
   const [note, setNote] = useState();
   const { stickyNotes } = useSocket();
   const { sendStickyNote } = useSocket();

@@ -6,7 +6,7 @@ import "./index.css";
 import { Dashboard } from "./Dashboard.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
+  <>
     <ToastContainer
       position='bottom-center'
       autoClose={5000}
@@ -20,5 +20,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       theme='dark'
     />
     <Dashboard />
-  </React.StrictMode>
+  </>
 );
