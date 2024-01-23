@@ -37,6 +37,7 @@
     "react-vis": "^1.12.1",
     "redux-persist": "^6.0.0",
     "socket.io-client": "^4.7.3",
+    "tw-elements-react": "^1.0.0-alpha2",
     "victory": "^36.7.0"
   },
   "devDependencies": {

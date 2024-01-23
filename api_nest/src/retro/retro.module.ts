@@ -9,7 +9,7 @@ import { TeamModule } from 'src/team/team.module';
 import { MembersService } from 'src/members/members.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { StickyNote, StickyNoteSchema } from './entities/sticky-note.entity';
-
+import { MailerModule } from '@nestjs-modules/mailer';
 @Module({
   controllers: [RetroEmailController],
   providers: [RetroGateway, RetroService, MembersService],
@@ -21,6 +21,18 @@ import { StickyNote, StickyNoteSchema } from './entities/sticky-note.entity';
         collection: 'stickynotes',
       },
     ]),
+    MailerModule.forRoot({
+      transport: {
+        host: 'smtp.office365.com', // o tu servidor SMTP de Outlook
+        port: 587,
+        secure: false,
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+        authMethod: 'PLAIN', // Agrega esta línea
+      },
+    }),
     SendGridModule.forRoot({
       apiKey: process.env.SENDGRID_API_KEY,
     }),

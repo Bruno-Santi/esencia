@@ -10,6 +10,7 @@ import { MembersService } from 'src/members/members.service';
 import { InjectModel } from '@nestjs/mongoose';
 import { Member } from 'src/members/entities/member.entity';
 import axios from 'axios';
+import { MailerService } from '@nestjs-modules/mailer';
 
 interface Vote {
   user_id: string;
@@ -37,6 +38,7 @@ export class RetroService {
   private retroStartedTeams: Set<string> = new Set();
 
   constructor(
+    private readonly mailerService: MailerService,
     private readonly teamService: TeamService,
     private readonly memberService: MembersService,
     private readonly jwtService: JwtService,
@@ -125,7 +127,7 @@ export class RetroService {
         console.log(this.retros);
       }
 
-      const retroUrl = `https://esencia.app/members/retro?token=${tokenWithoutQuotes}&team_id=${team_id}&scrum_id=${scrum_id}`;
+      const retroUrl = `http://localhost:5173/members/retro?token=${tokenWithoutQuotes}&team_id=${team_id}&scrum_id=${scrum_id}`;
       console.log(retroUrl);
 
       return retroUrl;
@@ -317,6 +319,12 @@ export class RetroService {
             );
 
             await this.sendGrid.send(emailData);
+            // this.mailerService.sendMail({
+            //   to: member.email,
+            //   from: process.env.EMAIL_USER,
+            //   subject: 'Retro',
+            //   template: 'retro',
+            // });
           }
         }
       }

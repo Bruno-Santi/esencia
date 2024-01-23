@@ -7,10 +7,6 @@ import { NoServer } from "../components/NoServer";
 import { useStickyNote } from "../hooks/useStickyNote";
 import { StickyModal } from "../components/StickyModal";
 import { useAuthSlice } from "../../hooks/useAuthSlice";
-import { useDashboard } from "../../hooks/useDashboard";
-import { set } from "react-hook-form";
-import { StickyModalModify } from "../components/StickyModalModify";
-import { useStickyNoteModify } from "../hooks/useStickyNoteModify";
 
 export const Retro = ({ token, team_id, user_id, scrum_id }) => {
   const {
@@ -53,9 +49,7 @@ export const Retro = ({ token, team_id, user_id, scrum_id }) => {
   if (serverStatus === "Disconnected") return <NoServer />;
   return (
     <RetroLayout>
-      {stickyModal && (
-        <StickyModal handleClick={handleClick} selectedNote={selectedNote} user_id={user_id} team_id={team_id} />
-      )}
+      {stickyModal && <StickyModal handleClick={handleClick} selectedNote={selectedNote} />}
 
       {user && (
         <button

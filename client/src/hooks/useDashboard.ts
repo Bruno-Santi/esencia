@@ -221,6 +221,8 @@ export const useDashboard = () => {
     }
   };
   const startGettingMembers = async (id) => {
+    console.log(id);
+
     try {
       const { data } = await api.get(`/api/members/${id}`);
 
@@ -235,6 +237,8 @@ export const useDashboard = () => {
   const startCreatingSurvey = async (teamName: string, teamId: string) => {
     setSurveyLoading(true);
     try {
+      console.log(teamId);
+
       const users = await startGettingMembers(teamId);
 
       if (!users) {

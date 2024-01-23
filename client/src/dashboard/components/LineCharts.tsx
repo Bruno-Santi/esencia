@@ -87,6 +87,7 @@ export const LineCharts = () => {
     <div>
       <div>
         <canvas
+          id='SesionLine'
           ref={chartContainer}
           style={{ marginBottom: "10px", width: "100%", height: "10em", margin: "auto", padding: 10 }}
         />

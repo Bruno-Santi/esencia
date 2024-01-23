@@ -34,7 +34,8 @@ export const NavBar = () => {
               <span
                 onClick={() => {
                   openModal();
-                  startGettingMembers(activeTeam.id);
+                  startGettingMembers(activeTeam._id);
+
                   startToggleModal();
                 }}
                 className='btn-primary rounded-lg p-2 text-lg font-poppins duration-700 hover:bg-tertiary hover:text-primary'
@@ -68,9 +69,9 @@ export const NavBar = () => {
                   startLogingOut();
                   closeDropdown();
                 }}
-                className='btn-primary p-2 rounded-lg font-poppins w-fit hover:bg-tertiary hover:text-primary duration-700 cursor-pointer'
+                className='btn-primary p-2  rounded-lg font-poppins w-fit hover:bg-tertiary hover:text-primary duration-700 cursor-pointer'
               >
-                <span className='text-md '>Log Out</span>
+                <span className='text-md z-50'>Log Out</span>
               </div>
             </div>
           )}

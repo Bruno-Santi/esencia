@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Manager } from "socket.io-client";
 import { useAuthSlice } from "../../hooks/useAuthSlice";
@@ -178,9 +178,6 @@ export const useSocket = () => {
 
   useEffect(() => {
     addListeners();
-    console.log(stickyNotes);
-
-    if (scrum_id) handleStartRetro(team_id);
 
     handleConnect();
   }, []);
@@ -233,8 +230,8 @@ export const useSocket = () => {
     window.location.href = redirectUrl;
   };
 
-  useEffect(() => {
-    if (scrum_id) return sendRetroToServer(team_id);
+  useMemo(() => {
+    if (scrum_id) sendRetroToServer(team_id);
   }, [scrum_id]);
 
   return {

@@ -73,12 +73,12 @@ export const DashboardUi = () => {
         </div>
 
         <div className='bg-quaternary shadow-lg shadow-primary/50 h-[400px] w-full lg:col-span-4 md:col-span-4 rounded-md '>
-          <div className='flex relative'>
+          <div className='flex relative z-0'>
             <span className='font-poppins text-tertiary w-full my-auto place-items-center text-2xl ml-4 mt-4'>
               Actionable Insights
             </span>
             {Object.keys(shortRecomendation).length > 0 && (
-              <div className='relative bottom-0 ml-4 mt-2'>
+              <div className='relative  z-0 bottom-0 ml-4 mt-2'>
                 <span className='w-full place-items-center my-auto text-tertiary text-sm'>
                   Did you find this insight accurate? <a className='text-lg cursor-pointer'>👍</a>{" "}
                   <a className='text-lg cursor-pointer'>👎</a>

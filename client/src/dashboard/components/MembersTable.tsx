@@ -54,7 +54,7 @@ export const MembersTable = () => {
   );
 
   useEffect(() => {
-    startGettingMembers(activeTeam.id);
+    startGettingMembers(activeTeam._id);
   }, [membersActiveTeam.length]);
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({

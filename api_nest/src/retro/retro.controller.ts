@@ -12,19 +12,19 @@ import { RetroService } from './retro.service';
 export class RetroEmailController {
   constructor(private readonly retroService: RetroService) {}
 
-  @Get(':teamId/send-email')
-  sendEmailToTeamMembers(@Param('teamId') teamId: string) {
+  @Get(':team_id')
+  sendEmailToTeamMembers(@Param('team_id') team_id: string) {
     try {
-      if (this.retroService.isValidTeamId(teamId)) {
-        console.log(this.retroService.isValidTeamId(teamId));
+      if (this.retroService.isValidTeamId(team_id)) {
+        console.log(this.retroService.isValidTeamId(team_id));
 
-        this.retroService.sendEmailToMembers(teamId);
+        this.retroService.sendEmailToMembers(team_id);
       }
     } catch (error) {
       throw new BadRequestException('Invalid teamId format');
     }
 
-    console.log(teamId);
+    console.log(team_id);
   }
 
   @Post('/create')
