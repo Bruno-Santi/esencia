@@ -34,7 +34,7 @@ const MetricChart = ({ metricName, value, color }) => {
         labelComponent={tooltipComponent}
       />
       <div>
-        <p className='text-center text-lg pt-2'>{metricName}</p>
+        <p className='text-center text-lg pt-2 dark:text-tertiary'>{metricName}</p>
       </div>
       {tooltipContainer && createPortal(tooltipComponent, tooltipContainer)}
     </div>

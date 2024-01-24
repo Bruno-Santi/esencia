@@ -13,7 +13,7 @@ export const Retrospectives = () => {
       <div className='flex h-full  mx-12 ml-28 justify-center my-0 p-20'>
         <div
           className='  w-full h-full bg-tertiary shadow-lg
-         shadow-primary/50 p-8 rounded-md'
+         shadow-primary/50 p-8 rounded-md    dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800 dark:shadow-white/10'
         >
           <NoRetro />
         </div>

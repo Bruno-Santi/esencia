@@ -63,9 +63,9 @@ export class SurveyService {
           `The team ${createSurveyDto.team_id} does not exist`,
         );
       await axios.post(process.env.API_DATA + '/daily_survey', createSurveyDto);
-      await axios.post(
-        `https://us-central1-esencia-app.cloudfunctions.net/short_recommendation?team_id=${createSurveyDto.team_id}`,
-      );
+      // await axios.post(
+      //   `https://us-central1-esencia-app.cloudfunctions.net/short_recommendation?team_id=${createSurveyDto.team_id}`,
+      // );
       await this.surveyModel.create({
         ...createSurveyDto,
         userId: convertedUserId,

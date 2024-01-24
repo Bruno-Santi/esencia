@@ -24,7 +24,7 @@ export const UsePagination = ({ shortRecomendation, containerRef }) => {
       <p className='font-poppins mx-auto my-auto flex'>Complete more than 1 survey to get short recommendation's</p>
     );
   return (
-    <div className='flex flex-col my-auto justify-center place-content-center items-center'>
+    <div className='flex flex-col my-auto justify-center place-content-center items-center dark:bg-gray-900 dark:text-tertiary'>
       {datosPagina.map(([title, content]) => (
         <div key={title}>
           <h2 className='font-bold font-manrope text-lg'>{title}:</h2>

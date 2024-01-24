@@ -14,6 +14,10 @@ export class Team extends Document {
     required: false,
   })
   logo?: string;
+  @Prop({
+    default: 0,
+  })
+  sprint?: number;
 }
 
 export const TeamSchema = SchemaFactory.createForClass(Team);

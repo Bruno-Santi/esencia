@@ -243,29 +243,14 @@ export class RetroGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @MessageBody() { teamId }: any,
     @ConnectedSocket() client: Socket,
   ) {
-    // Verificar si la función ya está en ejecución
-    if (!this.isSendingRetro) {
-      try {
-        // Establecer la bandera para indicar que la función está en ejecución
-        this.isSendingRetro = true;
+    console.log('email enviado a miembros');
 
-        console.log('Received sendRetro event:', teamId);
-        this.retroService.sendEmailToMembers(teamId);
-
-        if (!this.retroSentEmitted) {
-          this.emitUpdates(client.id, 'retroSent', { teamId });
-          this.retroSentEmitted = true;
-        }
-      } catch (error) {
-        console.error('Error handling sendRetro event:', error);
-      } finally {
-        this.isSendingRetro = false;
-      }
-    } else {
-      console.log(
-        'sendRetro event is already being processed. Ignoring this request.',
-      );
-    }
+    // try {
+    //   const resp = await this.retroService.sendEmailToMembers(teamId);
+    //   console.log(resp);
+    // } catch (error) {
+    //   console.log(error);
+    // }
   }
 
   @SubscribeMessage('deleteStickyNote')

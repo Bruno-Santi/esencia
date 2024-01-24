@@ -28,7 +28,7 @@ export const useSocket = () => {
   const [teamLength, setTeamLength] = useState(0);
   const { activeTeam } = useDashboard();
   const [stickyNotes, setStickyNotes] = useState([]);
-
+  const [retroSent, setRetroSent] = useState(false);
   const [userVotes, setUserVotes] = useState({});
   const { user } = useAuthSlice();
 
@@ -178,8 +178,8 @@ export const useSocket = () => {
 
   useEffect(() => {
     addListeners();
-
     handleConnect();
+    console.log("conectado");
   }, []);
 
   const handleStartRetro = (team_id) => {
@@ -229,11 +229,7 @@ export const useSocket = () => {
   const handleCompleteRetroRedirect = ({ redirectUrl }) => {
     window.location.href = redirectUrl;
   };
-
-  useMemo(() => {
-    if (scrum_id) sendRetroToServer(team_id);
-  }, [scrum_id]);
-
+  useEffect(() => {}, [retroSent, scrum_id, team_id]);
   return {
     serverStatus,
     membersConnected,

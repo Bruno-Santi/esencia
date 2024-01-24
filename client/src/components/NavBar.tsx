@@ -1,5 +1,3 @@
-import { FaRegUserCircle } from "react-icons/fa";
-import { RxExit } from "react-icons/rx";
 import { useAuthSlice } from "../hooks/useAuthSlice";
 import { useDashboard } from "../hooks/useDashboard";
 import { useModal } from "../hooks";
@@ -8,6 +6,7 @@ import { NavBarResponsive } from "./NavBarResponsive";
 import { IoIosArrowDropdown } from "react-icons/io";
 import { useState } from "react";
 import avatar from "../assets/avatarnav2.png";
+import { ThemeChange } from "./ThemeChange";
 export const NavBar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -26,7 +25,7 @@ export const NavBar = () => {
       <div className='lg:hidden md:hidden sm:block'>
         <NavBarResponsive />
       </div>
-      <nav className='sm:hidden md:block lg:block flex w-full  sticky bg-primary h-20 py-6 justify-around '>
+      <nav className='sm:hidden md:block lg:block flex w-full  sticky bg-primary h-20 py-6 justify-around dark:border-b-2 dark:border-gray-600'>
         <div className='w-full flex justify-center items-center'>
           {activeTeam && (
             <div className=''>
@@ -45,13 +44,14 @@ export const NavBar = () => {
             </div>
           )}
 
-          <div className='flex mt-2 ml-24 border-quaternary  border-2 p-1 rounded-md right-4 bottom-3 absolute bg-gradient-to-r from-indigo-950'>
-            <img src={avatar} alt='avatar' className='h-12 w-12 rounded-full' />
+          <div className='flex mt-2 ml-24 border-quaternary  border-2 p-1 rounded-md right-4 bottom-3 absolute bg-gradient-to-r from-indigo-950 dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800 '>
+            <img src={avatar} alt='avatar' className='h-12 w-12 rounded-full border-white border-2' />
             {/* <FaRegUserCircle className='text-tertiary h-12 w-12 mr-1' /> */}
             <div className='flex flex-col'>
               <span className='text-tertiary my-auto ml-2 font-poppins text-[16px]'>{user?.name}</span>
               <span className='text-tertiary my-auto ml-2 font-poppins text-[16px]'>{user?.email}</span>
             </div>
+
             <a
               className={`text-${
                 isDropdownOpen ? "tertiary" : "secondary"
@@ -77,6 +77,10 @@ export const NavBar = () => {
           )}
         </div>
         {isOpen && <ModalMembers closeModal={closeModal} />}
+        <div className='absolute right-96 bottom-6'>
+          {" "}
+          <ThemeChange />
+        </div>
       </nav>
     </>
   );

@@ -8,7 +8,11 @@
   font-weight: normal;
   cursor: pointer;
 }
-
+.btn-primary-dark {
+  background-color: #ffb703;
+  font-weight: normal;
+  cursor: pointer;
+}
 .btn-secondary {
   background-color: #e5e5e5;
   color: #1a1423;

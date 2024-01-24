@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Chart from "chart.js/auto";
 import moment from "moment";
 import "chartjs-adapter-moment";
@@ -7,9 +7,16 @@ import { useDashboard } from "../../hooks/useDashboard";
 const formatDate = (dateString) => moment(dateString).format("MM/DD/YYYY");
 
 export const LineCharts = () => {
+  const themeLocal = localStorage.getItem("theme");
+  const [theme, setTheme] = useState();
   const { linesMetrics } = useDashboard();
   const chartContainer = useRef(null);
   const chartInstance = useRef(null);
+  useEffect(() => {
+    console.log(theme);
+    setTheme(themeLocal); // Aquí podrías ver el valor actualizado
+    console.log("hola");
+  }, [theme]);
 
   const chartData = useMemo(() => {
     if (!linesMetrics || linesMetrics.label_x.length === 0) {
@@ -81,7 +88,7 @@ export const LineCharts = () => {
         chartInstance.current.update();
       }
     }
-  }, [chartData]);
+  }, [chartData, themeLocal]);
 
   return (
     <div>

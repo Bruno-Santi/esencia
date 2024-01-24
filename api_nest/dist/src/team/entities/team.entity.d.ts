@@ -27,6 +27,7 @@ export declare class Team extends Document {
     scrumId: string;
     name: string;
     logo?: string;
+    sprint?: number;
 }
 export declare const TeamSchema: import("mongoose").Schema<Team, import("mongoose").Model<Team, any, any, any, Document<unknown, any, Team> & Team & {
     _id: import("mongoose").Types.ObjectId;
