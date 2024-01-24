@@ -9,12 +9,14 @@ import { sendMail } from 'common/utils/emailData';
 import { CreateSurveyDto } from './dto/create-survey.dto';
 import { Survey } from './entities/survey.entity';
 import { TeamService } from 'src/team/team.service';
+import { getTeamData } from '../../../client/src/helpers/getTeamData';
+import { Team } from 'src/team/entities/team.entity';
 @Injectable()
 export class SurveyService {
   constructor(
     @InjectModel(Member.name) private readonly memberModel: Model<Member>,
     @InjectModel(Survey.name) private readonly surveyModel: Model<Survey>,
-
+    @InjectModel(Team.name) private readonly teamModel: Model<any>,
     @InjectSendGrid() private readonly client: SendGridService,
     private readonly jwtService: JwtService,
     private readonly teamService: TeamService,
@@ -58,11 +60,21 @@ export class SurveyService {
     const convertedUserId = new Types.ObjectId(createSurveyDto.user_id);
     try {
       const team = await this.teamService.searchTeam(convertedTeamId);
+      const data = {
+        ...createSurveyDto,
+        sprint: team.sprint,
+      };
       if (!team)
         throw new BadRequestException(
           `The team ${createSurveyDto.team_id} does not exist`,
         );
-      await axios.post(process.env.API_DATA + '/daily_survey', createSurveyDto);
+      const resp = await axios.post(
+        process.env.API_DATA + '/daily_survey',
+        data,
+      );
+
+      console.log(team.sprint);
+
       // await axios.post(
       //   `https://us-central1-esencia-app.cloudfunctions.net/short_recommendation?team_id=${createSurveyDto.team_id}`,
       // );
@@ -71,7 +83,10 @@ export class SurveyService {
         userId: convertedUserId,
         teamId: convertedTeamId,
         date: new Date(),
+        sprint: team.sprint,
       });
+      console.log(resp);
+
       return {
         created: 'ok',
       };

@@ -11,7 +11,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Member } from 'src/members/entities/member.entity';
 import axios from 'axios';
 import { MailerService } from '@nestjs-modules/mailer';
-
+import { Team } from 'src/team/entities/team.entity';
+type SocketId = string;
 interface Vote {
   user_id: string;
   value: 'thumb_up' | 'thumb_down';
@@ -31,7 +32,7 @@ interface Retro {
 }
 @Injectable({ scope: Scope.DEFAULT })
 export class RetroService {
-  private connectedClients: Map<Socket, string> = new Map();
+  private connectedClients: Map<SocketId, string> = new Map();
   private stickyNotes: Map<string, Map<string, StickyNote[]>> = new Map();
   private retros: Map<string, Retro> = new Map();
   private scrumMasterTeamMap: Record<string, string> = {};
@@ -43,15 +44,16 @@ export class RetroService {
     private readonly memberService: MembersService,
     private readonly jwtService: JwtService,
     @InjectModel(Member.name) private readonly memberModel: Model<Member>,
+    @InjectModel(Team.name) private readonly teamModel: Model<Member>,
     @InjectSendGrid() private readonly sendGrid: SendGridService,
   ) {}
 
   async registerClient(client: Socket, user_id: string) {
-    this.connectedClients.set(client, user_id);
+    this.connectedClients.set(client.id, user_id);
   }
 
   removeClient(client: Socket) {
-    this.connectedClients.delete(client);
+    this.connectedClients.delete(client.id);
   }
   async getStickyNote(
     user_id: string,
@@ -75,27 +77,29 @@ export class RetroService {
   }
 
   isClientRegistered(client: Socket): boolean {
-    return this.connectedClients.has(client);
+    return this.connectedClients.has(client.id);
   }
 
   getConnectedClients(): number {
     return this.connectedClients.size;
   }
-
-  getClientUserId(client: Socket) {
-    return this.connectedClients.get(client);
+  getClients() {
+    return this.connectedClients;
   }
-  async startRetro(teamId: string) {
+  getClientUserId(client: Socket) {
+    return this.connectedClients.get(client.id);
+  }
+  startRetro(teamId: string) {
     this.retroStartedTeams.add(teamId);
+    console.log(this.retros);
   }
 
   // Método para completar la retro
   async completeRetro(teamId: string) {
-    // Lógica para completar la retro
-    // ...
-
-    // Eliminar la marca de que la retro ha comenzado para el equipo
+    this.stickyNotes.delete(teamId);
     this.retroStartedTeams.delete(teamId);
+    this.connectedClients.clear();
+    this.retros.delete(teamId);
   }
 
   // Método para verificar si la retro ha comenzado para un equipo
@@ -110,6 +114,7 @@ export class RetroService {
 
     try {
       const { token, team_id, scrum_id } = data;
+      this.startRetro(team_id);
       console.log(scrum_id);
       const convertedTeamId = new Types.ObjectId(team_id);
       const tokenWithoutQuotes = token.replace(/^"|"$/g, '');
@@ -177,8 +182,10 @@ export class RetroService {
 
     if (vote === 'thumb_up') {
       stickyNote.thumb_up += 1;
+      console.log(stickyNote);
     } else if (vote === 'thumb_down') {
       stickyNote.thumb_down += 1;
+      console.log(stickyNote);
     }
 
     console.log(this.stickyNotes);
@@ -219,32 +226,43 @@ export class RetroService {
   }
   async completeRetroAndSendStickyNotes(team_id: string) {
     const stickyNotesMap = this.stickyNotes.get(team_id);
-
-    const allColumns = ['c1', 'c2', 'c3', 'c4'];
-
-    const formattedStickyNotes = Object.fromEntries(
-      allColumns.map((column) => [
-        column,
-        (stickyNotesMap?.get(column) || []).map(
-          ({ value, thumb_up, thumb_down }) => ({
-            value,
-            thumb_up,
-            thumb_down,
-          }),
-        ),
-      ]),
-    );
-
-    console.log({ ...formattedStickyNotes });
+    const convertedTeamId = new Types.ObjectId(team_id);
     try {
-      const resp = await axios.post(
-        `https://us-central1-esencia-app.cloudfunctions.net/retro`,
-        { ...formattedStickyNotes, team_id, sprint: 1 },
+      const resp = await this.teamModel.findOneAndUpdate(
+        convertedTeamId,
+        { $inc: { sprint: 1 } }, // Utiliza $inc para incrementar el valor del campo
+        { new: true }, // Devuelve el documento actualizado
       );
       console.log(resp);
     } catch (error) {
       console.log(error);
+    } finally {
+      const allColumns = ['c1', 'c2', 'c3', 'c4'];
+
+      const formattedStickyNotes = Object.fromEntries(
+        allColumns.map((column) => [
+          column,
+          (stickyNotesMap?.get(column) || []).map(
+            ({ value, thumb_up, thumb_down }) => ({
+              value,
+              thumb_up,
+              thumb_down,
+            }),
+          ),
+        ]),
+      );
+
+      console.log({ ...formattedStickyNotes });
     }
+
+    // try {
+    //   // const resp = await axios.post(
+    //   //   `https://us-central1-esencia-app.cloudfunctions.net/retro`,
+    //   //   { ...formattedStickyNotes, team_id, sprint: 1 },
+    //   console.log('Enviando retro a la api');
+    // } catch (error) {
+    //   console.log(error);
+    // }
   }
   private updateStickyNotesInMemory(
     team_id: string,
@@ -310,6 +328,8 @@ export class RetroService {
               { secret: process.env.JWT_SECRET_KEY },
             );
             const convertedUserId = new Types.ObjectId(member._id);
+            console.log({ UserId: convertedUserId });
+
             const emailData = await sendRetroMail(
               token,
               teamId,
