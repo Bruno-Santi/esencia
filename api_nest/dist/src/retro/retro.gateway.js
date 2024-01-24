@@ -36,14 +36,6 @@ let RetroGateway = class RetroGateway {
         console.log(user_id);
         const clients = await this.retroService.getClients();
         console.log(clients);
-        const entries = Array.from(clients.entries());
-        console.log(entries);
-        const idsArray = entries.map(([key, value]) => value);
-        if (idsArray.includes(user_id) || idsArray.includes(scrum_id)) {
-            console.log(`Disconnecting client with id: ${user_id || scrum_id}`);
-            client.disconnect(true);
-            return;
-        }
         const userLength = this.retroService.getConnectedClients();
         if (user_id) {
             await this.retroService.registerClient(client, user_id);

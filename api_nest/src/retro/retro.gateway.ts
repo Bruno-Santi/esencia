@@ -52,18 +52,18 @@ export class RetroGateway implements OnGatewayConnection, OnGatewayDisconnect {
     console.log(user_id);
     const clients = await this.retroService.getClients();
     console.log(clients);
-    const entries = Array.from(clients.entries());
+    // const entries = Array.from(clients.entries());
 
-    console.log(entries);
+    // console.log(entries);
 
-    const idsArray = entries.map(([key, value]) => value);
+    // const idsArray = entries.map(([key, value]) => value);
 
-    // Verificar si el user_id o scrum_id está repetido en el array
-    if (idsArray.includes(user_id) || idsArray.includes(scrum_id)) {
-      console.log(`Disconnecting client with id: ${user_id || scrum_id}`);
-      client.disconnect(true);
-      return;
-    }
+    // // Verificar si el user_id o scrum_id está repetido en el array
+    // if (idsArray.includes(user_id) || idsArray.includes(scrum_id)) {
+    //   console.log(`Disconnecting client with id: ${user_id || scrum_id}`);
+    //   client.disconnect(true);
+    //   return;
+    // }
     // if (Object.values(clients) === (user_id || scrum_id)) {
     //   client.disconnect();
     // }
