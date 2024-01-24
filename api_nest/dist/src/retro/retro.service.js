@@ -103,7 +103,7 @@ let RetroService = class RetroService {
                 this.retros.set(teamIdString, teamIdString);
                 console.log(this.retros);
             }
-            const retroUrl = `http://localhost:5173/members/retro?token=${tokenWithoutQuotes}&team_id=${team_id}&scrum_id=${scrum_id}`;
+            const retroUrl = `https://esencia.app/members/retro?token=${tokenWithoutQuotes}&team_id=${team_id}&scrum_id=${scrum_id}`;
             console.log(retroUrl);
             return retroUrl;
         }
