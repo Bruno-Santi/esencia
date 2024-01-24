@@ -32,9 +32,9 @@ export class DataService {
       const dashboardData = await axios.get(
         `https://us-central1-esencia-app.cloudfunctions.net/dashboard_data?team_id=${teamId}`,
       );
-      await axios.post(
-        `https://us-central1-esencia-app.cloudfunctions.net/short_recommendation?team_id=${teamId}`,
-      );
+      // await axios.post(
+      //   `https://us-central1-esencia-app.cloudfunctions.net/short_recommendation?team_id=${teamId}`,
+      // );
       const { data } = dashboardData;
       return {
         data,

@@ -9,7 +9,7 @@ const renderValue = (value: unknown): React.ReactNode => {
 };
 export const DataCollectionReport = () => {
   const { dataAmount } = useDashboard();
-  if (dataAmount.length === 0) return <p className='text-2xl'>NO DATA YET, TRY MAKING ACTIONS</p>;
+  if (dataAmount.length === 0) return null;
 
   return (
     <div

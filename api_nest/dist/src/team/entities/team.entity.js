@@ -33,6 +33,12 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], Team.prototype, "logo", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({
+        default: 0,
+    }),
+    __metadata("design:type", Number)
+], Team.prototype, "sprint", void 0);
 exports.Team = Team = __decorate([
     (0, mongoose_1.Schema)({ collection: 'teams' })
 ], Team);
