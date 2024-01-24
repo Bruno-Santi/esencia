@@ -15,6 +15,8 @@ export class SurveyController {
 
   @Post()
   postSurvey(@Body() createSurveyDto: CreateSurveyDto) {
+    console.log(createSurveyDto);
+
     return this.surveyService.postSurvey(createSurveyDto);
   }
 }

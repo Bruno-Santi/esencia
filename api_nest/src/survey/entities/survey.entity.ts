@@ -3,42 +3,31 @@ import { Document } from 'mongoose';
 
 @Schema({ collection: 'surveys' })
 export class Survey extends Document {
-  @Prop({
-    required: false,
-  })
-  userId: string;
-  @Prop({
-    required: true,
-  })
-  teamId: string;
-  @Prop({
-    required: true,
-  })
-  question1: number;
-  @Prop({
-    required: true,
-  })
-  question2: number;
-  @Prop({
-    required: true,
-  })
-  question3: number;
-  @Prop({
-    required: true,
-  })
-  question4: number;
-  @Prop({
-    required: false,
-  })
-  comment: string;
+  @Prop({ required: true })
+  team_id: string;
 
-  @Prop({
-    required: false,
-  })
+  @Prop({ required: true })
+  user_id: string;
+
+  @Prop({ required: false })
   sprint: number;
-  @Prop({
-    required: true,
-  })
+
+  @Prop({ type: Object, required: false })
+  comment: { content: string };
+
+  @Prop({ type: Object, required: true })
+  question1: { content: string; value: number };
+
+  @Prop({ type: Object, required: true })
+  question2: { content: string; value: number };
+
+  @Prop({ type: Object, required: true })
+  question3: { content: string; value: number };
+
+  @Prop({ type: Object, required: true })
+  question4: { content: string; value: number };
+
+  @Prop({ required: true })
   date: Date;
 }
 
