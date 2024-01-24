@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useQuestions } from "../../hooks";
-import { questions } from "../data/questions";
+import { finalRandomizedQuestions as questions } from "../data/questions";
 import { useEffect } from "react";
 
 export const Questions = ({ token, team_id, user_id }) => {
@@ -8,14 +8,12 @@ export const Questions = ({ token, team_id, user_id }) => {
   const { rangeValues, changesMade, handleChange, loading, handleNavigateToComment } = useQuestions(
     token,
     team_id,
-    user_id
+    user_id,
+    questions
   );
 
   const handleContinue = () => {
-    // Puedes realizar alguna validación adicional aquí antes de continuar
-    // Por ejemplo, asegurarte de que se hayan realizado cambios (changesMade) antes de continuar
     if (changesMade) {
-      // Navegar a la interfaz de comentarios con el estado actual de rangeValues
       navigate("/members/comments", {
         state: { dailySurvey: { team_id, sprint: 2, comment: "", ...getRangeValuesObject() } },
       });
@@ -23,7 +21,6 @@ export const Questions = ({ token, team_id, user_id }) => {
   };
 
   const getRangeValuesObject = () => {
-    // Convertir los valores de rango a un objeto
     return questions.reduce((acc, { id }) => {
       return {
         ...acc,

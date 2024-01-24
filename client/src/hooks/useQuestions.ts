@@ -1,31 +1,19 @@
-import { ChangeEvent, SyntheticEvent, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../helpers/apiToken";
 
-export const useQuestions = (token, team_id, user_id) => {
+export const useQuestions = (token, team_id, user_id, randomizedQuestions) => {
   const navigate = useNavigate();
-  const [isSendend, setIsSendend] = useState(false);
+
   const [changesMade, setChangesMade] = useState(false);
   const [loading, setLoading] = useState();
-  const [data, setData] = useState();
-  const [rangeValues, setRangeValues] = useState([
-    {
-      id: "question1",
+
+  const [rangeValues, setRangeValues] = useState(
+    randomizedQuestions.map((question) => ({
+      id: question.id,
       value: 5,
-    },
-    {
-      id: "question2",
-      value: 5,
-    },
-    {
-      id: "question3",
-      value: 5,
-    },
-    {
-      id: "question4",
-      value: 5,
-    },
-  ]);
+    }))
+  );
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -36,24 +24,36 @@ export const useQuestions = (token, team_id, user_id) => {
   };
 
   const handleNavigateToComment = () => {
-    const requestBody = rangeValues.reduce((acc, item, index) => {
-      const questionKey = `question${index + 1}`;
-      return {
-        ...acc,
-        [questionKey]: item.value,
-      };
-    }, {});
+    const transformedQuestions = rangeValues.reduce((acc, item, index) => {
+      const questionData = randomizedQuestions.find((q) => q.id === item.id);
+
+      if (questionData) {
+        return [
+          ...acc,
+          {
+            id: item.id,
+            content: questionData.question,
+            value: item.value / 10,
+          },
+        ];
+      }
+      return acc;
+    }, []);
 
     const dailySurvey = {
       team_id: team_id,
       user_id: user_id,
       sprint: 2,
       comment: "",
-      ...requestBody,
+      ...transformedQuestions.reduce((acc, item) => {
+        acc[item.id] = { content: item.content, value: item.value };
+        return acc;
+      }, {}),
     };
+    console.log(dailySurvey);
 
     navigate(`/members/comments?token=${token}&team_id=${team_id}`, {
-      state: { dailySurvey }, // Aquí estás pasando el estado a través de la opción state
+      state: { dailySurvey },
     });
   };
 

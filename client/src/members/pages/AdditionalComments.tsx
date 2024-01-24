@@ -69,10 +69,14 @@ export const AdditionalComments = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const data = {
       ...dailySurvey,
-      comment: comment || "",
+      comment: {
+        content: comment || "",
+      },
     };
+    console.log(data);
 
     toast.promise(sendFunction(data), {
       pending: "Enviando encuesta... ⏳",
