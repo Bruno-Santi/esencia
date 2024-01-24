@@ -1,0 +1,43 @@
+/// <reference types="mongoose/types/aggregate" />
+/// <reference types="mongoose/types/callback" />
+/// <reference types="mongoose/types/collection" />
+/// <reference types="mongoose/types/connection" />
+/// <reference types="mongoose/types/cursor" />
+/// <reference types="mongoose/types/document" />
+/// <reference types="mongoose/types/error" />
+/// <reference types="mongoose/types/expressions" />
+/// <reference types="mongoose/types/helpers" />
+/// <reference types="mongoose/types/middlewares" />
+/// <reference types="mongoose/types/indexes" />
+/// <reference types="mongoose/types/models" />
+/// <reference types="mongoose/types/mongooseoptions" />
+/// <reference types="mongoose/types/pipelinestage" />
+/// <reference types="mongoose/types/populate" />
+/// <reference types="mongoose/types/query" />
+/// <reference types="mongoose/types/schemaoptions" />
+/// <reference types="mongoose/types/schematypes" />
+/// <reference types="mongoose/types/session" />
+/// <reference types="mongoose/types/types" />
+/// <reference types="mongoose/types/utility" />
+/// <reference types="mongoose/types/validation" />
+/// <reference types="mongoose/types/virtuals" />
+/// <reference types="mongoose" />
+/// <reference types="mongoose/types/inferschematype" />
+import { MembersService } from './members.service';
+import { CreateMemberDto } from './dto/create-member.dto';
+export declare class MembersController {
+    private readonly membersService;
+    constructor(membersService: MembersService);
+    create(createMemberDto: CreateMemberDto): Promise<{
+        created: string;
+        newMember: CreateMemberDto;
+    }>;
+    get(teamId: string): Promise<{
+        members: (import("mongoose").Document<unknown, {}, import("./entities/member.entity").Member> & import("./entities/member.entity").Member & {
+            _id: import("mongoose").Types.ObjectId;
+        })[];
+    }>;
+    deleteOne(memberId: string): Promise<{
+        deleted: string;
+    }>;
+}
