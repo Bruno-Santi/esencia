@@ -9,7 +9,7 @@ import { sendMail } from 'common/utils/emailData';
 import { CreateSurveyDto } from './dto/create-survey.dto';
 import { Survey } from './entities/survey.entity';
 import { TeamService } from 'src/team/team.service';
-import { getTeamData } from '../../../client/src/helpers/getTeamData';
+
 import { Team } from 'src/team/entities/team.entity';
 @Injectable()
 export class SurveyService {
