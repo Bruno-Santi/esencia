@@ -17,9 +17,7 @@ export const useQuestions = (token, team_id, user_id, randomizedQuestions) => {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setRangeValues((prevValues) => [
-      ...prevValues.map((item) => (item.id === name ? { ...item, value: parseInt(value, 10) } : item)),
-    ]);
+    setRangeValues((prevValues) => [...prevValues.map((item) => (item.id === name ? { ...item, value: parseInt(value, 10) } : item))]);
     setChangesMade(true);
   };
 
@@ -43,7 +41,7 @@ export const useQuestions = (token, team_id, user_id, randomizedQuestions) => {
     const dailySurvey = {
       team_id: team_id,
       user_id: user_id,
-      sprint: 2,
+
       comment: "",
       ...transformedQuestions.reduce((acc, item) => {
         acc[item.id] = { content: item.content, value: item.value };

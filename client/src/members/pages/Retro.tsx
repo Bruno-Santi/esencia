@@ -9,17 +9,7 @@ import { StickyModal } from "../components/StickyModal";
 import { useAuthSlice } from "../../hooks/useAuthSlice";
 
 export const Retro = ({ token, team_id, user_id, scrum_id }) => {
-  const {
-    addListeners,
-    serverStatus,
-    handleDeleteNote,
-    membersConnected,
-
-    teamLength,
-    stickyNotes,
-    completeRetro,
-    handleVote,
-  } = useSocket();
+  const { addListeners, serverStatus, handleDeleteNote, membersConnected, handleConnect, teamLength, stickyNotes, completeRetro, handleVote } = useSocket();
 
   const { toggleModal, stickyModal, notes } = useStickyNote();
 
@@ -43,7 +33,7 @@ export const Retro = ({ token, team_id, user_id, scrum_id }) => {
   };
 
   useEffect(() => {
-    addListeners();
+    handleConnect();
   }, []);
 
   if (serverStatus === "Disconnected") return <NoServer />;
@@ -52,10 +42,7 @@ export const Retro = ({ token, team_id, user_id, scrum_id }) => {
       {stickyModal && <StickyModal handleClick={handleClick} selectedNote={selectedNote} />}
 
       {user && (
-        <button
-          onClick={() => completeRetro(team_id)}
-          className='btn-primary flex p-2 my-4 rounded-md justify-center m-auto'
-        >
+        <button onClick={() => completeRetro(team_id)} className='btn-primary flex p-2 my-4 rounded-md justify-center m-auto'>
           Complete Retro
         </button>
       )}
@@ -77,9 +64,7 @@ export const Retro = ({ token, team_id, user_id, scrum_id }) => {
             <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 absolute'>
               {stickyNotes &&
                 stickyNotes
-                  .filter(
-                    (note, index, arr) => arr.findIndex((n) => n.value === note.value && n.column === "c1") === index
-                  )
+                  .filter((note, index, arr) => arr.findIndex((n) => n.value === note.value && n.column === "c1") === index)
                   .map((note, index) => (
                     <div
                       key={index}
@@ -89,10 +74,7 @@ export const Retro = ({ token, team_id, user_id, scrum_id }) => {
                       }}
                       className='text-primary p-1 grid grid-cols-5 grid-rows-5 md:[130px] md:h-[130px] lg:w-[150px] lg:h-[150px] text-lg relative'
                     >
-                      <span
-                        className='md:text-xs lg:text-sm w-[120px]'
-                        style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}
-                      >
+                      <span className='md:text-xs lg:text-sm w-[120px]' style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
                         {note.value}
                       </span>
 
@@ -143,9 +125,7 @@ export const Retro = ({ token, team_id, user_id, scrum_id }) => {
             <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 absolute'>
               {stickyNotes &&
                 stickyNotes
-                  .filter(
-                    (note, index, arr) => arr.findIndex((n) => n.value === note.value && n.column === "c2") === index
-                  )
+                  .filter((note, index, arr) => arr.findIndex((n) => n.value === note.value && n.column === "c2") === index)
                   .map((note, index) => (
                     <div
                       key={index}
@@ -155,10 +135,7 @@ export const Retro = ({ token, team_id, user_id, scrum_id }) => {
                       }}
                       className='text-primary p-1 grid grid-cols-5 grid-rows-5 md:[120px] md:h-[120px] lg:w-[145px] lg:h-[145px] text-lg relative'
                     >
-                      <span
-                        className='md:text-xs lg:text-sm w-[120px]'
-                        style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}
-                      >
+                      <span className='md:text-xs lg:text-sm w-[120px]' style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
                         {note.value}
                       </span>
 
@@ -208,9 +185,7 @@ export const Retro = ({ token, team_id, user_id, scrum_id }) => {
             <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 absolute'>
               {stickyNotes &&
                 stickyNotes
-                  .filter(
-                    (note, index, arr) => arr.findIndex((n) => n.value === note.value && n.column === "c3") === index
-                  )
+                  .filter((note, index, arr) => arr.findIndex((n) => n.value === note.value && n.column === "c3") === index)
                   .map((note, index) => (
                     <div
                       key={index}
@@ -220,10 +195,7 @@ export const Retro = ({ token, team_id, user_id, scrum_id }) => {
                       }}
                       className='text-primary p-1 grid grid-cols-5 grid-rows-5 md:[120px] md:h-[120px] lg:w-[145px] lg:h-[145px] text-lg relative'
                     >
-                      <span
-                        className='md:text-xs lg:text-sm w-[120px]'
-                        style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}
-                      >
+                      <span className='md:text-xs lg:text-sm w-[120px]' style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
                         {note.value}
                       </span>
 
@@ -275,9 +247,7 @@ export const Retro = ({ token, team_id, user_id, scrum_id }) => {
             <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 absolute'>
               {stickyNotes &&
                 stickyNotes
-                  .filter(
-                    (note, index, arr) => arr.findIndex((n) => n.value === note.value && n.column === "c4") === index
-                  )
+                  .filter((note, index, arr) => arr.findIndex((n) => n.value === note.value && n.column === "c4") === index)
                   .map((note, index) => (
                     <div
                       key={index}
@@ -287,10 +257,7 @@ export const Retro = ({ token, team_id, user_id, scrum_id }) => {
                       }}
                       className='text-primary p-1 grid grid-cols-5 grid-rows-5 md:[120px] md:h-[120px] lg:w-[145px] lg:h-[145px] text-lg relative'
                     >
-                      <span
-                        className='md:text-xs lg:text-sm w-[120px]'
-                        style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}
-                      >
+                      <span className='md:text-xs lg:text-sm w-[120px]' style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
                         {note.value}
                       </span>
 

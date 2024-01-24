@@ -1,5 +1,6 @@
 import api from "../../helpers/apiToken";
 import { toast } from "react-toastify";
+import { useSocket } from "./useSocket";
 
 export const useCreateRetro = () => {
   const createLocalStorage = (token, team_id, scrum_id) => {
@@ -7,6 +8,7 @@ export const useCreateRetro = () => {
     localStorage.setItem("team_id", team_id);
     localStorage.setItem("scrum_id", scrum_id);
   };
+  const { handleSendRetro } = useSocket();
   const handleNewRetro = async (token, team_id, scrum_id) => {
     console.log(token, team_id, scrum_id);
     createLocalStorage(token, team_id, scrum_id);
@@ -29,7 +31,7 @@ export const useCreateRetro = () => {
 
     try {
       const response = await api.post("/api/retro-email/create", { token, team_id, scrum_id });
-
+      handleSendRetro(team_id);
       console.log(response);
 
       setTimeout(() => {

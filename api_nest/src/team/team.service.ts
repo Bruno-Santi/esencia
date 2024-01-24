@@ -64,7 +64,8 @@ export class TeamService {
     console.log(teamId);
 
     const team = await this.teamModel.findOne({ _id: teamId });
-    console.log(team.name);
+    console.log(team);
+    console.log(team.sprint);
 
     if (!team) throw new BadRequestException(`Team ${teamId} doesn't exist`);
     return team;

@@ -41,7 +41,6 @@ export const useSocket = () => {
     socket.once(SOCKET_EVENTS.CONNECT, handleConnect);
     socket.on(SOCKET_EVENTS.DISCONNECT, handleDisconnect);
     socket.on(SOCKET_EVENTS.STICKY_NOTE_EDITED, handleStickyNoteEdited);
-
     socket.on(SOCKET_EVENTS.USER_LENGTH, handleClientsUpdated);
     socket.on(SOCKET_EVENTS.SET_TEAMS, () => handleSetTeams(team_id));
     socket.on(SOCKET_EVENTS.TEAM_LENGTH, handleTeamLength);
@@ -54,8 +53,7 @@ export const useSocket = () => {
     });
     socket.on("retroCompleted", retroCompleted);
     socket.on(SOCKET_EVENTS.STICKY_NOTE_RATED, handleStickyNoteRated);
-    socket.on(SOCKET_EVENTS.DISCONNECT_TEAM, handleDisconnectTeam); // Agregado el nuevo evento
-
+    socket.on(SOCKET_EVENTS.DISCONNECT_TEAM, handleDisconnectTeam);
     socket.on(SOCKET_EVENTS.CONNECT, () => {
       socket.emit("getStickyNotes", { user_id, team_id });
     });
@@ -64,9 +62,7 @@ export const useSocket = () => {
     });
   };
   const handleStickyNoteDeleted = ({ user_id, team_id, noteContent }) => {
-    setStickyNotes((prevNotes) =>
-      prevNotes.filter((note) => !(note.user_id === user_id && note.team_id === team_id && note.value === noteContent))
-    );
+    setStickyNotes((prevNotes) => prevNotes.filter((note) => !(note.user_id === user_id && note.team_id === team_id && note.value === noteContent)));
   };
 
   const handleConnect = () => {
@@ -101,21 +97,23 @@ export const useSocket = () => {
       }));
     }
 
-    if (!userVotes[column][vote]) {
-      setUserVotes((prevUserVotes) => ({
+    setUserVotes((prevUserVotes) => {
+      const updatedVotes = {
         ...prevUserVotes,
         [column]: { ...prevUserVotes[column], [vote]: prevUserVotes[column][vote] + 1 },
-      }));
+      };
+
+      console.log("llego aca");
+      console.log("Updated userVotes:", updatedVotes);
+
       socket.emit("rateStickyNote", { user_id, team_id, column, vote, value });
-    }
+
+      return updatedVotes;
+    });
   };
   const handleStickyNoteEdited = ({ user_id, team_id, noteContent, newNoteContent }) => {
     setStickyNotes((prevNotes) =>
-      prevNotes.map((note) =>
-        note.user_id === user_id && note.team_id === team_id && note.value === noteContent
-          ? { ...note, value: newNoteContent }
-          : note
-      )
+      prevNotes.map((note) => (note.user_id === user_id && note.team_id === team_id && note.value === noteContent ? { ...note, value: newNoteContent } : note))
     );
   };
 
@@ -124,9 +122,9 @@ export const useSocket = () => {
     socket.emit(SOCKET_EVENTS.EDIT_STICKY_NOTE, { user_id, team_id, noteContent, newNoteContent });
   };
   const handleStickyNoteRated = (updatedStickyNote) => {
-    setStickyNotes((prevNotes) =>
-      prevNotes.map((note) => (note.value === updatedStickyNote.value ? { ...note, ...updatedStickyNote } : note))
-    );
+    console.log(updatedStickyNote);
+
+    setStickyNotes((prevNotes) => prevNotes.map((note) => (note.value === updatedStickyNote.value ? { ...note, ...updatedStickyNote } : note)));
   };
   const retroCompleted = () => {
     console.log("completado");
@@ -144,13 +142,12 @@ export const useSocket = () => {
   const handleDeleteNote = (noteContent) => {
     if (user_id === "null") user_id = scrum_id;
     socket.emit("deleteStickyNote", { user_id, team_id, noteContent });
-    setStickyNotes((prevNotes) =>
-      prevNotes.filter((note) => !(note.user_id === user_id && note.team_id === team_id && note.value === noteContent))
-    );
+    setStickyNotes((prevNotes) => prevNotes.filter((note) => !(note.user_id === user_id && note.team_id === team_id && note.value === noteContent)));
   };
 
   const handleClientsUpdated = (clients) => {
     setMembersConnected(clients);
+    console.log(membersConnected);
   };
 
   const handleSetTeams = (team_id) => {
@@ -178,12 +175,12 @@ export const useSocket = () => {
 
   useEffect(() => {
     addListeners();
-    handleConnect();
+
     console.log("conectado");
   }, []);
 
   const handleStartRetro = (team_id) => {
-    socket.emit("startRetro", { team_id });
+    socket.emit("startRetro", team_id);
   };
   const sendStickyNote = (column, value) => {
     if (user_id === "null") user_id = scrum_id;
@@ -207,8 +204,8 @@ export const useSocket = () => {
   };
 
   const sendRetroToServer = async (teamId) => {
-    socket.emit("sendRetro", { teamId });
     console.log(team_id);
+    socket.emit("sendRetro", { teamId });
   };
 
   const redirectToRetro = () => {
@@ -218,12 +215,16 @@ export const useSocket = () => {
     window.location.href = retroUrl;
   };
   const handleSendRetro = async (team_id) => {
-    await handleStartRetro(team_id);
+    try {
+      await sendRetroToServer(team_id);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      await handleStartRetro(team_id);
+      handleConnect();
 
-    console.log(team_id);
-    handleConnect();
-    await sendRetroToServer(team_id);
-    redirectToRetro();
+      redirectToRetro();
+    }
   };
 
   const handleCompleteRetroRedirect = ({ redirectUrl }) => {
