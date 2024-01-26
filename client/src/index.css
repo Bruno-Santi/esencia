@@ -51,6 +51,13 @@
   position: relative;
   z-index: 400;
 }
+.modal-content-dark {
+  background: #1a1423;
+  padding: 20px;
+  border-radius: 8px;
+  position: relative;
+  z-index: 400;
+}
 .sticky-content {
   background: #ffd60a;
   padding: 40px;

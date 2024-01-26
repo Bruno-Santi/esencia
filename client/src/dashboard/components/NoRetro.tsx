@@ -16,10 +16,10 @@ export const NoRetro = () => {
   const team_id = activeTeam._id;
   const token = localStorage.getItem("authToken");
   const initialQuestions = {
-    c1: "What went well?",
-    c2: "What went wrong?",
-    c3: "What need to be improved?",
-    c4: "What should we start doing?",
+    c1: "¿Qué salió bien?",
+    c2: "¿Qué salió mal?",
+    c3: "¿Qué necesita ser mejorado?",
+    c4: "¿Qué deberíamos comenzar a hacer?",
   };
   const { handleNewRetro } = useCreateRetro();
   const [questions, setQuestions] = useState({ ...initialQuestions });
@@ -198,7 +198,10 @@ export const NoRetro = () => {
       <div className=''>
         <button
           onClick={() => {
-            handleNewRetro(token, team_id, scrum_id);
+            console.log("me click");
+            console.log(token, team_id, scrum_id, questions);
+
+            handleNewRetro(token, team_id, scrum_id, questions);
           }}
           className='btn-primary  duration-700 hover:bg-primary p-4 mt-16 rounded-md text-lg  '
         >

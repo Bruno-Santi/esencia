@@ -9,6 +9,7 @@ import {
 } from '@nestjs/websockets';
 import { RetroService } from './retro.service';
 import { Server, Socket } from 'socket.io';
+import { log } from 'console';
 
 @WebSocketGateway({ cors: { origin: '*' }, namespace: '/retro' })
 export class RetroGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -18,6 +19,33 @@ export class RetroGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @WebSocketServer() wss: Server;
 
+  @SubscribeMessage('saveQuestions')
+  async handleSaveQuestions(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() { team_id, questions }: any,
+  ) {
+    console.log('Preguntas recibidas:', questions);
+    await this.retroService.saveQuestionsInMemory(team_id, questions);
+    this.wss.emit('questions', { team_id, questions });
+    // Resto del código para guardar las preguntas...
+  }
+
+  async handleQuestions(client: Socket) {
+    client.on('saveQuestions', async (data) => {
+      try {
+        console.log({ data: data });
+
+        const { team_id, questions } = data;
+        console.log(team_id, questions);
+
+        await this.retroService.saveQuestionsInMemory(team_id, questions);
+
+        this.wss.emit('questions', { team_id, questions });
+      } catch (error) {
+        console.error('Error handling saveQuestions:', error);
+      }
+    });
+  }
   async handleConnection(client: Socket) {
     client.on(
       'setUserId',
@@ -89,10 +117,14 @@ export class RetroGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (team_id) {
       if (this.retroService.isRetroStarted(team_id)) {
         client.join(team_id);
+        console.log(`Client joined room: ${team_id}`);
 
         const allStickyNotes =
           await this.retroService.getAllStickyNotes(team_id);
         this.wss.emit('stickyNotes', allStickyNotes);
+        const allQuestions = await this.retroService.getAllQuestions(team_id);
+        this.wss.emit('questions', allQuestions);
+        console.log(allQuestions);
 
         // for (const [key, value] of entries) {
         //   console.log(`Property: ${key}, Value: ${value}`);
@@ -203,12 +235,16 @@ export class RetroGateway implements OnGatewayConnection, OnGatewayDisconnect {
       await this.retroService.startRetro(team_id);
       console.log({ creandoRetro: 'ok' });
 
+      // Emitir evento 'retroStarted'
       this.wss.to(team_id).emit('retroStarted', { team_id });
+
+      // Manejar las preguntas después de que la retro ha comenzado
+      const questions = await this.retroService.getAllQuestions(team_id); // Obtener preguntas
+      this.wss.to(team_id).emit('questions', questions); // Emitir las preguntas a los clientes
     } catch (error) {
       console.error('Error starting retro:', error);
     }
   }
-
   @SubscribeMessage('completeRetro')
   async handleCompleteRetro(
     @MessageBody() { team_id }: any,

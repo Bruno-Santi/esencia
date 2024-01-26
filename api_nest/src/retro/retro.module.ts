@@ -3,34 +3,37 @@ import { RetroService } from './retro.service';
 import { RetroGateway } from './retro.gateway';
 import { MembersModule } from 'src/members/members.module';
 import { RetroEmailController } from './retro.controller';
-import { TeamService } from 'src/team/team.service';
+
 import { SendGridModule } from '@ntegral/nestjs-sendgrid';
 import { TeamModule } from 'src/team/team.module';
 import { MembersService } from 'src/members/members.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { StickyNote, StickyNoteSchema } from './entities/sticky-note.entity';
+
 import { MailerModule } from '@nestjs-modules/mailer';
+import { Retro, RetroSchema } from './entities/retro.entity';
+
 @Module({
   controllers: [RetroEmailController],
   providers: [RetroGateway, RetroService, MembersService],
   imports: [
     MongooseModule.forFeature([
       {
-        name: StickyNote.name,
-        schema: StickyNoteSchema,
-        collection: 'stickynotes',
+        name: Retro.name,
+        schema: RetroSchema,
+        collection: 'TeamRetro',
       },
     ]),
+    // Coma adicional eliminada aquí
     MailerModule.forRoot({
       transport: {
-        host: 'smtp.office365.com', // o tu servidor SMTP de Outlook
+        host: 'smtp.office365.com',
         port: 587,
         secure: false,
         auth: {
           user: process.env.EMAIL_USER,
           pass: process.env.EMAIL_PASSWORD,
         },
-        authMethod: 'PLAIN', // Agrega esta línea
+        authMethod: 'PLAIN',
       },
     }),
     SendGridModule.forRoot({

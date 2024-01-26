@@ -8,12 +8,12 @@ export const useCreateRetro = () => {
     localStorage.setItem("team_id", team_id);
     localStorage.setItem("scrum_id", scrum_id);
   };
-  const { handleSendRetro } = useSocket();
-  const handleNewRetro = async (token, team_id, scrum_id) => {
-    console.log(token, team_id, scrum_id);
+  const { handleSendRetro, handleSaveQuestions } = useSocket();
+  const handleNewRetro = async (token, team_id, scrum_id, questions) => {
+    console.log(token, team_id, scrum_id, questions);
     createLocalStorage(token, team_id, scrum_id);
     // await sendMail(team_id);
-    toast.promise(createRetro(token, team_id, scrum_id), {
+    toast.promise(createRetro(token, team_id, scrum_id, questions), {
       pending: "Creando retro... ⏳",
       success: "Retro creada. Redireccionando...🚀",
       error: "Error al crear retro ☹️",
@@ -26,12 +26,15 @@ export const useCreateRetro = () => {
   //     console.log(error);
   //   }
   // };
-  const createRetro = async (token, team_id, scrum_id) => {
+  const createRetro = async (token, team_id, scrum_id, questions) => {
     console.log("holasd");
 
     try {
       const response = await api.post("/api/retro-email/create", { token, team_id, scrum_id });
-      handleSendRetro(team_id);
+      await handleSendRetro(team_id, questions);
+
+      console.log(questions);
+
       console.log(response);
 
       setTimeout(() => {

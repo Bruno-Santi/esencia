@@ -3,6 +3,8 @@ import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { Manager } from "socket.io-client";
 import { useAuthSlice } from "../../hooks/useAuthSlice";
 import { useDashboard } from "../../hooks/useDashboard";
+import { connect } from "react-redux";
+import { questions } from "../data/questions";
 
 const SOCKET_EVENTS = {
   CONNECT: "connect",
@@ -19,10 +21,12 @@ const SOCKET_EVENTS = {
   DISCONNECT_TEAM: "disconnectTeam",
   EDIT_STICKY_NOTE: "editStickyNote",
   STICKY_NOTE_EDITED: "stickyNoteEdited",
+  GET_QUESTIONS: "questions",
 };
 const API_URL_DEPLOY = `https://esencia-api.onrender.com`;
 const RETRO_URL_DEPLOY = `https://esencia.app`;
-const RETRO_URL_LOCAL = `http://localhost:5173`;
+const RETRO_URL_LOCAL = `http://localhost:3000`;
+const CLIENT_URL = `http://localhost:5173`;
 const socket = new Manager(`${API_URL_DEPLOY}/socket.io/socket.io.js`).socket("/retro");
 
 export const useSocket = () => {
@@ -31,6 +35,7 @@ export const useSocket = () => {
   const [teamLength, setTeamLength] = useState(0);
   const { activeTeam } = useDashboard();
   const [stickyNotes, setStickyNotes] = useState([]);
+  const [questions, setQuestions] = useState({ c1: "", c2: "", c3: "", c4: "" });
   const [retroSent, setRetroSent] = useState(false);
   const [userVotes, setUserVotes] = useState({});
   const { user } = useAuthSlice();
@@ -51,6 +56,7 @@ export const useSocket = () => {
     socket.on(SOCKET_EVENTS.STICKY_NOTES, handleStickyNotes);
     socket.on(SOCKET_EVENTS.DELETE_STICKY_NOTES, handleDeleteNote);
     socket.on(SOCKET_EVENTS.STICKY_NOTE_DELETED, handleStickyNoteDeleted);
+    socket.on(SOCKET_EVENTS.GET_QUESTIONS, handleGetQuestions);
     socket.on(SOCKET_EVENTS.COMPLETE_RETRO_REDIRECT, () => {
       navigate("/members/retro/finished");
     });
@@ -64,7 +70,10 @@ export const useSocket = () => {
   const handleStickyNoteDeleted = ({ user_id, team_id, noteContent }) => {
     setStickyNotes((prevNotes) => prevNotes.filter((note) => !(note.user_id === user_id && note.team_id === team_id && note.value === noteContent)));
   };
-
+  const handleGetQuestions = (questions) => {
+    setQuestions(questions);
+    console.log(questions);
+  };
   const handleConnect = () => {
     console.log(user_id, scrum_id, team_id);
     if (team_id || activeTeam._id) {
@@ -76,6 +85,17 @@ export const useSocket = () => {
     }
   };
 
+  const handleSaveQuestions = async (team_id, questions) => {
+    console.log(team_id, questions);
+
+    // Verifica si las preguntas están definidas y no son vacías
+    if (team_id && questions) {
+      await connect();
+      socket.emit("saveQuestions", { team_id, questions });
+    } else {
+      console.error("Error: Preguntas vacías o no definidas");
+    }
+  };
   const handleStickyNotes = (notes) => {
     const updatedUserVotes = {};
     notes.forEach((note) => {
@@ -210,20 +230,21 @@ export const useSocket = () => {
 
   const redirectToRetro = () => {
     const tokenSinComillas = token.replace(/^"|"$/g, "");
-    const retroUrl = `${RETRO_URL_LOCAL}/members/retro?token=${tokenSinComillas}&team_id=${activeTeam._id}&scrum_id=${user.id}`;
+    const retroUrl = `${CLIENT_URL}/members/retro?token=${tokenSinComillas}&team_id=${activeTeam._id}&scrum_id=${user.id}`;
 
     window.location.href = retroUrl;
   };
-  const handleSendRetro = async (team_id) => {
+  const handleSendRetro = async (team_id, questions) => {
     try {
       await sendRetroToServer(team_id);
     } catch (error) {
       console.log(error);
     } finally {
       await handleStartRetro(team_id);
-      handleConnect();
+      await handleConnect();
 
-      redirectToRetro();
+      await redirectToRetro();
+      await handleSaveQuestions(team_id, questions);
     }
   };
 
@@ -246,5 +267,7 @@ export const useSocket = () => {
     handleSendRetro,
     handleVote,
     editStickyNote,
+    handleSaveQuestions,
+    questions,
   };
 };

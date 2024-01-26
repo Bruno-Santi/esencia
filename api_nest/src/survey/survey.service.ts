@@ -76,7 +76,7 @@ export class SurveyService {
       console.log(team.sprint);
 
       // await axios.post(
-      //   `https://us-central1-esencia-app.cloudfunctions.net/short_recommendation?team_id=${createSurveyDto.team_id}`,
+      //   `${process.env.API_DATA}/short_recommendation?team_id=${createSurveyDto.team_id}`,
       // );
       await this.surveyModel.create({
         ...createSurveyDto,

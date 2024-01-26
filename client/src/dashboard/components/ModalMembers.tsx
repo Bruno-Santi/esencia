@@ -13,7 +13,7 @@ export const ModalMembers: React.FC<{
   const { creatingLoading } = useAuthSlice();
   const { membersActiveTeam, activeTeam, startToggleModal } = useDashboard();
   const [addMember, setAddMember] = useState(false);
-
+  const theme = localStorage.getItem("theme");
   const toggleAddMember = () => {
     setAddMember((prevState) => {
       console.log("Previous state:", prevState);
@@ -25,7 +25,9 @@ export const ModalMembers: React.FC<{
   return (
     <Modal>
       <div
-        className='text-5xl text-primary/60 z-1 cursor-pointer absolute right-4 top-4 duration-700 hover:text-secondary '
+        className={`text-5xl ${
+          theme !== "dark" ? `text-primary/60` : `text-tertiary`
+        } z-1 cursor-pointer absolute right-4 top-4 duration-700 hover:text-secondary `}
         onClick={() => {
           closeModal();
           startToggleModal();
@@ -34,17 +36,17 @@ export const ModalMembers: React.FC<{
         <IoMdClose />
       </div>
       <div className='flex flex-col'>
-        <div className='text-lg font-poppins '>{activeTeam.name} Members</div>
+        <div className={theme === "dark" ? "text-lg font-poppins text-tertiary" : "text-lg font-poppins text-primary"}>{activeTeam.name} Members</div>
         <div
           onClick={toggleAddMember}
           className={
             creatingLoading
-              ? "btn-primary flex w-fit text-xl  mt-4 p-2 rounded-md cursor-pointer duration-700 font-poppins hover:bg-tertiary hover:text-primary"
-              : "btn-secondary flex w-fit text-xl  mt-4 p-2 rounded-md cursor-pointer duration-700 font-poppins"
+              ? "btn-secondary flex w-fit text-xl  mt-4 p-2 rounded-md cursor-pointer duration-700 font-poppins hover:bg-tertiary hover:text-primary"
+              : "btn-primary flex w-fit text-xl  mt-4 p-2 rounded-md cursor-pointer duration-700 font-poppins"
           }
         >
           Add{" "}
-          <i className='text-3xl ml-2 my-auto'>
+          <i className='text-3xl ml-2 my-auto '>
             <CiCirclePlus />
           </i>
         </div>

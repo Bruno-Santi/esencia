@@ -9,7 +9,8 @@ import { StickyModal } from "../components/StickyModal";
 import { useAuthSlice } from "../../hooks/useAuthSlice";
 
 export const Retro = ({ token, team_id, user_id, scrum_id }) => {
-  const { addListeners, serverStatus, handleDeleteNote, membersConnected, handleConnect, teamLength, stickyNotes, completeRetro, handleVote } = useSocket();
+  const { addListeners, serverStatus, questions, handleDeleteNote, membersConnected, handleConnect, teamLength, stickyNotes, completeRetro, handleVote } =
+    useSocket();
 
   const { toggleModal, stickyModal, notes } = useStickyNote();
 
@@ -60,7 +61,7 @@ export const Retro = ({ token, team_id, user_id, scrum_id }) => {
         <section className='grid grid-cols-12 p-2 relative grid-rows-5 gap-5 '>
           {/* Div 1 */}
           <div className='bg-gray-400 relative row-start-1 p-40 px-60 row-end-3 col-start-1 col-end-7 rounded-lg text-2xl flex items-center justify-center'>
-            {initialQuestions.c1}
+            {questions?.c1}
             <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 absolute'>
               {stickyNotes &&
                 stickyNotes
@@ -121,7 +122,7 @@ export const Retro = ({ token, team_id, user_id, scrum_id }) => {
           </div>
           {/* Div 2 */}
           <div className='bg-gray-400 relative row-start-1 row-end-3 col-start-7 col-end-13 rounded-lg text-2xl flex items-center justify-center'>
-            {initialQuestions.c2}
+            {questions?.c2}
             <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 absolute'>
               {stickyNotes &&
                 stickyNotes
@@ -181,7 +182,7 @@ export const Retro = ({ token, team_id, user_id, scrum_id }) => {
             </i>
           </div>
           <div className='bg-gray-400 relative row-start-3 row-end-5 col-start-1 col-end-7 rounded-lg text-2xl flex items-center justify-center'>
-            {initialQuestions.c3}
+            {questions?.c3}
             <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 absolute'>
               {stickyNotes &&
                 stickyNotes
@@ -243,7 +244,7 @@ export const Retro = ({ token, team_id, user_id, scrum_id }) => {
 
           {/* Div 4 */}
           <div className='bg-gray-400 relative row-start-3 row-end-5 col-start-7 col-end-13 rounded-lg text-2xl flex items-center justify-center'>
-            {initialQuestions.c4}
+            {questions?.c4}
             <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 absolute'>
               {stickyNotes &&
                 stickyNotes

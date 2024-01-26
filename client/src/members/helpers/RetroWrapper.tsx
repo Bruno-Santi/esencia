@@ -17,9 +17,6 @@ const RetroWrapper = () => {
     localStorage.setItem("team_id", team_id);
     localStorage.setItem("user_id", user_id);
     localStorage.setItem("scrum_id", scrum_id);
-    console.log("team_id: " + team_id);
-    console.log(user_id);
-    console.log(scrum_id);
 
     setParams({ token, team_id, user_id, scrum_id });
   }, []);

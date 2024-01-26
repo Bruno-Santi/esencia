@@ -9,6 +9,7 @@ export const TeamForm: React.FC<{
   closeModal: () => void;
 }> = ({ closeModal }) => {
   const fileInputRef = useRef(null);
+  const theme = localStorage.getItem("theme");
   const { user } = useAuthSlice();
   const { startCreatingTeam } = useDashboard();
   const { imageSelected, handleImageClick, handleFileChange, isLoading } = useImageUpload(fileInputRef);
@@ -28,11 +29,19 @@ export const TeamForm: React.FC<{
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col mx-auto text-center space-y-12'>
-      <label htmlFor='teamName' className='text-manrope text-2xl mt-4 '>
+      <label htmlFor='teamName' className={`text-manrope text-2xl mt-4 ${theme === "dark" && "text-tertiary"}`}>
         Your team name <span className='text-sm'>(*)</span>{" "}
       </label>
       <input
-        className='h-12 w-64 rounded-md p-2 text-sm font-normal  text-center border-2 duration-500 text-primary focus:outline-none focus:border-2 focus:border-secondary/80 focus:font-bold'
+        className={`
+            h-12 w-64 rounded-md p-2 text-sm font-normal border-b-2
+            duration-500 text-primary focus:outline-none
+            ${
+              theme === "dark"
+                ? "bg-transparent border-b-gray-300 rounded-none text-white placeholder-white"
+                : "border-2  focus:border-secondary/80 focus:font-bold"
+            }
+           `}
         type='text'
         placeholder='Team Name'
         {...register("name", {
@@ -40,7 +49,7 @@ export const TeamForm: React.FC<{
           maxLength: 20,
         })}
       />
-      <label htmlFor='teamLogo' className='text-manrope text-2xl mt-4 '>
+      <label htmlFor='teamLogo' className={`text-manrope text-2xl mt-4 ${theme === "dark" && "text-tertiary"}`}>
         Your team logo
       </label>
       <input
@@ -64,10 +73,7 @@ export const TeamForm: React.FC<{
           />
         </div>
       ) : (
-        <MdUploadFile
-          className='w-24 h-24 cursor-pointer m-auto mt-4 text-tertiary duration-700 hover:text-secondary'
-          onClick={handleImageClick}
-        />
+        <MdUploadFile className='w-24 h-24 cursor-pointer m-auto mt-4 text-tertiary duration-700 hover:text-secondary' onClick={handleImageClick} />
       )}
       <button
         disabled={isLoading}

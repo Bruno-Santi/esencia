@@ -53,9 +53,9 @@ export const NavBar = () => {
             </div>
 
             <a
-              className={`text-${
-                isDropdownOpen ? "tertiary" : "secondary"
-              } m-auto text-4xl ml-2 cursor-pointer duration-500  -rotate-${isDropdownOpen ? "90" : "0"}`}
+              className={`text-${isDropdownOpen ? "tertiary" : "secondary"} m-auto text-4xl ml-2 cursor-pointer duration-500  -rotate-${
+                isDropdownOpen ? "90" : "0"
+              }`}
               onClick={toggleDropdown}
             >
               <IoIosArrowDropdown />
@@ -63,7 +63,7 @@ export const NavBar = () => {
           </div>
 
           {isDropdownOpen && (
-            <div className='absolute top-20 right-4 bg-white border border-tertiary p-2 rounded-md'>
+            <div className='absolute top-20 right-4 bg-white border border-tertiary p-2 rounded-md dark:bg-black dark:border-none'>
               <div
                 onClick={() => {
                   startLogingOut();
