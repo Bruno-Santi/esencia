@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useDashboard } from "../../hooks/useDashboard";
 
 const renderValue = (value: unknown): React.ReactNode => {
@@ -9,6 +10,10 @@ const renderValue = (value: unknown): React.ReactNode => {
 };
 export const DataCollectionReport = () => {
   const { dataAmount } = useDashboard();
+  useEffect(() => {
+    console.log(dataAmount);
+  }, []);
+
   if (dataAmount.length === 0) return null;
 
   return (
@@ -18,10 +23,7 @@ export const DataCollectionReport = () => {
     >
       {Object.entries(dataAmount).map(([key, value]) => (
         <span key={key} className='px-2 text-center text-tertiary flex flex-col'>
-          <span className='font-poppins lg:text-sm md:text-xs'>
-            {" "}
-            {key.replace(/_/g, " ").replace(/\b\w/g, (match) => match.toUpperCase())}:
-          </span>{" "}
+          <span className='font-poppins lg:text-sm md:text-xs'> {key.replace(/_/g, " ").replace(/\b\w/g, (match) => match.toUpperCase())}:</span>{" "}
           <span className='font-poppins  lg:text-sm md:text-xs'>{renderValue(value)}</span>
         </span>
       ))}

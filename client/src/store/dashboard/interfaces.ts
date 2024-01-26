@@ -8,6 +8,7 @@ export interface UserTeams {
   id: string;
   name: string;
   logo: string;
+  sprint?: number;
 }
 
 export interface DashBoardState {

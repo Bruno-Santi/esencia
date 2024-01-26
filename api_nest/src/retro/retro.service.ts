@@ -92,10 +92,13 @@ export class RetroService {
   startRetro(teamId: string) {
     this.retroStartedTeams.add(teamId);
     console.log(this.retros);
+    console.log(this.stickyNotes);
   }
 
   // Método para completar la retro
   async completeRetro(teamId: string) {
+    console.log(teamId);
+
     this.stickyNotes.delete(teamId);
     this.retroStartedTeams.delete(teamId);
     this.connectedClients.clear();

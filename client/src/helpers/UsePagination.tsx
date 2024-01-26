@@ -5,10 +5,7 @@ export const UsePagination = ({ shortRecomendation, containerRef }) => {
   const [paginaActual, setPaginaActual] = useState(1);
   const itemsPorPagina = 1;
 
-  const datosPagina = Object.entries(shortRecomendation).slice(
-    (paginaActual - 1) * itemsPorPagina,
-    paginaActual * itemsPorPagina
-  );
+  const datosPagina = Object.entries(shortRecomendation).slice((paginaActual - 1) * itemsPorPagina, paginaActual * itemsPorPagina);
 
   const paginasTotales = Math.ceil(Object.keys(shortRecomendation).length / itemsPorPagina);
 
@@ -20,14 +17,12 @@ export const UsePagination = ({ shortRecomendation, containerRef }) => {
     }
   };
   if (shortRecomendation === "there are no recommendations")
-    return (
-      <p className='font-poppins mx-auto my-auto flex'>Complete more than 1 survey to get short recommendation's</p>
-    );
+    return <p className='font-poppins mx-auto my-auto flex'>Complete more than 1 survey to get short recommendation's</p>;
   return (
     <div className='flex flex-col my-auto justify-center place-content-center items-center dark:bg-gray-900 dark:text-tertiary'>
       {datosPagina.map(([title, content]) => (
         <div key={title}>
-          <h2 className='font-bold font-manrope text-lg'>{title}:</h2>
+          <h2 className='font-bold font-manrope text-lg dark:text-green-700'>{title}:</h2>
           <p className='font-poppins'>{content}</p>
         </div>
       ))}
@@ -35,19 +30,13 @@ export const UsePagination = ({ shortRecomendation, containerRef }) => {
         <button
           onClick={() => cambiarPagina(paginaActual - 1)}
           disabled={paginaActual === 1}
-          className={
-            paginaActual !== 1 ? "btn-primary p-2 text-center rounded-md" : "btn-secondary p-2 text-center rounded-md"
-          }
+          className={paginaActual !== 1 ? "btn-primary p-2 text-center rounded-md" : "btn-secondary p-2 text-center rounded-md"}
         >
           <RxDoubleArrowLeft />
         </button>
 
         <button
-          className={
-            paginaActual !== paginasTotales
-              ? "btn-primary p-2 text-center rounded-md"
-              : "btn-secondary p-2 text-center rounded-md"
-          }
+          className={paginaActual !== paginasTotales ? "btn-primary p-2 text-center rounded-md" : "btn-secondary p-2 text-center rounded-md"}
           onClick={() => cambiarPagina(paginaActual + 1)}
           disabled={paginaActual === paginasTotales}
         >

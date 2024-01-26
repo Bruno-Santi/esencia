@@ -10,17 +10,17 @@ export const ActiveTeam = () => {
   }, []);
 
   return (
-    <div className='flex mx-auto justify-center my-auto h-full '>
+    <div className='flex mx-auto justify-center my-auto min-h-screen '>
       {!activeTeam ? (
         <div className='flex flex-col justify-center mx-auto my-72 space-y-2 duration-700 '>
           <div className='text-4xl   font-poppins text-primary/80'>
             {!isLoading ? (
-              <span>Select Team</span>
+              <span className='dark:text-tertiary text-primary '>Select Team</span>
             ) : (
-              <div role='status'>
+              <div role='status bg-black h-screen'>
                 <svg
                   aria-hidden='true'
-                  className='inline w-24 h-24 text-gray-200 animate-spin mt-20 dark:text-gray-600 fill-green-500'
+                  className='bg-black inline w-24 h-24 text-gray-200 animate-spin mt-20 dark:text-gray-600 fill-green-500'
                   viewBox='0 0 100 101'
                   fill='none'
                   xmlns='http://www.w3.org/2000/svg'

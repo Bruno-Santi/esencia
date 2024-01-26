@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { Manager } from "socket.io-client";
 import { useAuthSlice } from "../../hooks/useAuthSlice";
 import { useDashboard } from "../../hooks/useDashboard";
@@ -20,7 +20,10 @@ const SOCKET_EVENTS = {
   EDIT_STICKY_NOTE: "editStickyNote",
   STICKY_NOTE_EDITED: "stickyNoteEdited",
 };
-const socket = new Manager("https://esencia-api.onrender.com/socket.io/socket.io.js").socket("/retro");
+const API_URL_DEPLOY = `https://esencia-api.onrender.com`;
+const RETRO_URL_DEPLOY = `https://esencia.app`;
+const RETRO_URL_LOCAL = `http://localhost:5173`;
+const socket = new Manager(`${API_URL_DEPLOY}/socket.io/socket.io.js`).socket("/retro");
 
 export const useSocket = () => {
   const [serverStatus, setServerStatus] = useState("");
@@ -31,7 +34,7 @@ export const useSocket = () => {
   const [retroSent, setRetroSent] = useState(false);
   const [userVotes, setUserVotes] = useState({});
   const { user } = useAuthSlice();
-
+  const navigate = useNavigate();
   const team_id = localStorage.getItem("team_id");
   let user_id = localStorage.getItem("user_id");
   const scrum_id = localStorage.getItem("scrum_id");
@@ -48,17 +51,14 @@ export const useSocket = () => {
     socket.on(SOCKET_EVENTS.STICKY_NOTES, handleStickyNotes);
     socket.on(SOCKET_EVENTS.DELETE_STICKY_NOTES, handleDeleteNote);
     socket.on(SOCKET_EVENTS.STICKY_NOTE_DELETED, handleStickyNoteDeleted);
-    socket.on(SOCKET_EVENTS.COMPLETE_RETRO_REDIRECT, ({ redirectUrl }) => {
-      window.location.href = redirectUrl;
+    socket.on(SOCKET_EVENTS.COMPLETE_RETRO_REDIRECT, () => {
+      navigate("/members/retro/finished");
     });
     socket.on("retroCompleted", retroCompleted);
     socket.on(SOCKET_EVENTS.STICKY_NOTE_RATED, handleStickyNoteRated);
     socket.on(SOCKET_EVENTS.DISCONNECT_TEAM, handleDisconnectTeam);
     socket.on(SOCKET_EVENTS.CONNECT, () => {
       socket.emit("getStickyNotes", { user_id, team_id });
-    });
-    socket.on("completeRetroRedirect", ({ redirectUrl }) => {
-      window.location.href = redirectUrl;
     });
   };
   const handleStickyNoteDeleted = ({ user_id, team_id, noteContent }) => {
@@ -210,7 +210,7 @@ export const useSocket = () => {
 
   const redirectToRetro = () => {
     const tokenSinComillas = token.replace(/^"|"$/g, "");
-    const retroUrl = `https://esencia.app/members/retro?token=${tokenSinComillas}&team_id=${activeTeam._id}&scrum_id=${user.id}`;
+    const retroUrl = `${RETRO_URL_LOCAL}/members/retro?token=${tokenSinComillas}&team_id=${activeTeam._id}&scrum_id=${user.id}`;
 
     window.location.href = retroUrl;
   };

@@ -25,17 +25,25 @@ export class DataService {
     }
   }
 
-  async getDashboardData(teamId) {
+  async getDashboardData(teamId, sprint) {
     try {
       await this.checkTeam(teamId);
 
       const dashboardData = await axios.get(
-        `https://us-central1-esencia-app.cloudfunctions.net/dashboard_data?team_id=${teamId}`,
+        `https://us-central1-esencia-app.cloudfunctions.net/dashboard_data?sprint=${sprint}&team_id=${teamId}`,
       );
-      // await axios.post(
+      // const short = await axios.post(
       //   `https://us-central1-esencia-app.cloudfunctions.net/short_recommendation?team_id=${teamId}`,
       // );
+
+      const data2 = await axios.post(
+        `https://us-central1-esencia-app.cloudfunctions.net/get_topics?sprint=${sprint}&team_id=${teamId}`,
+      );
       const { data } = dashboardData;
+      console.log(data2.data);
+
+      console.log(data);
+
       return {
         data,
       };

@@ -40,6 +40,7 @@ export const useDashboard = () => {
     dataAmount,
     isLoading,
     modalOpen,
+    topics,
     dataLoading,
     longRecommendation,
   } = useSelector(({ dashboard }) => dashboard);
@@ -59,9 +60,11 @@ export const useDashboard = () => {
   const startToggleModal = () => {
     dispatch(onToggleModal(!modalOpen));
   };
-  const buttonGetData = async (id, triggered) => {
+  const buttonGetData = async (id, sprint, triggered) => {
+    console.log(id, sprint, triggered);
+
     try {
-      await starGettingData(id, triggered);
+      await starGettingData(id, sprint, triggered);
     } catch (error) {
       console.log(error);
     } finally {
@@ -79,13 +82,15 @@ export const useDashboard = () => {
       toast.warning("Error while getting data");
     }
   };
-  const starGettingData = async (id: string, triggered?: boolean) => {
+  const starGettingData = async (id: string, sprint = 0, triggered?: boolean) => {
     dispatch(onSetDataLoading(true));
-    console.log(id);
+    console.log(id, sprint);
 
     setTimeout(async () => {
       try {
-        const surveyData = await getTeamData(id);
+        console.log(sprint);
+
+        const surveyData = await getTeamData(id, sprint);
         console.log(surveyData);
 
         const datalocal = localStorage.getItem("surveyData");
@@ -97,6 +102,7 @@ export const useDashboard = () => {
               linesMetrics: {},
               dataAmount: [],
               shortRecomendation: {},
+              topics: [],
             })
           );
         } else {
@@ -105,8 +111,9 @@ export const useDashboard = () => {
               onSaveMetricsForToday({
                 metricsForToday: surveyData.data.pie_chart || {},
                 linesMetrics: surveyData.data.lines_graph || {},
-                dataAmount: surveyData.data.data_amounts || [],
+                dataAmount: surveyData.data.data_amount || [],
                 shortRecomendation: surveyData.data.short_recommendation || {},
+                topics: surveyData.data.topics || [],
               })
             );
           }
@@ -114,8 +121,9 @@ export const useDashboard = () => {
             onSaveMetricsForToday({
               metricsForToday: surveyData.data.pie_chart || {},
               linesMetrics: surveyData.data.lines_graph || {},
-              dataAmount: surveyData.data.data_amounts || [],
+              dataAmount: surveyData.data.data_amount || [],
               shortRecomendation: surveyData.data.short_recommendation || {},
+              topics: surveyData.data.topics || [],
             })
           );
         }
@@ -123,12 +131,12 @@ export const useDashboard = () => {
         const dataToSave = {
           metricsForToday: surveyData.data.pie_chart || {},
           linesMetrics: surveyData.data.lines_graph || {},
-          dataAmount: surveyData.data.data_amounts || [],
+          dataAmount: surveyData.data.data_amount || [],
           shortRecomendation: surveyData.data.short_recommendation || "",
+          topics: surveyData.data.topics || [],
         };
 
-        if (triggered)
-          !surveyData.data.error ? toast.success("Data received successfully") : toast.warning("No data yet");
+        if (triggered) !surveyData.data.error ? toast.success("Data received successfully") : toast.warning("No data yet");
         localStorage.setItem("surveyData", JSON.stringify(dataToSave));
       } catch (error) {
         console.log(error);
@@ -150,20 +158,21 @@ export const useDashboard = () => {
     dispatch(cleanActiveTeam());
     dispatch(onLoadingTeam());
     //@ts-expect-error 'efefe'
-    starGettingData(id);
-    console.log(id);
+
     closeModal();
     dispatch(
       onSetActiveTeam({
         id: id,
       })
     );
+    const sprint = userTeams.find((team) => team._id === id).sprint;
+    starGettingData(id, sprint);
+
+    console.log(id, activeTeam.sprint);
   };
 
   const startCreatingTeam = async (newTeam: UserTeams, scrumId) => {
-    newTeam.logo =
-      newTeam.logo ||
-      "https://res.cloudinary.com/di92lsbym/image/upload/c_thumb,w_200,g_face/v1701895638/team-logo_2_fq5yev.png";
+    newTeam.logo = newTeam.logo || "https://res.cloudinary.com/di92lsbym/image/upload/c_thumb,w_200,g_face/v1701895638/team-logo_2_fq5yev.png";
 
     const { name, logo } = newTeam;
     try {
@@ -293,7 +302,7 @@ export const useDashboard = () => {
     dataAmount,
     user,
     isLoading,
-
+    topics,
     startAddingMember,
     membersActiveTeam,
     startSettingTeams,

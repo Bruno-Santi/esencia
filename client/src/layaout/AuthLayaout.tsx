@@ -7,15 +7,14 @@ export const AuthLayout: React.FC<LayoutProps> = ({ children }) => {
       <div className=' flex lg:flex-row animate__animated animate__fadeIn animate__slower animate__delay-0.8s'>
         <div className='lg:w-1/2  lg:block md:block hidden flex items-center justify-center h-screen'>
           {" "}
-          <section className='w-5/6 flex flex-col lg:block md:block hidden text-center m-auto lg:mt-44 md:mt-36  '>
+          <section className='w-5/6 flex flex-col lg:block md:block hidden text-center m-auto lg:mt-56 md:mt-56   '>
             {" "}
             <h1 className='text-tertiary font-manrope font-bold pt-20 md:text-3xl lg:text-4xl'>
               Discover a new way to empower your <span className='text-secondary'>agile teams</span>
             </h1>
             <div className='w-5/6 m-auto space-y-6 pt-8'>
               <p className='text-tertiary font-light text-xl'>
-                <span className='importantWord'>Esencia</span> is the innovative SaaS platform designed to take your
-                Agile Leadership to the next level.
+                <span className='importantWord'>Esencia</span> is the innovative SaaS platform designed to take your Agile Leadership to the next level.
               </p>
               <p className='text-tertiary font-light text-xl'>
                 Break the barrier of process-focused tools and discover an <br></br>

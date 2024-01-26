@@ -58,7 +58,7 @@ export const AdditionalComments = () => {
       try {
         const resp = await api.post("/api/survey", data, { headers });
 
-        navigate("/members/finished");
+        navigate("/members/finished", { state: { type: "encuesta" } });
 
         setLoading(false);
       } catch (error) {

@@ -25,14 +25,7 @@ const MetricChart = ({ metricName, value, color }) => {
 
   return (
     <div className='-z-0 w-[170px]' style={{ width: 170, height: 110, margin: 25, padding: 6 }}>
-      <VictoryPie
-        data={data}
-        colorScale={[color, "#D3D3D380"]}
-        innerRadius={120}
-        labels={() => null}
-        padding={7}
-        labelComponent={tooltipComponent}
-      />
+      <VictoryPie data={data} colorScale={[color, "#D3D3D380"]} innerRadius={120} labels={() => null} padding={7} labelComponent={tooltipComponent} />
       <div>
         <p className='text-center text-lg pt-2 dark:text-tertiary'>{metricName}</p>
       </div>
@@ -43,18 +36,36 @@ const MetricChart = ({ metricName, value, color }) => {
 
 export const Charts = () => {
   const { metricsForToday } = useDashboard();
-  useEffect(() => {
-    console.log(metricsForToday);
-  }, [metricsForToday]);
+  //   <div>
 
+  // </div>
   return (
-    <div className='flex mx-auto -z-10 justify-center space-x-6'>
-      <MetricChart metricName='Self Satisfaction' value={metricsForToday.self_satisfaction} color='#FF6384' />
-      <MetricChart metricName='Team Collaboration' value={metricsForToday.team_collaboration} color='#36A2EB' />
+    <section>
+      <div className='flex mx-auto    justify-center space-x-6 space-y-6'>
+        <MetricChart metricName='Self Satisfaction' value={Math.round(metricsForToday.self_satisfaction * 100)} color='#FF6384' />
+        <MetricChart metricName='Team Collaboration' value={Math.round(metricsForToday.team_collaboration * 100)} color='#36A2EB' />
 
-      <MetricChart metricName='Work Engagement' value={metricsForToday.work_engagement} color='#FFCE56' />
-      <MetricChart metricName='Workspace Wellbeing' value={metricsForToday.workspace} color='#4CAF50' />
-      <div id='tooltip-container' className='-z-10' style={{ position: "fixed", top: 0, left: 0 }} />
-    </div>
+        <MetricChart metricName='Work Engagement' value={Math.round(metricsForToday.work_engagement * 100)} color='#FFCE56' />
+        <MetricChart metricName='Workspace Wellbeing' value={Math.round(metricsForToday.workspace_wellbeing * 100)} color='#4CAF50' />
+        <div id='tooltip-container' className='-z-10' style={{ position: "fixed", top: 0, left: 0 }} />
+      </div>
+      <div className='text-tertiary text-4xl pt-2 flex justify-center mt-12'>
+        {" "}
+        <div className='w-3/4 h-2.5'>
+          <div className='flex flex-col justify-between'>
+            <span className='text-base font-bold font-poppins text-primary  dark:text-tertiary'>
+              General Satisfaction -{" "}
+              <span className=' font-bold  dark:text-white text-primary font-poppins'>{Math.round(metricsForToday.general_satisfaction * 100)}%</span>
+            </span>
+
+            <div className='relative  bg-gray-400/60  rounded-full h-4 mt-4'>
+              <div className='bg-orange-600 h-4 rounded-full' style={{ width: `${Math.round(metricsForToday.general_satisfaction * 100)}%` }}>
+                <div className='absolute inset-0 flex items-center justify-center'></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 };

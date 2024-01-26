@@ -2,9 +2,10 @@ import React from "react";
 import { TeamListProps } from "../../interface/index";
 import { useDashboard } from "../../hooks/useDashboard";
 
-export const TeamList: React.FC<TeamListProps> = ({ id, name, logo }) => {
+export const TeamList: React.FC<TeamListProps> = ({ id, name, logo, sprint }) => {
   const { startSettingActiveTeam, activeTeam, closeModal } = useDashboard();
   const isActive = activeTeam?._id === id;
+
   console.log(id);
   console.log(activeTeam?._id);
   return (

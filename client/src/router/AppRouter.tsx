@@ -29,6 +29,7 @@ export const AppRouter = () => {
     if (tokenParams) localStorage.setItem("userToken", searchParams.get("token"));
   }, [tokenParams]);
   useEffect(() => {
+    console.log(userTokenLocal);
     console.log(userToken);
 
     if (tokenParams) setLoading(false);
@@ -40,7 +41,9 @@ export const AppRouter = () => {
   }, []);
 
   useEffect(() => {
-    if (!authToken && !userToken) {
+    if (!authToken && !userToken && !userTokenLocal) {
+      console.log("holis");
+
       startLogingOut();
       setLoading(false);
     }

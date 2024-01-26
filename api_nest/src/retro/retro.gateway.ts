@@ -220,10 +220,10 @@ export class RetroGateway implements OnGatewayConnection, OnGatewayDisconnect {
       await this.retroService.completeRetroAndSendStickyNotes(team_id);
 
       this.retroService.clearTeamIdForRetro(team_id);
-
+      this.retroService.completeRetro(team_id);
       this.wss.to(team_id).emit('retroCompleted', { team_id });
-      const redirectUrl = 'https://esencia.app/members/retro/finished';
-      this.wss.to(team_id).emit('completeRetroRedirect', { redirectUrl });
+
+      this.wss.to(team_id).emit('completeRetroRedirect');
     } catch (error) {
       console.error('Error completing retro:', error);
     }

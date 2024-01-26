@@ -10,6 +10,7 @@ const initialState: DashBoardState = {
   metricsForToday: {},
   linesMetrics: {},
   shortRecomendation: {},
+  topics: [],
   longRecommendation: {},
   dataAmount: [],
   isLoading: false,
@@ -34,6 +35,7 @@ export const dashboardSlice = createSlice({
       state.shortRecomendation = "";
       state.metricsForToday = [];
       state.membersActiveTeam = [];
+      state.topics = [];
     },
     onLoadingTeam: (state) => {
       state.isLoading = true;
@@ -79,10 +81,13 @@ export const dashboardSlice = createSlice({
       state.membersActiveTeam = action.payload.members;
     },
     onSaveMetricsForToday: (state, { payload }) => {
+      console.log(payload);
+
       state.metricsForToday = payload.metricsForToday;
       state.linesMetrics = payload.linesMetrics;
       state.dataAmount = payload.dataAmount;
       state.shortRecomendation = payload.shortRecomendation;
+      state.topics = payload.topics;
       state.isLoading = false;
     },
 

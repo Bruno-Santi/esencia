@@ -45,35 +45,17 @@ export const DashboardUi = () => {
       w-full lg:col-span-6 md:col-span-8   rounded-md'
         >
           <div className='flex justify-between'>
-            <span className='font-poppins text-primary dark:text-tertiary flex mt-4 ml-4 text-2xl font-bold'>
-              Key team indicator
-            </span>
-            <div className='w-2/4 h-2.5 mt-3'>
-              <div className='flex justify-between mb-1'>
-                <span className='text-base font-medium text-primary font-poppins dark:text-tertiary'>
-                  General Satisfaction
-                </span>
-              </div>
-              <div className='relative w-2/3 bg-gray-400  rounded-full h-4 '>
-                <div className='bg-quaternary h-4 rounded-full' style={{ width: "45%" }}>
-                  <div className='absolute inset-0 flex items-center justify-center'>
-                    <span className='text-xs font-medium text-white font-poppins'>45%</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <span className='font-poppins text-primary dark:text-tertiary flex mt-4 ml-4 text-2xl font-bold'>Key team indicator</span>
           </div>
-          <div className='flex items-center justify-center h-3/6'>
-            <span className='text-center font-poppins w-6/12 mt-16 my-auto text-primary/50 font-bold text-5xl'>
-              <div className='flex justify-center -space-x-20 m-auto text-center'></div>
+          <div className='flex items-center -z-10 justify-center h-3/6'>
+            <span className='text-center font-poppins w-6/12 mt-8 my-auto text-primary/50 font-bold text-5xl'>
+              <div className='flex justify-center -space-x-20 m-auto  text-center'></div>
               {Object.keys(metricsForToday).length > 0 ? (
                 <div className={modalOpen ? "hidden" : ""}>
                   <Charts />
                 </div>
               ) : (
-                <p className='text-2xl dark:text-tertiary font-normal font-poppins mt-20'>
-                  NO DATA YET, TRY MAKING ACTIONS
-                </p>
+                <p className='text-2xl dark:text-tertiary font-normal font-poppins mt-20'>NO DATA YET, TRY MAKING ACTIONS</p>
               )}
             </span>
           </div>
@@ -81,14 +63,11 @@ export const DashboardUi = () => {
 
         <div className='bg-quaternary      dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800   shadow-lg shadow-primary/50 h-[400px] w-full lg:col-span-4 md:col-span-4 rounded-md '>
           <div className='flex relative z-0'>
-            <span className='font-poppins text-tertiary w-full my-auto place-items-center text-2xl ml-4 mt-4 font-bold'>
-              Actionable Insights
-            </span>
+            <span className='font-poppins text-tertiary w-full my-auto place-items-center text-2xl ml-4 mt-4 font-bold'>Actionable Insights</span>
             {Object.keys(shortRecomendation).length > 0 && (
               <div className='relative  z-0 bottom-0 ml-4 mt-2'>
                 <span className='w-full place-items-center my-auto text-tertiary text-sm'>
-                  Did you find this insight accurate? <a className='text-lg cursor-pointer'>👍</a>{" "}
-                  <a className='text-lg cursor-pointer'>👎</a>
+                  Did you find this insight accurate? <a className='text-lg cursor-pointer'>👍</a> <a className='text-lg cursor-pointer'>👎</a>
                 </span>
               </div>
             )}
@@ -97,22 +76,17 @@ export const DashboardUi = () => {
             ref={containerRef}
             className='bg-tertiary  dark:bg-gray-900 w-5/6 mt-4 place-items-center align-middle lg:h-4/6 md:h-[15em] mx-auto rounded-lg overflow-y-scroll'
           >
-            <div
-              ref={containerRef}
-              className='font-poppin p-3 w-6/6 scroll-p-12 overflow-x-hidden my-auto   bg-tertiary  dark:bg-gray-900 m-auto'
-            >
+            <div ref={containerRef} className='font-poppin p-3 w-6/6 scroll-p-12 overflow-x-hidden my-auto   bg-tertiary  dark:bg-gray-900 m-auto'>
               {Object.keys(shortRecomendation).length > 0 ? (
                 <UsePagination shortRecomendation={shortRecomendation} containerRef={containerRef} />
               ) : (
-                <p className='text-xl   inset-0 text-center font-normal font-poppins dark:text-tertiary'>
-                  NO DATA YET, TRY MAKING A SURVEY FIRST
-                </p>
+                <p className='text-xl   inset-0 text-center font-normal font-poppins dark:text-tertiary'>NO DATA YET, TRY MAKING A SURVEY FIRST</p>
               )}
             </div>
           </div>
           <div className='mx-auto flex justify-center mt-2'>
             <button
-              onClick={() => buttonGetData(activeTeam._id, true)}
+              onClick={() => buttonGetData(activeTeam._id, activeTeam.sprint, true)}
               className='btn-primary flex p-2 text-lg rounded-lg hover:text-primary hover:bg-tertiary duration-700'
             >
               Refresh Data{" "}
@@ -126,14 +100,12 @@ export const DashboardUi = () => {
 
         <div
           className='bg-tertiary shadow-lg
-         shadow-primary/50  h-[400px]
+         shadow-primary/50  lg:h-[400px] md:h-[360px]
          dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800
       w-full col-span-3 md:col-span-2 md:row-span-2 lg:row-span-1 rounded-md'
         >
           <div className='flex flex-col space-y-8 p-2 m-auto md:col-span-3 '>
-            <span className='font-poppins text-primary flex mt-4 ml-4 text-2xl dark:text-tertiary font-bold'>
-              Avaible Actions
-            </span>
+            <span className='font-poppins text-primary flex mt-4 ml-4 text-2xl dark:text-tertiary font-bold'>Avaible Actions</span>
             <button
               disabled={surveyLoading}
               onClick={() => startCreatingSurvey(activeTeam.name, activeTeam._id)}
@@ -166,7 +138,7 @@ export const DashboardUi = () => {
             </button>
             <button
               className='btn-primary 
-                     font-poppins text-sm rounded-md p-2 md:p-1 duration-700 lg:p-2 lg:text-xl
+                     font-poppins text-sm rounded-md p-2 md:p-1 duration-700 lg:p-2 lg:text-xl md:text-base
                       hover:bg-amber-100 hover:text-primary'
             >
               Reports
@@ -175,8 +147,8 @@ export const DashboardUi = () => {
         </div>
 
         <div
-          className=' h-[400px] mb-6
-      w-full lg:col-span-4 md:col-span-2 row-span-2 rounded-md justify-center m-auto place-content-center'
+          className=' h-[400px] 
+      w-full lg:col-span-4 md:col-span-2 mt-2 row-span-2 rounded-md justify-center m-auto place-content-center'
         >
           <TrendingTopics />
           <DataCollectionReport />
@@ -184,13 +156,11 @@ export const DashboardUi = () => {
 
         <div
           className='bg-tertiary shadow-lg
-         shadow-primary/50  h-[400px]
+         shadow-primary/50  h-[360px]
          dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800 
       w-full lg:col-span-8 md:col-span-8 row-span-2  rounded-md '
         >
-          <span className='font-poppins text-primary flex mt-4 ml-4 text-2xl dark:text-tertiary font-bold'>
-            Team global report
-          </span>
+          <span className='font-poppins text-primary flex mt-4 ml-4 text-2xl dark:text-tertiary font-bold'>Team global report</span>
           <div className='flex items-center m-auto justify-center h-3/6'>
             <span className='text-center mt-28 font-poppins w-full text-primary/50 font-bold text-4xl'>
               {Object.keys(linesMetrics).length > 0 ? (

@@ -3,12 +3,11 @@ import { useDashboard } from "../../hooks/useDashboard";
 import { DashboardLayout } from "../../layaout/DashboardLayout";
 import { ActiveTeam, NoTeams } from "../components";
 import { useDocumentTitle } from "../../hooks";
-import css from "@emotion/styled";
 import { ClipLoader } from "react-spinners";
-import { useAuthSlice } from "../../hooks/useAuthSlice";
+
 export const Main = () => {
-  const { startSettingUser, startSettingTeams, userTeams, dataLoading, startToggleModal, modalOpen } = useDashboard();
-  const { startLogginOut } = useAuthSlice();
+  const { startSettingTeams, userTeams, dataLoading, startToggleModal, modalOpen } = useDashboard();
+
   useDocumentTitle("Dashboard | Esencia.app");
   useEffect(() => {
     const fetchData = async () => {
@@ -44,7 +43,7 @@ export const Main = () => {
           <ClipLoader
             color='#00ff00'
             loading={true}
-            css={css`
+            css={`
               display: block;
               margin: 0 auto;
               border-color: red;

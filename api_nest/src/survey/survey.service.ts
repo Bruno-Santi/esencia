@@ -95,4 +95,46 @@ export class SurveyService {
       throw new BadRequestException(error.message);
     }
   }
+
+  async checkSurvey(teamId, userId) {
+    console.log(teamId, userId);
+
+    const currentDate = new Date();
+    console.log(currentDate);
+    const startOfDay = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      currentDate.getDate(),
+    );
+    const endOfDay = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      currentDate.getDate(),
+      23,
+      59,
+      59,
+    );
+
+    try {
+      const survey = await this.surveyModel.findOne({
+        team_id: teamId,
+        user_id: userId,
+        date: {
+          $gte: startOfDay,
+          $lt: endOfDay,
+        },
+      });
+      if (!survey) {
+        return {
+          survey: 'not found',
+        };
+      }
+      return {
+        survey: 'found',
+      };
+    } catch (error) {
+      console.log(error);
+      throw new BadRequestException(error.message);
+    }
+  }
 }
