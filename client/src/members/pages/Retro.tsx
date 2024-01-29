@@ -73,26 +73,26 @@ export const Retro = ({ token, team_id, user_id, scrum_id }) => {
                         backgroundColor: "rgba(255, 255, 102, 0.7)", // Amarillo pastel
                         // Otras propiedades de estilo que desees agregar
                       }}
-                      className='text-primary p-1 grid grid-cols-5 grid-rows-5 md:[130px] md:h-[130px] lg:w-[150px] lg:h-[150px] text-lg relative'
+                      className='text-primary p-1 grid grid-cols-5 grid-rows-5 md:[130px] md:h-[140px] lg:w-[150px] lg:h-[150px] text-lg relative'
                     >
                       <span className='md:text-xs lg:text-sm w-[120px]' style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
                         {note.value}
                       </span>
 
-                      <div className='absolute bottom-0 left-2 flex space-x-2'>
+                      <div className='absolute bottom-0 md:text-sm lg:text-lg left-2 flex space-x-2'>
                         <button
                           onClick={() => handleVote("c1", "thumb_up", note.value)}
                           style={{ color: userVotes[note.value] === "thumb_up" ? "green" : "black" }}
                         >
                           <FaRegThumbsUp />
-                          <span className='text-xs flex'>({note.thumb_up})</span>
+                          <span className='md:text-[10px] lg:text-sm flex'>({note.thumb_up})</span>
                         </button>
                         <button
                           onClick={() => handleVote("c1", "thumb_down", note.value)}
                           style={{ color: userVotes[note.value] === "thumb_down" ? "red" : "black" }}
                         >
                           <FaRegThumbsDown />
-                          <span className='text-xs flex'>({note.thumb_down})</span>
+                          <span className='md:text-[10px] lg:text-sm flex'>({note.thumb_down})</span>
                         </button>
                       </div>
 
@@ -140,20 +140,20 @@ export const Retro = ({ token, team_id, user_id, scrum_id }) => {
                         {note.value}
                       </span>
 
-                      <div className='absolute bottom-2 left-2 flex space-x-2'>
+                      <div className='absolute md:text-sm lg:text-lg bottom-2 left-2 flex space-x-2'>
                         <button
                           onClick={() => handleVote("c2", "thumb_up", note.value)}
                           style={{ color: userVotes[note.value] === "thumb_up" ? "green" : "black" }}
                         >
                           <FaRegThumbsUp />
-                          <span className='text-xs flex'>({note.thumb_up})</span>
+                          <span className='md:text-[10px] lg:text-sm flex'>({note.thumb_up})</span>
                         </button>
                         <button
                           onClick={() => handleVote("c2", "thumb_down", note.value)}
                           style={{ color: userVotes[note.value] === "thumb_down" ? "red" : "black" }}
                         >
                           <FaRegThumbsDown />
-                          <span className='text-xs flex'>({note.thumb_down})</span>
+                          <span className='md:text-[10px] lg:text-sm flex'>({note.thumb_down})</span>
                         </button>
                       </div>
 
@@ -200,25 +200,25 @@ export const Retro = ({ token, team_id, user_id, scrum_id }) => {
                         {note.value}
                       </span>
 
-                      <div className='absolute bottom-2 left-2 flex space-x-2'>
+                      <div className='absolute bottom-2  md:text-sm lg:text-lg left-2 flex space-x-2'>
                         <button
                           onClick={() => handleVote("c3", "thumb_up", note.value)}
                           style={{ color: userVotes[note.value] === "thumb_up" ? "green" : "black" }}
                         >
                           <FaRegThumbsUp />
-                          <span className='text-xs flex'>({note.thumb_up})</span>
+                          <span className='md:text-[10px] lg:text-sm flex'>({note.thumb_up})</span>
                         </button>
                         <button
                           onClick={() => handleVote("c3", "thumb_down", note.value)}
                           style={{ color: userVotes[note.value] === "thumb_down" ? "red" : "black" }}
                         >
                           <FaRegThumbsDown />
-                          <span className='text-xs flex'>({note.thumb_down})</span>
+                          <span className='md:text-[10px] lg:text-sm flex'>({note.thumb_down})</span>
                         </button>
                       </div>
 
                       {user_id == note.user_id && (
-                        <div className='absolute bottom-2 right-2 flex space-x-2'>
+                        <div className='absolute bottom-2  md:text-sm lg:text-lg right-2 flex space-x-2'>
                           <button onClick={() => handleDeleteNoteByValue(note.value)}>
                             <FaRegTrashAlt />
                           </button>
@@ -262,20 +262,20 @@ export const Retro = ({ token, team_id, user_id, scrum_id }) => {
                         {note.value}
                       </span>
 
-                      <div className='absolute bottom-2 left-2 flex space-x-2'>
+                      <div className='absolute bottom-2  md:text-sm lg:text-lg left-2 flex space-x-2'>
                         <button
                           onClick={() => handleVote("c4", "thumb_up", note.value)}
                           style={{ color: userVotes[note.value] === "thumb_up" ? "green" : "black" }}
                         >
                           <FaRegThumbsUp />
-                          <span className='text-xs flex'>({note.thumb_up})</span>
+                          <span className='md:text-[10px] lg:text-sm flex'>({note.thumb_up})</span>
                         </button>
                         <button
                           onClick={() => handleVote("c4", "thumb_down", note.value)}
                           style={{ color: userVotes[note.value] === "thumb_down" ? "red" : "black" }}
                         >
                           <FaRegThumbsDown />
-                          <span className='text-xs flex'>({note.thumb_down})</span>
+                          <span className='md:text-[10px] lg:text-sm flex'>({note.thumb_down})</span>
                         </button>
                       </div>
 

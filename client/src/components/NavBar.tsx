@@ -83,7 +83,7 @@ export const NavBar = () => {
           )}
         </div>
         {isOpen && <ModalMembers closeModal={closeModal} />}
-        <div className={`absolute right-${user?.email.length >= 20 ? `72` : `72`}  pr-${user?.email.length >= 20 ? `24` : `8`} bottom-6`}>
+        <div className={user?.email.length > 20 ? `pr-24 absolute right-72 bottom-6` : `pr-14 absolute right-72 bottom-6`}>
           {" "}
           <ThemeChange />
         </div>

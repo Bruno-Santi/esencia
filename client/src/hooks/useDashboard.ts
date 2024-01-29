@@ -85,38 +85,33 @@ export const useDashboard = () => {
   const starGettingData = async (id: string, sprint = 0, triggered?: boolean) => {
     dispatch(onSetDataLoading(true));
     console.log(id, sprint);
+    toast.promise(startGettingDataFunc(id, sprint, triggered), {
+      pending: "Seeking for new data... 🕐",
+      success: "Data received successfully! 🎉",
+      error: "Error while getting data 😢",
+    });
+  };
+  const startGettingDataFunc = async (id, sprint, triggered) => {
+    try {
+      console.log(sprint);
 
-    setTimeout(async () => {
-      try {
-        console.log(sprint);
-
-        const surveyData = await getTeamData(id, sprint);
-        console.log(surveyData);
-
-        const datalocal = localStorage.getItem("surveyData");
-        if (datalocal) localStorage.removeItem("surveyData");
-        if (surveyData.error) {
-          dispatch(
-            onSaveMetricsForToday({
-              metricsForToday: {},
-              linesMetrics: {},
-              dataAmount: [],
-              shortRecomendation: {},
-              topics: [],
-            })
-          );
-        } else {
-          if (surveyData.data.short_recommendation === "there are no recommendations") {
-            dispatch(
-              onSaveMetricsForToday({
-                metricsForToday: surveyData.data.pie_chart || {},
-                linesMetrics: surveyData.data.lines_graph || {},
-                dataAmount: surveyData.data.data_amount || [],
-                shortRecomendation: surveyData.data.short_recommendation.content || {},
-                topics: surveyData.data.topics || [],
-              })
-            );
-          }
+      const surveyData = await getTeamData(id, sprint);
+      console.log(surveyData);
+      if (surveyData.data === "No existe data de este equipo") toast.warning("There's no data for this team 😢");
+      const datalocal = localStorage.getItem("surveyData");
+      if (datalocal) localStorage.removeItem("surveyData");
+      if (surveyData.error) {
+        dispatch(
+          onSaveMetricsForToday({
+            metricsForToday: {},
+            linesMetrics: {},
+            dataAmount: [],
+            shortRecomendation: {},
+            topics: [],
+          })
+        );
+      } else {
+        if (surveyData.data.short_recommendation === "there are no recommendations") {
           dispatch(
             onSaveMetricsForToday({
               metricsForToday: surveyData.data.pie_chart || {},
@@ -127,26 +122,32 @@ export const useDashboard = () => {
             })
           );
         }
-
-        const dataToSave = {
-          metricsForToday: surveyData.data.pie_chart || {},
-          linesMetrics: surveyData.data.lines_graph || {},
-          dataAmount: surveyData.data.data_amount || [],
-          shortRecomendation: surveyData.data.short_recommendation.content || "",
-          topics: surveyData.data.topics || [],
-        };
-
-        if (triggered) !surveyData.data.error ? toast.success("Data received successfully") : toast.warning("No data yet");
-        localStorage.setItem("surveyData", JSON.stringify(dataToSave));
-      } catch (error) {
-        console.log(error);
-        toastWarning("No data yet");
-      } finally {
-        dispatch(onSetDataLoading(false));
+        dispatch(
+          onSaveMetricsForToday({
+            metricsForToday: surveyData.data.pie_chart || {},
+            linesMetrics: surveyData.data.lines_graph || {},
+            dataAmount: surveyData.data.data_amount || [],
+            shortRecomendation: surveyData.data.short_recommendation.content || {},
+            topics: surveyData.data.topics || [],
+          })
+        );
       }
-    }, 1500);
-  };
 
+      const dataToSave = {
+        metricsForToday: surveyData.data.pie_chart || {},
+        linesMetrics: surveyData.data.lines_graph || {},
+        dataAmount: surveyData.data.data_amount || [],
+        shortRecomendation: surveyData.data.short_recommendation.content || "",
+        topics: surveyData.data.topics || [],
+      };
+
+      localStorage.setItem("surveyData", JSON.stringify(dataToSave));
+    } catch (error) {
+      console.log(error);
+    } finally {
+      dispatch(onSetDataLoading(false));
+    }
+  };
   const startSettingActiveTeam = async (id: number) => {
     modalOpen && startToggleModal();
     const dataToSave = {

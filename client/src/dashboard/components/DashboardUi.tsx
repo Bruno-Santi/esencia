@@ -10,6 +10,7 @@ import { useEffect, useRef } from "react";
 import { UsePagination } from "../../helpers/UsePagination";
 import { TrendingTopics } from ".";
 import { toastSuccess } from "../../helpers/toastSuccess";
+import { ClipLoader } from "react-spinners";
 
 export const DashboardUi = () => {
   const {
@@ -22,7 +23,7 @@ export const DashboardUi = () => {
     shortRecomendation,
     modalOpen,
     buttonGetData,
-
+    dataLoading,
     longRecommendation,
   } = useDashboard();
 
@@ -34,7 +35,9 @@ export const DashboardUi = () => {
     handleNavigate("/dashboard/feedback");
     if (Object.entries(longRecommendation).length > 0 === false) return;
   };
-  useEffect(() => {}, [longRecommendation]);
+  useEffect(() => {
+    console.log(dataLoading);
+  }, []);
   const handleVote = () => {
     toastSuccess("Thanks for your feedback! 🤗");
   };
@@ -64,11 +67,11 @@ export const DashboardUi = () => {
           </div>
         </div>
 
-        <div className='bg-quaternary   dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800   shadow-lg shadow-primary/50 h-[400px] w-full lg:col-span-4 md:col-span-4 rounded-md '>
+        <div className='bg-quaternary  dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800   shadow-lg shadow-primary/50 h-[400px] w-full lg:col-span-4 md:col-span-4 rounded-md '>
           <div className='flex  '>
             <span className='font-poppins text-tertiary w-fit my-auto place-items-center text-2xl ml-4 mt-4 font-bold'>Actionable Insights</span>
             {Object.keys(shortRecomendation).length > 0 && (
-              <div className='relative   bottom-0 ml-4 mt-2'>
+              <div className='   bottom-0 ml-4 mt-2'>
                 <span className='w-full place-items-center my-auto text-tertiary text-sm'>
                   Did you find this insight accurate?{" "}
                   <a className='text-lg cursor-pointer' onClick={handleVote}>
@@ -96,9 +99,14 @@ export const DashboardUi = () => {
           <div className='mx-auto flex justify-center mt-2'>
             <button
               onClick={() => buttonGetData(activeTeam._id, activeTeam.sprint, true)}
-              className='btn-primary flex p-2 text-lg rounded-lg font-bold hover:text-primary dark:font-bold hover:bg-tertiary duration-700'
+              disabled={dataLoading}
+              className={
+                dataLoading
+                  ? "btn-secondary"
+                  : "btn-primary flex p-2 text-lg rounded-lg font-bold hover:text-primary dark:font-bold hover:bg-tertiary duration-700"
+              }
             >
-              Refresh Data{" "}
+              {dataLoading ? <ClipLoader /> : `Refresh Data`}
               <i className='my-auto text-xl dark:font-bold font-bold ml-2'>
                 {" "}
                 <IoRefreshCircleOutline />

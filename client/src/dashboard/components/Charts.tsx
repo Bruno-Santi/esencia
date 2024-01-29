@@ -61,7 +61,7 @@ export const Charts = () => {
             <div className='relative  bg-gray-400/60  rounded-full h-4 mt-4'>
               <div className='bg-orange-600 h-4 rounded-full' style={{ width: `${Math.round(metricsForToday.general_satisfaction * 100)}%` }}>
                 <div className='absolute inset-0 flex items-center cursor-pointer justify-center group'>
-                  <span className='hidden group-hover:block group-hover:duration-700 animate-bounce text-tertiary'>
+                  <span className='hidden group-hover:block text-lg text-primary group-hover:duration-700 animate-pulse dark:text-tertiary'>
                     {Math.round(metricsForToday.general_satisfaction * 100)}%
                   </span>
                 </div>
