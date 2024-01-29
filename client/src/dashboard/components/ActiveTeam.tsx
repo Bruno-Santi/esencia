@@ -12,10 +12,10 @@ export const ActiveTeam = () => {
   return (
     <div className='flex mx-auto justify-center my-auto min-h-screen '>
       {!activeTeam ? (
-        <div className='flex flex-col justify-center mx-auto my-72 space-y-2 duration-700 '>
+        <div className='flex flex-col justify-center mx-auto my-0 pb-20 space-y-2 duration-700 '>
           <div className='text-4xl   font-poppins text-primary/80'>
             {!isLoading ? (
-              <span className='dark:text-tertiary text-primary '>Select Team</span>
+              <span className='dark:text-tertiary text-primary pb-44 '>Select Team</span>
             ) : (
               <div role='status bg-black h-screen'>
                 <svg

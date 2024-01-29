@@ -63,7 +63,7 @@ export const NavBar = () => {
           </div>
 
           {isDropdownOpen && (
-            <div className='absolute top-20 right-4 bg-white border border-tertiary p-2 rounded-md dark:bg-black dark:border-none'>
+            <div className='absolute z-40 top-20 right-4 bg-white border border-tertiary p-2 rounded-md dark:bg-black dark:border-none'>
               <div
                 onClick={() => {
                   startLogingOut();
@@ -71,13 +71,13 @@ export const NavBar = () => {
                 }}
                 className='btn-primary p-2  rounded-lg font-poppins w-fit hover:bg-tertiary hover:text-primary duration-700 cursor-pointer'
               >
-                <span className='text-md z-50'>Log Out</span>
+                <span className='text-md '>Log Out</span>
               </div>
             </div>
           )}
         </div>
         {isOpen && <ModalMembers closeModal={closeModal} />}
-        <div className='absolute right-96 bottom-6'>
+        <div className='absolute right-72 bottom-6'>
           {" "}
           <ThemeChange />
         </div>

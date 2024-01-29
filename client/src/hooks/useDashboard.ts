@@ -172,6 +172,8 @@ export const useDashboard = () => {
   };
 
   const startCreatingTeam = async (newTeam: UserTeams, scrumId) => {
+    console.log(newTeam, scrumId);
+
     newTeam.logo = newTeam.logo || "https://res.cloudinary.com/di92lsbym/image/upload/c_thumb,w_200,g_face/v1701895638/team-logo_2_fq5yev.png";
 
     const { name, logo } = newTeam;

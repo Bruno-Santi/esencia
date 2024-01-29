@@ -36,9 +36,9 @@ export class DataService {
       const dashboardData = await axios.get(
         `${process.env.API_DATA}/dashboard_data?sprint=${sprint}&team_id=${teamId}`,
       );
-      // const short = await axios.post(
-      //   `${process.env.API_DATA}/short_recommendation?team_id=${teamId}&sprint=${sprint}`,
-      // );
+      const short = await axios.post(
+        `${process.env.API_DATA}/short_recommendation?team_id=${teamId}&sprint=${sprint}`,
+      );
 
       const { data } = dashboardData;
 

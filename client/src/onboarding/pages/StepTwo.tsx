@@ -3,6 +3,7 @@ import { OnBoardingLayout } from "../../layaout";
 import { MdUploadFile } from "react-icons/md";
 import { useDocumentTitle, useImageUpload, useNavigateTo } from "../../hooks";
 import { useDashboard } from "../../hooks/useDashboard";
+import { useAuthSlice } from "../../hooks/useAuthSlice";
 
 export const StepTwo = () => {
   useDocumentTitle("Onboard | Esencia.app");
@@ -11,27 +12,25 @@ export const StepTwo = () => {
   const { imageSelected, handleImageClick, handleFileChange, isLoading } = useImageUpload(fileInputRef);
   const { handleNavigate } = useNavigateTo();
   const { startCreatingTeam } = useDashboard();
+  const { user } = useAuthSlice();
   const handleChange = (e) => {
     const { value } = e.target;
     setTeamName(value);
   };
   const handleSubmit = () => {
     const team = {
-      logo:
-        imageSelected ||
-        "https://res.cloudinary.com/di92lsbym/image/upload/c_thumb,w_200,g_face/v1701895638/team-logo_2_fq5yev.png",
+      logo: imageSelected || "https://res.cloudinary.com/di92lsbym/image/upload/c_thumb,w_200,g_face/v1701895638/team-logo_2_fq5yev.png",
       name: teamName,
     };
     //@ts-expect-error 'fafaf'
-    startCreatingTeam(team);
+    startCreatingTeam(team, user.id);
     handleNavigate("/dashboard");
   };
   return (
     <OnBoardingLayout>
       <div className='flex flex-col animate__animated animate__fadeIn animate__slower'>
         <span className='sm:w-5/6 sm:text-2xl md:w-3/6 lg:w-2/6 font-light text-center font-manrope md:text-2xl lg:text-4xl text-tertiary mx-auto'>
-          Great! Now, let's set the stage for your team. What's your{" "}
-          <span className='font-bold text-secondary'>team name</span>?
+          Great! Now, let's set the stage for your team. What's your <span className='font-bold text-secondary'>team name</span>?
           <div className='flex flex-col mt-12'>
             <label htmlFor='teamName' className='text-manrope md:text-lg lg:text-2xl '>
               Your team name

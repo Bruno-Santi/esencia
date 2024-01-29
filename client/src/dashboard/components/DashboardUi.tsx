@@ -61,11 +61,11 @@ export const DashboardUi = () => {
           </div>
         </div>
 
-        <div className='bg-quaternary      dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800   shadow-lg shadow-primary/50 h-[400px] w-full lg:col-span-4 md:col-span-4 rounded-md '>
-          <div className='flex relative z-0'>
-            <span className='font-poppins text-tertiary w-full my-auto place-items-center text-2xl ml-4 mt-4 font-bold'>Actionable Insights</span>
+        <div className='bg-quaternary   dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800   shadow-lg shadow-primary/50 h-[400px] w-full lg:col-span-4 md:col-span-4 rounded-md '>
+          <div className='flex  '>
+            <span className='font-poppins text-tertiary w-fit my-auto place-items-center text-2xl ml-4 mt-4 font-bold'>Actionable Insights</span>
             {Object.keys(shortRecomendation).length > 0 && (
-              <div className='relative  z-0 bottom-0 ml-4 mt-2'>
+              <div className='relative   bottom-0 ml-4 mt-2'>
                 <span className='w-full place-items-center my-auto text-tertiary text-sm'>
                   Did you find this insight accurate? <a className='text-lg cursor-pointer'>👍</a> <a className='text-lg cursor-pointer'>👎</a>
                 </span>
