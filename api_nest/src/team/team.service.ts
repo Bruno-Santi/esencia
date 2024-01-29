@@ -60,6 +60,8 @@ export class TeamService {
     if (!user) throw new BadRequestException(`User ${scrumId} doesn't exist`);
   };
   searchTeam = async (teamId) => {
+    console.log(teamId);
+
     const convertedTeamId = new Types.ObjectId(teamId);
     console.log(teamId);
 
@@ -69,5 +71,19 @@ export class TeamService {
 
     if (!team) throw new BadRequestException(`Team ${teamId} doesn't exist`);
     return team;
+  };
+
+  findOne = async (team_id) => {
+    console.log(team_id);
+
+    try {
+      const team = await this.teamModel.findOne({ _id: team_id });
+      console.log(team);
+      console.log(team.name);
+      if (!team) throw new BadRequestException(`Team ${team_id} doesn't exist`);
+      return team;
+    } catch (error) {
+      console.log(error);
+    }
   };
 }

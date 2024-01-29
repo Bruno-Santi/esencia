@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  UseGuards,
+  Query,
+} from '@nestjs/common';
 import { TeamService } from './team.service';
 import { CreateTeamDto } from './dto/create-team.dto';
 
@@ -24,5 +32,12 @@ export class TeamController {
   @Get(':scrumId')
   GetTeams(@Param('scrumId', ParseMongoIdPipe) scrumId: Types.ObjectId) {
     return this.teamService.findAllTeams(scrumId);
+  }
+
+  @Get()
+  findOne(@Query('team_id') team_id: string) {
+    console.log(team_id);
+
+    return this.teamService.findOne(team_id);
   }
 }
