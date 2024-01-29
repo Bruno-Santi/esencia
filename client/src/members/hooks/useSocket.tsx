@@ -230,7 +230,7 @@ export const useSocket = () => {
 
   const redirectToRetro = () => {
     const tokenSinComillas = token.replace(/^"|"$/g, "");
-    const retroUrl = `${CLIENT_URL}/members/retro?token=${tokenSinComillas}&team_id=${activeTeam._id}&scrum_id=${user.id}`;
+    const retroUrl = `${RETRO_URL_DEPLOY}/members/retro?token=${tokenSinComillas}&team_id=${activeTeam._id}&scrum_id=${user.id}`;
 
     window.location.href = retroUrl;
   };
