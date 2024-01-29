@@ -48,6 +48,7 @@ export const dashboardSlice = createSlice({
       state.dataAmount = [];
       state.shortRecomendation = {};
       state.longRecommendation = {};
+      state.topics = [];
     },
     onSetUserTeams: (
       state,

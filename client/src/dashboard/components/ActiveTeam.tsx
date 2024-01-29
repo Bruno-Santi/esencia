@@ -39,7 +39,7 @@ export const ActiveTeam = () => {
             )}
           </div>
           <div className={!isLoading ? `mx-auto my-auto` : "hidden"}>
-            <RiLightbulbLine className='text-[100px] text-primary/80' />
+            <RiLightbulbLine className='text-[100px] text-primary/80 dark:text-tertiary' />
           </div>
         </div>
       ) : (

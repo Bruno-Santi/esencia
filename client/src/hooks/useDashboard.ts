@@ -112,7 +112,7 @@ export const useDashboard = () => {
                 metricsForToday: surveyData.data.pie_chart || {},
                 linesMetrics: surveyData.data.lines_graph || {},
                 dataAmount: surveyData.data.data_amount || [],
-                shortRecomendation: surveyData.data.short_recommendation || {},
+                shortRecomendation: surveyData.data.short_recommendation.content || {},
                 topics: surveyData.data.topics || [],
               })
             );
@@ -122,7 +122,7 @@ export const useDashboard = () => {
               metricsForToday: surveyData.data.pie_chart || {},
               linesMetrics: surveyData.data.lines_graph || {},
               dataAmount: surveyData.data.data_amount || [],
-              shortRecomendation: surveyData.data.short_recommendation || {},
+              shortRecomendation: surveyData.data.short_recommendation.content || {},
               topics: surveyData.data.topics || [],
             })
           );
@@ -132,7 +132,7 @@ export const useDashboard = () => {
           metricsForToday: surveyData.data.pie_chart || {},
           linesMetrics: surveyData.data.lines_graph || {},
           dataAmount: surveyData.data.data_amount || [],
-          shortRecomendation: surveyData.data.short_recommendation || "",
+          shortRecomendation: surveyData.data.short_recommendation.content || "",
           topics: surveyData.data.topics || [],
         };
 
@@ -153,6 +153,7 @@ export const useDashboard = () => {
       metricsForToday: [],
       linesMetrics: [],
       dataAmount: [],
+      topics: [],
     };
     localStorage.setItem("surveyData", JSON.stringify(dataToSave));
     dispatch(cleanActiveTeam());

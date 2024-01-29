@@ -4,7 +4,7 @@ import { useModal } from "../hooks";
 import { ModalMembers } from "../dashboard/components/ModalMembers";
 import { NavBarResponsive } from "./NavBarResponsive";
 import { IoIosArrowDropdown } from "react-icons/io";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import avatar from "../assets/avatarnav2.png";
 import { ThemeChange } from "./ThemeChange";
 export const NavBar = () => {
@@ -17,9 +17,15 @@ export const NavBar = () => {
   const closeDropdown = () => {
     setIsDropdownOpen(false);
   };
+
   const { startLogingOut } = useAuthSlice();
   const { activeTeam, user, startGettingMembers, startToggleModal } = useDashboard();
   const { isOpen, closeModal, openModal } = useModal();
+  const userNameLength = user?.email?.length;
+  useEffect(() => {
+    console.log(userNameLength);
+  }, []);
+
   return (
     <>
       <div className='lg:hidden md:hidden sm:block'>
@@ -77,7 +83,7 @@ export const NavBar = () => {
           )}
         </div>
         {isOpen && <ModalMembers closeModal={closeModal} />}
-        <div className='absolute right-72 bottom-6'>
+        <div className={`absolute right-${user?.email.length >= 20 ? `72` : `72`}  pr-${user?.email.length >= 20 ? `24` : `8`} bottom-6`}>
           {" "}
           <ThemeChange />
         </div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RxDoubleArrowLeft, RxDoubleArrowRight } from "react-icons/rx";
 
 export const UsePagination = ({ shortRecomendation, containerRef }) => {
@@ -6,6 +6,9 @@ export const UsePagination = ({ shortRecomendation, containerRef }) => {
   const itemsPorPagina = 1;
 
   const datosPagina = Object.entries(shortRecomendation).slice((paginaActual - 1) * itemsPorPagina, paginaActual * itemsPorPagina);
+  useEffect(() => {
+    console.log(shortRecomendation);
+  }, []);
 
   const paginasTotales = Math.ceil(Object.keys(shortRecomendation).length / itemsPorPagina);
 
@@ -22,7 +25,7 @@ export const UsePagination = ({ shortRecomendation, containerRef }) => {
     <div className='flex flex-col my-auto justify-center place-content-center items-center dark:bg-gray-900 dark:text-tertiary'>
       {datosPagina.map(([title, content]) => (
         <div key={title}>
-          <h2 className='font-bold font-manrope text-lg dark:text-green-700'>{title}:</h2>
+          <h2 className='font-bold font-manrope text-lg dark:text-green-600'>{title}:</h2>
           <p className='font-poppins'>{content}</p>
         </div>
       ))}

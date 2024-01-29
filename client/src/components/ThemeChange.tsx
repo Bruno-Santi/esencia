@@ -29,12 +29,12 @@ export const ThemeChange = () => {
     <div>
       {theme === "light" ? (
         <GoSun
-          className='text-4xl text-tertiary cursor-pointer animate__animated animate__fadeIn animate__slower'
+          className='text-4xl text-tertiary duration-500 hover:text-secondary cursor-pointer animate__animated animate__fadeIn animate__slower'
           onClick={handleChangeTheme}
         />
       ) : (
         <PiMoonStars
-          className='text-4xl text-tertiary cursor-pointer animate__animated animate__fadeIn animate__slower'
+          className='text-4xl text-tertiary duration-500 hover:text-secondary cursor-pointer animate__animated animate__fadeIn animate__slower'
           onClick={handleChangeTheme}
         />
       )}

@@ -9,6 +9,7 @@ import { IoRefreshCircleOutline } from "react-icons/io5";
 import { useEffect, useRef } from "react";
 import { UsePagination } from "../../helpers/UsePagination";
 import { TrendingTopics } from ".";
+import { toastSuccess } from "../../helpers/toastSuccess";
 
 export const DashboardUi = () => {
   const {
@@ -34,7 +35,9 @@ export const DashboardUi = () => {
     if (Object.entries(longRecommendation).length > 0 === false) return;
   };
   useEffect(() => {}, [longRecommendation]);
-
+  const handleVote = () => {
+    toastSuccess("Thanks for your feedback! 🤗");
+  };
   return (
     <>
       <div className=' w-full md:grid lg:grid px-6 ml-20 sm:flex sm:flex-col  lg:py-6 md:py-2 grid-cols-12 grid-rows-2 gap-6'>
@@ -67,7 +70,13 @@ export const DashboardUi = () => {
             {Object.keys(shortRecomendation).length > 0 && (
               <div className='relative   bottom-0 ml-4 mt-2'>
                 <span className='w-full place-items-center my-auto text-tertiary text-sm'>
-                  Did you find this insight accurate? <a className='text-lg cursor-pointer'>👍</a> <a className='text-lg cursor-pointer'>👎</a>
+                  Did you find this insight accurate?{" "}
+                  <a className='text-lg cursor-pointer' onClick={handleVote}>
+                    👍
+                  </a>{" "}
+                  <a onClick={handleVote} className='text-lg cursor-pointer'>
+                    👎
+                  </a>
                 </span>
               </div>
             )}
@@ -87,10 +96,10 @@ export const DashboardUi = () => {
           <div className='mx-auto flex justify-center mt-2'>
             <button
               onClick={() => buttonGetData(activeTeam._id, activeTeam.sprint, true)}
-              className='btn-primary flex p-2 text-lg rounded-lg hover:text-primary hover:bg-tertiary duration-700'
+              className='btn-primary flex p-2 text-lg rounded-lg font-bold hover:text-primary dark:font-bold hover:bg-tertiary duration-700'
             >
               Refresh Data{" "}
-              <i className='my-auto text-xl ml-2'>
+              <i className='my-auto text-xl dark:font-bold font-bold ml-2'>
                 {" "}
                 <IoRefreshCircleOutline />
               </i>

@@ -32,7 +32,7 @@ const SurveyWrapper = () => {
       try {
         // `http://localhost:3000
         // `https://esencia-api.onrender.com`
-        const response = await axios.get(`http://localhost:3000/api/survey/${params.team_id}/${params.user_id}`, {
+        const response = await axios.get(`https://esencia-api.onrender.com/api/survey/${params.team_id}/${params.user_id}`, {
           headers: {
             Authorization: `Bearer ${params.token}`,
           },

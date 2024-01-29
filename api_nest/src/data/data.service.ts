@@ -39,6 +39,8 @@ export class DataService {
       const short = await axios.post(
         `${process.env.API_DATA}/short_recommendation?team_id=${teamId}&sprint=${sprint}`,
       );
+      console.log(data2);
+      console.log(short);
 
       const { data } = dashboardData;
 
@@ -48,6 +50,8 @@ export class DataService {
         data,
       };
     } catch (error) {
+      console.log(error);
+
       throw new BadRequestException(error.message);
     }
   }
