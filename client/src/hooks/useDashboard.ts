@@ -97,7 +97,7 @@ export const useDashboard = () => {
 
       const surveyData = await getTeamData(id, sprint);
       console.log(surveyData);
-      if (surveyData.data === "No existe data de este equipo") toast.warning("There's no data for this team 😢");
+      if (surveyData === "No existe data de este equipo") toast.warning("There's no data for this team 😢");
       const datalocal = localStorage.getItem("surveyData");
       if (datalocal) localStorage.removeItem("surveyData");
       if (surveyData.error) {
@@ -111,34 +111,34 @@ export const useDashboard = () => {
           })
         );
       } else {
-        if (surveyData.data.short_recommendation === "there are no recommendations") {
+        if (surveyData.short_recommendation === "there are no recommendations") {
           dispatch(
             onSaveMetricsForToday({
-              metricsForToday: surveyData.data.pie_chart || {},
-              linesMetrics: surveyData.data.lines_graph || {},
+              metricsForToday: surveyData.pie_chart || {},
+              linesMetrics: surveyData.lines_graph || {},
               dataAmount: surveyData.data.data_amount || [],
-              shortRecomendation: surveyData.data.short_recommendation.content || {},
-              topics: surveyData.data.topics || [],
+              shortRecomendation: surveyData.data.short_recommendation?.content || {},
+              topics: surveyData.topics || [],
             })
           );
         }
         dispatch(
           onSaveMetricsForToday({
-            metricsForToday: surveyData.data.pie_chart || {},
-            linesMetrics: surveyData.data.lines_graph || {},
-            dataAmount: surveyData.data.data_amount || [],
-            shortRecomendation: surveyData.data.short_recommendation.content || {},
-            topics: surveyData.data.topics || [],
+            metricsForToday: surveyData.pie_chart || {},
+            linesMetrics: surveyData.lines_graph || {},
+            dataAmount: surveyData.data_amount || [],
+            shortRecomendation: surveyData.short_recommendation?.content || {},
+            topics: surveyData.topics || [],
           })
         );
       }
 
       const dataToSave = {
-        metricsForToday: surveyData.data.pie_chart || {},
-        linesMetrics: surveyData.data.lines_graph || {},
-        dataAmount: surveyData.data.data_amount || [],
-        shortRecomendation: surveyData.data.short_recommendation.content || "",
-        topics: surveyData.data.topics || [],
+        metricsForToday: surveyData.pie_chart || {},
+        linesMetrics: surveyData.lines_graph || {},
+        dataAmount: surveyData.data_amount || [],
+        shortRecomendation: surveyData.short_recommendation?.content || "",
+        topics: surveyData.topics || [],
       };
 
       localStorage.setItem("surveyData", JSON.stringify(dataToSave));
