@@ -359,10 +359,10 @@ export class RetroService {
 
     this.isValidTeamId(teamId);
     try {
-      const teams = await this.teamService.searchTeam(teamId);
+      const team = await this.teamService.searchTeam(teamId);
 
-      if (teams) {
-        console.log(teams);
+      if (team) {
+        console.log(team);
 
         const convertedTeamId = new Types.ObjectId(teamId);
         const members = await this.memberModel.find({
@@ -385,6 +385,7 @@ export class RetroService {
               member.name,
               member.email,
               convertedUserId,
+              team.name,
             );
 
             await this.sendGrid.send(emailData);

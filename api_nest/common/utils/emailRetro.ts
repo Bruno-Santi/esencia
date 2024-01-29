@@ -4,13 +4,14 @@ export const sendRetroMail = (
   memberName,
   memberEmail,
   memberId,
+  teamName,
 ) => {
   console.log(token, teamId, memberName, memberEmail);
 
   const emailRetro = {
     to: `${memberEmail}`,
-    subject: `${memberName} you're invited to participate in Team Retro`,
-    from: 'santimariabruno@gmail.com',
+    subject: `${memberName} fuiste a invitado a la retro del equipo ${teamName} `,
+    from: `${process.env.SENDGRID_EMAIL}`,
     html: `<html>
       
           <head>
@@ -87,10 +88,10 @@ export const sendRetroMail = (
                       <img class='logo' src='https://res.cloudinary.com/di92lsbym/image/upload/c_thumb,w_200,g_face/v1704312320/ESENCIA_LOGO_mbsjht.png' />
                   </div>
               
-                  <h2 class='title'>Welcome ${memberName} to Esencia Retro</h2>
-                  <p class='subtitle'>You're invited to complete the Team Retro. Your feedback is valuable and helps us improve our team's performance. Thank you for your participation!</p>
+                  <h2 class='title'>Bienvenido ${memberName} a la retro de ${teamName}</h2>
+                  <p class='subtitle'>Fuiste invitado a participar junto a tu equipo, completando una retroespectiva en tiempo real!</p>
                   <div class='button-container'>
-                     <a class='access-button' href='https://esencia.app/members/retro?token=${token}&team_id=${teamId}&user_id=${memberId}' target='_blank'>Access to retro</a>
+                     <a class='access-button' href='https://esencia.app/members/retro?token=${token}&team_id=${teamId}&user_id=${memberId}' target='_blank'>Acceso a la retro</a>
                   </div>
               </div>
           </body>

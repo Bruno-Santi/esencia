@@ -11,7 +11,7 @@ export const sendMail = (
   const emailData = {
     to: `${memberEmail}`,
     subject: `${memberName} queremos saber tu opinión sobre el trabajo en ${teamName}`,
-    from: 'santimariabruno@gmail.com',
+    from: `${process.env.SENDGRID_EMAIL}`,
     html: `<html>
       
           <head>
