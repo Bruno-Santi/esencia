@@ -8,6 +8,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Survey, surveySchema } from './entities/survey.entity';
 import { TeamModule } from 'src/team/team.module';
 import { JwtAuthGuard } from 'common/jwt-guard/jwt-guard.guard';
+import { DaySurvey, daySurveySchema } from './entities/daySurvey.entity';
 
 @Module({
   controllers: [SurveyController],
@@ -21,6 +22,13 @@ import { JwtAuthGuard } from 'common/jwt-guard/jwt-guard.guard';
         name: Survey.name,
         schema: surveySchema,
         collection: 'surveys',
+      },
+    ]),
+    MongooseModule.forFeature([
+      {
+        name: DaySurvey.name,
+        schema: daySurveySchema,
+        collection: 'TeamSurveys',
       },
     ]),
     JwtModule,

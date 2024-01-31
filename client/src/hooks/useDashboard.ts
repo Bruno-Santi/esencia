@@ -12,6 +12,7 @@ import {
   onSetDataLoading,
   onSetLongRecommendation,
 } from "../store/dashboard/dashboardSlice";
+
 import { UserTeams } from "../store/dashboard/interfaces";
 import { useModal } from ".";
 import { useState } from "react";
@@ -21,6 +22,7 @@ import { getTeamData } from "../helpers/getTeamData";
 import { toastSuccess, toastWarning } from "../helpers";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { finalRandomizedQuestions } from "../members/data/questions";
 
 export const useDashboard = () => {
   const [surveyLoading, setSurveyLoading] = useState(false);
@@ -168,8 +170,8 @@ export const useDashboard = () => {
       })
     );
     const sprint = userTeams.find((team) => team._id === id).sprint;
-    starGettingData(id, sprint);
-
+    await starGettingData(id, sprint);
+    await startGettingLongRecommendation(id, sprint);
     console.log(id, activeTeam.sprint);
   };
 
@@ -249,15 +251,25 @@ export const useDashboard = () => {
 
   const startCreatingSurvey = async (teamName: string, teamId: string) => {
     setSurveyLoading(true);
+    console.log(finalRandomizedQuestions);
+
+    const questions = finalRandomizedQuestions;
+    const questionValues = Object.values(questions);
+    const data = {
+      team_id: teamId,
+      questions: questionValues,
+    };
     try {
       console.log(teamId);
 
       const users = await startGettingMembers(teamId);
+      console.log({ data });
 
       if (!users) {
         toastWarning(`The team ${teamName} doesn't have any member.`);
       } else {
-        const response = await api.post(`/api/survey/${teamId}`);
+        const response = await api.post(`/api/survey/day-survey/`, data);
+        console.log(response);
 
         setSurveyLoading(false);
         return toastSuccess(`Survey sended to the team: ${teamName}`);

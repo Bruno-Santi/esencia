@@ -11,8 +11,10 @@ export class DataService {
   ) {}
   async getLongRecommendation(teamId) {
     try {
-      await this.checkTeam(teamId);
-
+      const team = await this.checkTeam(teamId);
+      // const postRecommendation = await axios.post(
+      //   `${process.env.API_DATA}/report?team_id=${teamId}&sprint=${team?.sprint}`,
+      // );
       const longRecommendation = await axios.get(
         `${process.env.API_DATA}/get_long_recommendation?team_id=${teamId}`,
       );
