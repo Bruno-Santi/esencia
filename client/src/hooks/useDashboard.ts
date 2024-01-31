@@ -171,7 +171,7 @@ export const useDashboard = () => {
     );
     const sprint = userTeams.find((team) => team._id === id).sprint;
     await starGettingData(id, sprint);
-    await startGettingLongRecommendation(id, sprint);
+    // await startGettingLongRecommendation(id, sprint); a
     console.log(id, activeTeam.sprint);
   };
 
