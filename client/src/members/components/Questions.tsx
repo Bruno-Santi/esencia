@@ -30,7 +30,7 @@ export const Questions = ({ token, team_id, user_id }) => {
   return (
     <div className='flex flex-col sm:p-4 md:w-4/6 m-auto'>
       {loading ? (
-        <p>Loading...</p>
+        <p className='text-center flex justify-center m-auto text-tertiary text-lg p-6'>Loading questions...</p>
       ) : (
         <div className='sm:w-full m-auto flex flex-col mt-6 h-fit bg-gray-600 rounded-md p-2 '>
           {questions?.map(({ id, content }) => (
