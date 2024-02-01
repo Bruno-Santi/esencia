@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { onLogOutUser, onSetUser } from "../store/dashboard/dashboardSlice";
 import api from "../helpers/apiToken";
 import { toastSuccess } from "../helpers";
+import axios from "axios";
 
 export const useAuthSlice = () => {
   //@ts-expect-error 'efefe'
@@ -16,53 +17,59 @@ export const useAuthSlice = () => {
   const { handleNavigate } = useNavigateTo();
 
   useEffect(() => {}, [loading]);
-  const startCheckingUser = async () => {
-    dispatch(onChecking());
+  // const startCheckingUser = async () => {
+  //   dispatch(onChecking());
 
-    try {
-      const user = await api.get(`/users`);
-      console.log(user.data.team_list);
-      dispatch(onSetUser(user.data.team_list));
-      dispatch(onLogin(user.data.user));
-    } catch (error) {
-      console.log(error);
+  //   try {
+  //     const user = await api.get(`/users`);
+  //     console.log(user.data.team_list);
 
-      dispatch(onLogOut(""));
-    }
-  };
+  //   } catch (error) {
+  //     console.log(error);
+
+  //     dispatch(onLogOut(""));
+  //   }
+  // };
   const startLoginUser = async ({ email, password }: { email: string; password: string }) => {
-    try {
-      const resp = await api.post(`/auth/login`, { user: { email, password } });
+    console.log({ email, password });
 
+    try {
+      const resp = await api.post("/api/auth/login", { email, password });
+      console.log({ email, password });
       dispatch(clearErrorMessage());
       localStorage.setItem("authToken", JSON.stringify(resp.data.token));
 
-      await startCheckingUser();
+      // await startCheckingUser();
       localStorage.setItem("isAuthenticated", true);
       const firstLog = localStorage.getItem("firstLoggin");
+      dispatch(onSetUser(resp.data.user));
+      console.log(resp.data.user);
+
+      dispatch(onLogin(resp.data.user));
       if (!firstLog) localStorage.setItem("firstLoggin", "0");
       firstLog == "1" ? handleNavigate("/dashboard") : handleNavigate("/onboarding");
     } catch (error) {
-      console.error(error);
+      console.log(error.response.data);
 
-      const errorMessage = error.response?.data?.payload || error.message;
+      const errorMessage = error.response?.data?.message || error.message;
 
       dispatch(onLogOut(errorMessage));
     }
   };
 
-  const startRegisteringUser = async ({ first_name, email, password }) => {
+  const startRegisteringUser = async ({ name, email, password }) => {
     console.log(user);
 
     try {
-      const resp = await api.post(`/auth/register`, { user: { first_name, email, password } });
+      const resp = await api.post(`/api/auth/register`, { name, email, password });
       toastSuccess(`Successfully registered. Redirecting to login. 👍`);
       handleNavigate("/auth/login");
       dispatch(clearErrorMessage());
       console.log(resp);
     } catch (error) {
-      const { payload } = error.response.data;
-      dispatch(onLogOut(payload));
+      console.log(error.response.data.message);
+
+      dispatch(onLogOut(error.response.data.message));
     }
   };
 
@@ -78,11 +85,9 @@ export const useAuthSlice = () => {
     handleNavigate("/auth/login");
   };
 
-  const cleanErrorMessage = () => dispatch(clearErrorMessage())
+  const cleanErrorMessage = () => dispatch(clearErrorMessage());
 
-  
   return {
-    startCheckingUser,
     loading,
     errorMessage,
     status,

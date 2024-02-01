@@ -6,8 +6,9 @@ import { toast } from "react-toastify";
 
 export const MembersTable = () => {
   const { activeTeam, membersActiveTeam, startGettingMembers, startDeletingMember } = useDashboard();
+  const theme = localStorage.getItem("theme");
   const handleAccept = (userId, memberName) => {
-    startDeletingMember(userId, activeTeam.id, memberName);
+    startDeletingMember(userId, activeTeam._id, memberName);
   };
 
   const handleCancel = () => toast.error("Cancelled");
@@ -33,7 +34,7 @@ export const MembersTable = () => {
     () => [
       {
         Header: "Name",
-        accessor: "first_name",
+        accessor: "name",
       },
       {
         Header: "Email",
@@ -45,8 +46,7 @@ export const MembersTable = () => {
         accessor: "delete",
         Cell: ({ row }) => (
           <span className='text-red-600 cursor-pointer  text-lg lg:text-2xl'>
-            <FiTrash2 onClick={() => startDeletingMemberInComponent(row.original.id, row.original.first_name)} />
-       
+            <FiTrash2 onClick={() => startDeletingMemberInComponent(row.original._id, row.original.name)} />
           </span>
         ),
       },
@@ -55,7 +55,7 @@ export const MembersTable = () => {
   );
 
   useEffect(() => {
-    startGettingMembers(activeTeam.id);
+    startGettingMembers(activeTeam._id);
   }, [membersActiveTeam.length]);
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
@@ -64,15 +64,12 @@ export const MembersTable = () => {
   });
   return (
     <div className='w-full overflow-x-auto max-h-96 overflow-y-scroll my-12'>
-      <table {...getTableProps()} className='table-auto rounded text-left border-2 border-primary/30'>
+      <table {...getTableProps()} className={`table-auto rounded text-left border-2 border-${theme !== "dark" ? `primary/30` : `secondary text-tertiary`}`}>
         <thead className='border-b border-blue-gray-100 bg-blue-gray-50 p-4'>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()} className=''>
               {headerGroup.headers.map((column) => (
-                <th
-                  {...column.getHeaderProps()}
-                  className='justify-start border-b flex-row h-20 my-auto mx-auto border-blue-gray-100 bg-blue-gray-50 px-4'
-                >
+                <th {...column.getHeaderProps()} className='justify-start border-b flex-row h-20 my-auto mx-auto border-blue-gray-100 bg-blue-gray-50 px-4'>
                   {column.render("Header")}
                 </th>
               ))}
@@ -83,7 +80,10 @@ export const MembersTable = () => {
           {rows.map((row) => {
             prepareRow(row);
             return (
-              <tr {...row.getRowProps()} className='odd:bg-secondary/20 w-fit h-20 my-auto mx-auto justify-start px-4'>
+              <tr
+                {...row.getRowProps()}
+                className={`${theme !== "dark" ? `odd:bg-secondary/20` : `odd:bg-blue-950`} w-fit h-20 my-auto mx-auto justify-start px-4`}
+              >
                 {row.cells.map((cell) => (
                   <td {...cell.getCellProps()} className='lg:w-3/4 lg:px-4'>
                     {cell.render("Cell")}

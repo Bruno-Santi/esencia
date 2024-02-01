@@ -1,13 +1,15 @@
 # dependencies
 node_modules/
-
+/dist/*
+dist/
+dist
 # IDE
 /.idea
 /.awcache
 /.vscode
 /.devcontainer
 *.code-workspace
-
+.env
 # Vim
 [._]*.s[a-v][a-z]
 [._]*.sw[a-p]
@@ -45,3 +47,4 @@ build/config\.gypi
 
 .npmrc
 pnpm-lock.yaml
+.vercel

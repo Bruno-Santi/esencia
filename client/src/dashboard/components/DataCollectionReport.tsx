@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useDashboard } from "../../hooks/useDashboard";
 
 const renderValue = (value: unknown): React.ReactNode => {
@@ -9,17 +10,23 @@ const renderValue = (value: unknown): React.ReactNode => {
 };
 export const DataCollectionReport = () => {
   const { dataAmount } = useDashboard();
-  if (dataAmount.length === 0) return <p className='text-2xl'>NO DATA YET, TRY MAKING ACTIONS</p>;
+  useEffect(() => {
+    console.log(dataAmount);
+  }, []);
+
+  if (dataAmount.length === 0) return null;
 
   return (
-    <div>
-      <ul className='text-primary text-xl md:text-sm text-left border-2 border-primary/30 rounded-lg space-y-2 m-auto justify-start '>
-        {Object.entries(dataAmount).map(([key, value]) => (
-          <li key={key} className='p-4 odd:bg-gray-400/40 rounded-lg'>
-            {key.replace(/_/g, " ").replace(/\b\w/g, (match) => match.toUpperCase())}: {renderValue(value)}
-          </li>
-        ))}
-      </ul>
+    <div
+      className='md:mt-2 lg:mt-12 shadow-lg
+    shadow-primary/50 border-primary border rounded-md flex justify-center p-3 bg-quaternary'
+    >
+      {Object.entries(dataAmount).map(([key, value]) => (
+        <span key={key} className='px-2 text-center text-tertiary flex flex-col'>
+          <span className='font-poppins lg:text-sm md:text-xs'> {key.replace(/_/g, " ").replace(/\b\w/g, (match) => match.toUpperCase())}:</span>{" "}
+          <span className='font-poppins  lg:text-sm md:text-xs'>{renderValue(value)}</span>
+        </span>
+      ))}
     </div>
   );
 };

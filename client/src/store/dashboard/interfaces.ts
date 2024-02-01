@@ -1,6 +1,6 @@
 export interface User {
   id?: string;
-  first_name: string;
+  name: string;
   email: string;
   password: string;
 }
@@ -8,6 +8,7 @@ export interface UserTeams {
   id: string;
   name: string;
   logo: string;
+  sprint?: number;
 }
 
 export interface DashBoardState {

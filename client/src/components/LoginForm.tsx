@@ -22,12 +22,12 @@ export const LoginForm = () => {
     <>
       <form className='flex flex-col space-y-6 pt-6' onSubmit={handleSubmit(onSubmit)}>
         <div className='flex flex-col'>
-          <label className=' text-tertiary text-lg font-normal' htmlFor='email'>
+          <label className=' text-tertiary md:text-md lg:text-lg font-normal' htmlFor='email'>
             Email
           </label>
           <input
             type='email'
-            className='h-12 w-64 rounded-md p-2 text-sm font-thin  border-2 duration-500 text-primary focus:outline-none focus:border-2 focus:border-secondary/80 focus:font-bold'
+            className='md:h-10 lg:h-12 w-23 rounded-md p-2 text-sm font-thin  border-2 duration-500 text-primary focus:outline-none focus:border-2 focus:border-secondary/80 focus:font-bold'
             placeholder='Email'
             {...register("email", {
               required: "This field is required",

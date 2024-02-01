@@ -1,87 +1,91 @@
-import { ChangeEvent, SyntheticEvent, useState } from "react";
-import { useNavigateTo } from ".";
-import { Navigate, useNavigate } from "react-router-dom";
-import api from "../helpers/apiToken";
+import { useState, useEffect, ChangeEvent } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-export const useQuestions = ({ team_id, token }) => {
+export const useQuestions = (token, team_id, user_id) => {
   const navigate = useNavigate();
-  const [isSendend, setIsSendend] = useState(false);
   const [changesMade, setChangesMade] = useState(false);
-  const [rangeValues, setRangeValues] = useState([
-    {
-      id: "question1",
-      value: 5,
-    },
-    {
-      id: "question2",
-      value: 5,
-    },
-    {
-      id: "question3",
-      value: 5,
-    },
-    {
-      id: "question4",
-      value: 5,
-    },
-  ]);
+  const [loading, setLoading] = useState(true); // Set initial loading state to true
+  const [questions, setQuestions] = useState([]);
+  const [rangeValues, setRangeValues] = useState([]);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setRangeValues((prevValues) => [
-      ...prevValues.map((item) =>
-        item.id === name ? { ...item, value: parseInt(value, 10) } : item
-      ),
-    ]);
-    setChangesMade(true);
-  };
-
-  const handleSubmit = async (e: SyntheticEvent) => {
-    e.preventDefault();
-    if (isSendend) return;
-
-    const requestBody = rangeValues.reduce((acc, item, index) => {
-      const questionKey = `question${index + 1}`;
-      return {
-        ...acc,
-        [questionKey]: item.value,
-      };
-    }, {});
-
-    const dailySurvey = {
-      user_id: team_id,
-      team_id: token,
-      sprint: 1,
-      comment: "",
-      ...requestBody,
-    };
-
+  const getQuestions = async () => {
     try {
-      const resp = await api.post(`/survey/daily_survey`, {
-        daily_survey: dailySurvey,
+      const response = await axios.get(`https://esencia-api.onrender.com/api/survey/day-survey/team/${team_id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
-      console.log("todo bien " + resp);
+
+      setQuestions(response.data.questions);
+      console.log(response.data.questions);
+
+      setLoading(false); // Set loading to false after successfully fetching data
     } catch (error) {
       console.log(error);
     }
+  };
 
-    setIsSendend(true);
+  useEffect(() => {
+    const fetchData = async () => {
+      await getQuestions();
+    };
 
-    // navigate("/members/comments", { state: { dailySurvey } });
+    fetchData();
+  }, []); // Empty dependency array to run only once on mount
 
-    //% FACU_EDIT
-    //! Estás cambiando el "team_id" por "token"?
+  useEffect(() => {
+    // Update rangeValues when questions are updated
+    setRangeValues(
+      questions?.map((question) => ({
+        id: question.id,
+        value: 5,
+      })) || []
+    );
+  }, [questions]);
 
-    navigate(`/members/comments?token=${team_id}&team_id=${token}`, {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setRangeValues((prevValues) => prevValues.map((item) => (item.id === name ? { ...item, value: parseInt(value, 10) } : item)));
+    setChangesMade(true);
+  };
+
+  const handleNavigateToComment = () => {
+    const transformedQuestions = rangeValues.reduce((acc, item, index) => {
+      const questionData = questions.find((q) => q.id === item.id);
+
+      if (questionData) {
+        return {
+          ...acc,
+          [questionData.id]: {
+            content: questionData.content,
+            cuadrant_cohef: questionData.cuadrant_cohef,
+            value: item.value / 10,
+          },
+        };
+      }
+      return acc;
+    }, {});
+
+    const dailySurvey = {
+      team_id: team_id,
+      user_id: user_id,
+      comment: "",
+      ...transformedQuestions,
+    };
+
+    console.log(dailySurvey);
+
+    navigate(`/members/comments?token=${token}&team_id=${team_id}`, {
       state: { dailySurvey },
     });
   };
-  //% END
-
   return {
     rangeValues,
     changesMade,
     handleChange,
-    handleSubmit,
+    loading,
+    handleNavigateToComment,
+    questions,
   };
 };

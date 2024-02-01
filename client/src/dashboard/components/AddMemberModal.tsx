@@ -19,13 +19,14 @@ export const AddMemberModal: React.FC<{
   const { activeTeam, startAddingMember, membersActiveTeam } = useDashboard();
   const [forceRender, setForceRender] = useState(false);
   const [modalKey, setModalKey] = useState(Date.now());
+  const theme = localStorage.getItem("theme");
   useEffect(() => {
     setForceRender((prev) => !prev);
   }, [membersActiveTeam]);
 
   const onSubmit = (data) => {
     setModalKey(Date.now());
-    const teamId = activeTeam.id;
+    const teamId = activeTeam._id;
     startAddingMember(data, teamId);
 
     closeAddMember();
@@ -33,12 +34,16 @@ export const AddMemberModal: React.FC<{
 
   return (
     <Modal key={modalKey}>
-      <form className='flex flex-col w-4/6 mx-auto font-poppins text-xl'>
+      <form className={`flex flex-col w-4/6 mx-auto font-poppins text-xl ${theme === "dark" && "text-tertiary"}`}>
         <div className='my-6 flex flex-col mx-auto'>
           <label htmlFor='name'>Name</label>
 
           <input
-            className='h-12 w-64 rounded-md p-2 text-sm font-normal  border-2 duration-500 text-primary focus:outline-none focus:border-2 focus:border-secondary/80 focus:font-bold'
+            className={`
+ h-12 w-64 rounded-md p-2 text-sm font-normal border-b-2
+ duration-500 text-primary focus:outline-none
+ ${theme === "dark" ? "bg-transparent border-b-gray-300 rounded-none text-white placeholder-white" : "border-2  focus:border-secondary/80 focus:font-bold"}
+`}
             type='text'
             placeholder='Name'
             {...register("first_name", {
@@ -50,7 +55,15 @@ export const AddMemberModal: React.FC<{
         <div className='my-6 flex flex-col mx-auto'>
           <label htmlFor='email'>Email:</label>
           <input
-            className='h-12 w-64 rounded-md p-2 text-sm font-normal  border-2 duration-500 text-primary focus:outline-none focus:border-2 focus:border-secondary/80 focus:font-bold'
+            className={`
+            h-12 w-64 rounded-md p-2 text-sm font-normal border-b-2
+            duration-500 text-primary focus:outline-none
+            ${
+              theme === "dark"
+                ? "bg-transparent border-b-gray-300 rounded-none text-white placeholder-white"
+                : "border-2  focus:border-secondary/80 focus:font-bold"
+            }
+           `}
             type='email'
             placeholder='Email'
             {...register("email", {
@@ -60,17 +73,11 @@ export const AddMemberModal: React.FC<{
         </div>
       </form>
       <div className='flex space-x-6 mx-auto justify-center '>
-        <button
-          onClick={closeAddMember}
-          className='btn-secondary rounded-md p-2 font-poppins duration-700 hover:bg-tertiary hover:text-primary '
-        >
+        <button onClick={closeAddMember} className='btn-secondary rounded-md p-2 font-poppins duration-700 hover:bg-tertiary hover:text-primary '>
           Cancel
         </button>
 
-        <button
-          onClick={handleSubmit(onSubmit)}
-          className='btn-primary rounded-md p-2 font-poppins duration-700 hover:bg-tertiary hover:text-primary '
-        >
+        <button onClick={handleSubmit(onSubmit)} className='btn-primary rounded-md p-2 font-poppins duration-700 hover:bg-tertiary hover:text-primary '>
           Save
         </button>
       </div>

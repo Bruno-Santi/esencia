@@ -5,7 +5,7 @@ import { useAuthSlice } from "../hooks/useAuthSlice";
 import { renderErrorMessage } from "../helpers/renderErrorMessage";
 
 export const RegisterForm = () => {
-  const { loading, startRegisteringUser, errorMessage } = useAuthSlice();
+  const { loading, startRegisteringUser, errorMessage, cleanErrorMessage } = useAuthSlice();
   const { handleNavigate } = useNavigateTo();
   const {
     register,
@@ -25,7 +25,7 @@ export const RegisterForm = () => {
           className='h-12 w-64 rounded-md p-2 text-sm font-thin  border-2 duration-500 text-primary focus:outline-none focus:border-2 focus:border-secondary/80 focus:font-bold'
           type='text'
           placeholder='Name'
-          {...register("first_name", {
+          {...register("name", {
             required: "This field is required",
             maxLength: 20,
           })}
@@ -83,7 +83,10 @@ export const RegisterForm = () => {
           <Divider width={"w-[400px]"} />
         </div>
         <span
-          onClick={() => handleNavigate("/auth/login")}
+          onClick={() => {
+            cleanErrorMessage();
+            handleNavigate("/auth/login");
+          }}
           className='text-tertiary font-normal mt-6 font-poppins cursor-pointer text-lg m-auto  duration-500 hover:text-secondary '
         >
           Have an account? <span>Log In</span>

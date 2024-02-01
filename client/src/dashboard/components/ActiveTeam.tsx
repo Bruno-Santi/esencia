@@ -6,21 +6,21 @@ import { useEffect } from "react";
 export const ActiveTeam = () => {
   const { activeTeam, startGettingMembers, isLoading } = useDashboard();
   useEffect(() => {
-    if (activeTeam) startGettingMembers(activeTeam.id);
+    if (activeTeam) startGettingMembers(activeTeam._id);
   }, []);
 
   return (
-    <div className='flex mx-auto justify-center my-auto h-full '>
+    <div className='flex mx-auto justify-center my-auto min-h-screen '>
       {!activeTeam ? (
-        <div className='flex flex-col justify-center mx-auto my-72 space-y-2 duration-700 '>
+        <div className='flex flex-col justify-center mx-auto my-0 pb-20 space-y-2 duration-700 '>
           <div className='text-4xl   font-poppins text-primary/80'>
             {!isLoading ? (
-              <span>Select Team</span>
+              <span className='dark:text-tertiary text-primary pb-44 '>Select Team</span>
             ) : (
-              <div role='status'>
+              <div role='status bg-black h-screen'>
                 <svg
                   aria-hidden='true'
-                  className='inline w-24 h-24 text-gray-200 animate-spin mt-20 dark:text-gray-600 fill-green-500'
+                  className='bg-black inline w-24 h-24 text-gray-200 animate-spin mt-20 dark:text-gray-600 fill-green-500'
                   viewBox='0 0 100 101'
                   fill='none'
                   xmlns='http://www.w3.org/2000/svg'
@@ -39,7 +39,7 @@ export const ActiveTeam = () => {
             )}
           </div>
           <div className={!isLoading ? `mx-auto my-auto` : "hidden"}>
-            <RiLightbulbLine className='text-[100px] text-primary/80' />
+            <RiLightbulbLine className='text-[100px] text-primary/80 dark:text-tertiary' />
           </div>
         </div>
       ) : (

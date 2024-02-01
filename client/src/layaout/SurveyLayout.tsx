@@ -4,21 +4,19 @@ import { logo } from "../assets";
 
 export const SurveyLayout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <div className='w-full h-screen bg-primary'>
+    <div className='w-full lg:min-h-screen md:min-h-screen bg-primary bg-contain sm:min-h-screen'>
       <img
         src={logo}
-        className=' w-1/6 md:w-[80px] lg:w-[80px]  left-12 top-12 absolute m-auto animate-pulse duration-700'
+        className=' w-1/6 md:w-[60px] lg:w-[80px] sm:top-5 sm:left-5 lg:left-12 md:left-12 lg:top-12 md:top-12 absolute m-auto animate-pulse duration-700'
         alt='esencia.ai logo'
       />
-      <div className='flex flex-col'>
-        <h4 className='text-tertiary font-normal tracking-tighter flex mt-20 md:text-2xl lg:text-5xl font-poppins mx-auto'>
-          Welcome!
+      <div className='flex flex-col sm:pt-10'>
+        <h4 className='text-tertiary font-normal tracking-tighter flex mt-20 md:text-3xl lg:text-5xl sm:text-2xl font-poppins mx-auto'>
+          Bienvenido!
         </h4>
-        <p className='text-center font-poppins font-extralight md:text-base lg:text-xl w-2/3 justify-center mx-auto mt-6 text-tertiary'>
-          You’ve been invited to fulfill a <span className='text-secondary font-normal'>Esencia</span> survey. This is
-          the main tool through which data is gathered We really appreciate you{" "}
-          <span className='text-secondary font-normal'>taking the time to answer</span>, as this will be the main input
-          to improve and enable teams interactions.
+        <p className='text-center font-poppins font-extralight md:text-base lg:text-xl lg:w-2/3 md:w-2/3 sm:w-full justify-center mx-auto mt-4 text-tertiary'>
+          Muchas gracias por tomarte unos minutos para contestar esta encuesta,{" "}
+          <span className='text-secondary font-normal'>tu feedback es muy valioso para nosotros</span>.
         </p>
       </div>
 

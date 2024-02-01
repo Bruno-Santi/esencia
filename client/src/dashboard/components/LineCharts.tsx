@@ -1,46 +1,61 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Chart from "chart.js/auto";
-import moment from "moment";
 import "chartjs-adapter-moment";
 import { useDashboard } from "../../hooks/useDashboard";
-
-const formatDate = (dateString) => moment(dateString).format("MM/DD/YYYY");
+import { formatDate } from "../../helpers";
 
 export const LineCharts = () => {
+  const themeLocal = localStorage.getItem("theme");
+  const [theme, setTheme] = useState();
   const { linesMetrics } = useDashboard();
   const chartContainer = useRef(null);
   const chartInstance = useRef(null);
 
+  useEffect(() => {
+    setTheme(themeLocal);
+  }, [theme]);
+
   const chartData = useMemo(() => {
-    if (!linesMetrics || linesMetrics.label_x.length === 0) {
-      return null; // O cualquier valor predeterminado que desees cuando no haya datos
+    if (!linesMetrics || linesMetrics.length === 0) {
+      return null;
     }
 
+    const formattedData = linesMetrics.map((metric) => ({
+      date: formatDate(metric.date),
+      daily_general_satisfaction: metric.daily_general_satisfaction * 100,
+      daily_self_satisfaction: metric.daily_self_satisfaction * 100,
+      daily_team_collaboration: metric.daily_team_collaboration * 100,
+      daily_work_engagement: metric.daily_work_engagement * 100,
+      daily_workspace_wellbeing: metric.daily_workspace_wellbeing * 100,
+    }));
+
+    const labels = formattedData.map((data) => data.date);
+
     return {
-      labels: linesMetrics.label_x.map(formatDate),
+      labels: labels,
       datasets: [
         {
           label: "Self Satisfaction",
-          data: linesMetrics.self_satisfaction || Array(linesMetrics.label_x.length).fill(0),
+          data: formattedData.map((data) => data.daily_self_satisfaction),
           borderColor: "rgba(255, 99, 132, 0.5)",
           backgroundColor: "rgba(255, 99, 132, 0.2)",
         },
         {
           label: "Team Collaboration",
-          data: linesMetrics.team_collaboration || Array(linesMetrics.label_x.length).fill(0),
+          data: formattedData.map((data) => data.daily_team_collaboration),
           borderColor: "rgba(54, 162, 235, 0.5)",
           backgroundColor: "rgba(54, 162, 235, 0.2)",
         },
         {
           label: "Work Engagement",
-          data: linesMetrics.work_engagement || Array(linesMetrics.label_x.length).fill(0),
+          data: formattedData.map((data) => data.daily_work_engagement),
           borderColor: "rgba(255, 206, 86, 0.5)",
           backgroundColor: "rgba(255, 206, 86, 0.2)",
         },
         {
-          label: "Workspace",
-          data: linesMetrics.workspace || Array(linesMetrics.label_x.length).fill(0),
-          borderColor: "rgba(75, 192, 192, 0.5)",
+          label: "Workspace Wellbeing",
+          data: formattedData.map((data) => data.daily_workspace_wellbeing),
+          borderColor: "#2f8032",
           backgroundColor: "rgba(75, 192, 192, 0.2)",
         },
       ],
@@ -81,12 +96,12 @@ export const LineCharts = () => {
         chartInstance.current.update();
       }
     }
-  }, [chartData]);
+  }, [chartData, themeLocal]);
 
   return (
     <div>
       <div>
-        <canvas ref={chartContainer} style={{ marginBottom: "10px", width: "90%", height: "6.5em", margin: "auto" }} />
+        <canvas id='SesionLine' ref={chartContainer} style={{ marginBottom: "10px", width: "100%", height: "8em", margin: "auto", padding: 10 }} />
       </div>
     </div>
   );

@@ -10,6 +10,7 @@ const initialState: DashBoardState = {
   metricsForToday: {},
   linesMetrics: {},
   shortRecomendation: {},
+  topics: [],
   longRecommendation: {},
   dataAmount: [],
   isLoading: false,
@@ -22,7 +23,7 @@ export const dashboardSlice = createSlice({
   initialState,
   reducers: {
     onSetUser: (state, { payload }) => {
-      state.user = payload.user;
+      state.user = payload;
       state.isLoading = false;
     },
     onLogOutUser: (state) => {
@@ -34,6 +35,7 @@ export const dashboardSlice = createSlice({
       state.shortRecomendation = "";
       state.metricsForToday = [];
       state.membersActiveTeam = [];
+      state.topics = [];
     },
     onLoadingTeam: (state) => {
       state.isLoading = true;
@@ -46,6 +48,7 @@ export const dashboardSlice = createSlice({
       state.dataAmount = [];
       state.shortRecomendation = {};
       state.longRecommendation = {};
+      state.topics = [];
     },
     onSetUserTeams: (
       state,
@@ -53,9 +56,10 @@ export const dashboardSlice = createSlice({
         userTeams: UserTeams[];
       }>
     ) => {
-      state.userTeams = action.payload.userTeams;
+      state.userTeams = action.payload.userTeams || [];
       state.isLoading = false;
       state.modalOpen = false;
+      state.dataLoading = false;
     },
     onSetActiveTeam: (
       state,
@@ -63,7 +67,7 @@ export const dashboardSlice = createSlice({
         id: number;
       }>
     ) => {
-      const userTeam = state.userTeams.find((team) => team.id === action.payload.id);
+      const userTeam = state.userTeams.find((team) => team._id === action.payload.id);
       state.activeTeam = userTeam;
       state.isLoading = false;
       state.modalOpen = false;
@@ -78,10 +82,13 @@ export const dashboardSlice = createSlice({
       state.membersActiveTeam = action.payload.members;
     },
     onSaveMetricsForToday: (state, { payload }) => {
+      console.log(payload);
+
       state.metricsForToday = payload.metricsForToday;
       state.linesMetrics = payload.linesMetrics;
       state.dataAmount = payload.dataAmount;
       state.shortRecomendation = payload.shortRecomendation;
+      state.topics = payload.topics;
       state.isLoading = false;
     },
 
