@@ -73,17 +73,7 @@ export const useDashboard = () => {
       dispatch(onSetDataLoading(false));
     }
   };
-  const startGettingLongRecommendation = async (teamId) => {
-    try {
-      const resp = await api.get(`/get_long_recommendation?team_id=${teamId}`);
-      console.log(resp.data);
 
-      dispatch(onSetLongRecommendation(resp.data));
-    } catch (error) {
-      console.log(error);
-      toast.warning("Error while getting data");
-    }
-  };
   const starGettingData = async (id: string, sprint = 0, triggered?: boolean) => {
     dispatch(onSetDataLoading(true));
     console.log(id, sprint);
@@ -99,7 +89,12 @@ export const useDashboard = () => {
 
       const surveyData = await getTeamData(id, sprint);
       console.log(surveyData);
-      if (surveyData.longRecommendation !== "There is no enough data" || surveyData.longRecommendation !== 'There is no retro' || !surveyData.longRecommendation) dispatch(onSetLongRecommendation(surveyData.longRecommendation));
+      if (
+        surveyData.longRecommendation !== "There is no enough data" ||
+        surveyData.longRecommendation !== "There is no retro" ||
+        !surveyData.longRecommendation
+      )
+        dispatch(onSetLongRecommendation(surveyData.longRecommendation));
       if (surveyData === "No existe data de este equipo") toast.warning("There's no data for this team 😢");
       const datalocal = localStorage.getItem("surveyData");
       if (datalocal) localStorage.removeItem("surveyData");
@@ -171,8 +166,8 @@ export const useDashboard = () => {
       })
     );
     const sprint = userTeams.find((team) => team._id === id).sprint;
-    await starGettingData(id, sprint);
-    // await startGettingLongRecommendation(id, sprint); a
+    await starGettingData(String(id), sprint);
+
     console.log(id, activeTeam.sprint);
   };
 
@@ -335,7 +330,7 @@ export const useDashboard = () => {
     dataLoading,
     closeModal,
     isOpen,
-    startGettingLongRecommendation,
+
     longRecommendation,
     startDeletingMember,
   };
