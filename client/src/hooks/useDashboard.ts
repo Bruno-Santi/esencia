@@ -99,7 +99,7 @@ export const useDashboard = () => {
 
       const surveyData = await getTeamData(id, sprint);
       console.log(surveyData);
-      if (surveyData.longRecommendation !== "There is no enough data") dispatch(onSetLongRecommendation(surveyData.longRecommendation));
+      if (surveyData.longRecommendation !== "There is no enough data" || surveyData.longRecommendation !== 'There is no retro') dispatch(onSetLongRecommendation(surveyData.longRecommendation));
       if (surveyData === "No existe data de este equipo") toast.warning("There's no data for this team 😢");
       const datalocal = localStorage.getItem("surveyData");
       if (datalocal) localStorage.removeItem("surveyData");
