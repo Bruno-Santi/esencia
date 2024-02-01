@@ -43,7 +43,7 @@ export class DataService {
         `${process.env.API_DATA}/dashboard_data?sprint=${sprint}&team_id=${teamId}`,
       );
       const longRecommendation = await axios.post(
-        `${process.env.API_DATA}/report?team_id=${teamId}&sprint=${sprint}`,
+        `${process.env.API_DATA}/report?team_id=${teamId}&sprint=${sprint + 1}`,
       );
 
       console.log(data2);
