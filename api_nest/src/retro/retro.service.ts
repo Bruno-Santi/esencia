@@ -308,6 +308,11 @@ export class RetroService {
   async postRetro(data) {
     try {
       const resp = await axios.post(`${process.env.API_DATA}/retro`, data);
+      const trigger = await axios.post(
+        `${process.env.API_DATA}/reports?team_id=${data.team_id}&sprint=${data.sprint}`,
+      );
+      console.log(trigger);
+
       console.log(resp);
     } catch (error) {
       console.log(error);

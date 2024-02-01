@@ -31,9 +31,9 @@ export const DashboardUi = () => {
   const containerRef = useRef();
 
   const handleNavigateToFeedBack = () => {
-    console.log(!Object.entries(longRecommendation.recommendation));
-    handleNavigate("/dashboard/feedback");
     if (Object.entries(longRecommendation).length > 0 === false) return;
+    console.log(!Object.entries(longRecommendation));
+    handleNavigate("/dashboard/feedback");
   };
   useEffect(() => {
     console.log(dataLoading);
@@ -43,7 +43,7 @@ export const DashboardUi = () => {
   };
   return (
     <>
-      <div className=' w-full md:grid lg:grid px-6 ml-20 sm:flex sm:flex-col  lg:py-6 md:py-2 grid-cols-12 grid-rows-2 gap-6'>
+      <div className=' w-full md:grid lg:grid px-6 ml-4 sm:flex sm:flex-col  lg:py-6 md:py-2 grid-cols-12 grid-rows-2 gap-6'>
         <div
           className='bg-tertiary shadow-lg
          shadow-primary/50  h-[400px] 
@@ -53,11 +53,11 @@ export const DashboardUi = () => {
           <div className='flex justify-between'>
             <span className='font-poppins text-primary dark:text-tertiary flex mt-4 ml-4 text-2xl font-bold'>Key team indicator</span>
           </div>
-          <div className='flex items-center -z-10 justify-center h-3/6'>
-            <span className='text-center font-poppins w-6/12 mt-8 my-auto text-primary/50 font-bold text-5xl'>
-              <div className='flex justify-center -space-x-20 m-auto  text-center'></div>
+          <div className='flex items-center -z-10 justify-center h-full'>
+            <span className='text-center font-poppins w-full mt-8 my-auto text-primary/50 font-bold text-5xl'>
+              <div className='flex justify-center  m-auto  text-center'></div>
               {Object.keys(metricsForToday).length > 0 ? (
-                <div className={modalOpen ? "hidden" : ""}>
+                <div>
                   <Charts />
                 </div>
               ) : (

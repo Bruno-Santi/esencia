@@ -32,25 +32,31 @@ export class DataService {
       console.log(teamId, sprint);
 
       await this.checkTeam(teamId);
+
+      const short = await axios.post(
+        `${process.env.API_DATA}/short_recommendation?team_id=${teamId}&sprint=${sprint}`,
+      );
       const data2 = await axios.post(
         `${process.env.API_DATA}/get_topics?sprint=${sprint}&team_id=${teamId}`,
       );
       const dashboardData = await axios.get(
         `${process.env.API_DATA}/dashboard_data?sprint=${sprint}&team_id=${teamId}`,
       );
-      const short = await axios.post(
-        `${process.env.API_DATA}/short_recommendation?team_id=${teamId}&sprint=${sprint}`,
+      const longRecommendation = await axios.post(
+        `${process.env.API_DATA}/report?team_id=${teamId}&sprint=${sprint}`,
       );
+
       console.log(data2);
       console.log(short);
 
-      const { data } = dashboardData;
-
-      console.log(data);
-
-      return {
-        data,
+      const responseData = {
+        data: dashboardData.data,
+        longRecommendation: longRecommendation.data,
       };
+
+      console.log(responseData);
+
+      return responseData;
     } catch (error) {
       console.log(error);
 

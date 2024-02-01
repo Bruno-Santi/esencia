@@ -28,7 +28,7 @@ export const TeamForm: React.FC<{
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col mx-auto text-center space-y-12'>
+    <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col mx-auto text-center space-y-12 dark:bg-black'>
       <label htmlFor='teamName' className={`text-manrope text-2xl mt-4 ${theme === "dark" && "text-tertiary"}`}>
         Your team name <span className='text-sm'>(*)</span>{" "}
       </label>

@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { useQuestions } from "../../hooks";
 import { useEffect } from "react";
+import Slider from "@mui/material/Slider";
+import { deepOrange, deepPurple } from "@mui/material/colors";
 
 export const Questions = ({ token, team_id, user_id }) => {
   const navigate = useNavigate();
@@ -36,37 +38,38 @@ export const Questions = ({ token, team_id, user_id }) => {
           {questions?.map(({ id, content }) => (
             <div
               key={id}
-              className='flex flex-col lg:p-6 md:p-2 lg:space-y-4 md:space-y-2 lg:text-xl md:text-[18px] sm:text-[18px] text-center text-tertiary font-poppins justify-center'
+              className='flex flex-col lg:p-4 md:p-2 lg:space-y-4 md:space-y-2 lg:text-xl md:text-[18px] sm:text-[18px] text-center text-tertiary font-poppins justify-center'
             >
               {content}
               <div className='flex items-center justify-between'>
-                <span role='img' className='lg:text-3xl md:text-lg sm:text-lg' aria-label='Sad Emoji'>
+                <span role='img' className='lg:text-2xl md:text-lg sm:text-lg' aria-label='Sad Emoji'>
                   😟
                 </span>
                 <label htmlFor={`minmax-range-${id}`} className='block mb-2 text-sm font-medium text-gray-900 dark:text-white '>
                   {rangeValues.map(({ id: valueId, value }) => {
                     return valueId === id ? (
                       <div className='border-2 mt-2 rounded-full border-secondary w-8 h-8'>
-                        <span key={valueId} className='text-xl'>
+                        <span key={valueId} className='text-xl text-tertiary'>
                           {value}
                         </span>
                       </div>
                     ) : null;
                   })}
                 </label>
-                <span role='img' className='lg:text-3xl md:text-lg sm:text-lg' aria-label='Happy Emoji'>
+                <span role='img' className='lg:text-2xl md:text-lg sm:text-lg' aria-label='Happy Emoji'>
                   😊
                 </span>
               </div>
-              <input
-                onChange={handleChange}
+              <Slider
+                onChange={(event, value) => handleChange({ target: { name: id, value } })}
                 name={id}
                 value={rangeValues.find((item) => item.id === id)?.value || 0}
-                id={`minmax-range-${id}`}
-                type='range'
-                min='0'
-                max='10'
-                className=' custom-range my-4'
+                valueLabelDisplay='auto'
+                valueLabelFormat={(value) => rangeValues.find((item) => item.id === id)?.value || 0}
+                min={0}
+                max={10}
+                marks
+                style={{ color: deepOrange[600] }}
               />
             </div>
           ))}

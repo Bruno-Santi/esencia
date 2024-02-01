@@ -1,6 +1,5 @@
 import { IoMdClose } from "react-icons/io";
-import { Modal } from "../../layaout";
-import React from "react";
+import { Dialog, DialogTitle, IconButton, DialogContent, Box } from "@mui/material";
 import { TeamForm } from ".";
 import { useDashboard } from "../../hooks/useDashboard";
 
@@ -9,20 +8,27 @@ export const ModalTeam: React.FC<{
 }> = ({ closeModal }) => {
   const { startToggleModal } = useDashboard();
   const theme = localStorage.getItem("theme");
+
   return (
-    <Modal>
-      <div
-        className={`text-4xl text-primary/60 cursor-pointer absolute right-4 top-4 duration-700 hover:text-secondary ${theme === "dark" && "text-tertiary"}`}
-        onClick={() => {
-          closeModal();
-          startToggleModal();
-        }}
-      >
-        <IoMdClose />
-      </div>
-      <div className='flex flex-col'>
-        <TeamForm closeModal={closeModal} />
-      </div>
-    </Modal>
+    <Dialog open={true} onClose={() => closeModal()} fullWidth maxWidth='sm'>
+      <DialogTitle className='dark:bg-black'>
+        <Box sx={{ position: "absolute", top: 4, right: 4 }}>
+          <IconButton
+            className={`text-5xl ${theme !== "dark" ? `text-primary/60` : `text-tertiary`} z-1 cursor-pointer duration-700 hover:text-secondary `}
+            onClick={() => {
+              closeModal();
+              startToggleModal();
+            }}
+          >
+            <IoMdClose className='dark:text-teal-50 text-secondary' />
+          </IconButton>
+        </Box>
+      </DialogTitle>
+      <DialogContent className='dark:bg-black'>
+        <div className='flex flex-col dark:bg-black'>
+          <TeamForm closeModal={closeModal} />
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };

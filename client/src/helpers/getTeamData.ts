@@ -6,6 +6,7 @@ export const getTeamData = async (teamId: string, sprint) => {
 
   const response = await api.get(`/api/data/dashboard-data/${teamId}/${team.data.sprint}`);
   console.log(response);
+  console.log(response.data.longRecommendation);
 
-  return response.data.data;
+  return response.data;
 };

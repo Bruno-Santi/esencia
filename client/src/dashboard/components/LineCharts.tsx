@@ -55,7 +55,7 @@ export const LineCharts = () => {
         {
           label: "Workspace Wellbeing",
           data: formattedData.map((data) => data.daily_workspace_wellbeing),
-          borderColor: "rgba(75, 192, 192, 0.5)",
+          borderColor: "#2f8032",
           backgroundColor: "rgba(75, 192, 192, 0.2)",
         },
       ],

@@ -1,49 +1,67 @@
+import { useEffect } from "react";
 import { BackButton } from ".";
 import { arrowdown, graph } from "../../assets";
 import { useDocumentTitle } from "../../hooks";
 import { useDashboard } from "../../hooks/useDashboard";
 import { DashboardLayout } from "../../layaout/DashboardLayout";
+import { UsePagination } from "../../helpers/UsePagination";
+import { toastSuccess } from "../../helpers";
+import { FaSmile, FaUsers, FaTools, FaHome } from "react-icons/fa";
+import { MdOutlineSelfImprovement } from "react-icons/md";
+import { Cuadrants } from "./Cuadrants";
 
 export const FeedBack = () => {
   useDocumentTitle("Feedback | Esencia.app");
+
   const { longRecommendation } = useDashboard();
+  const handleVote = () => {
+    toastSuccess("Thanks for your feedback! 🤗");
+  };
+  useEffect(() => {
+    console.log(longRecommendation);
+  }, []);
   return (
     <DashboardLayout>
       <BackButton />
       <div className='flex h-screen'>
-        <section className='flex flex-col w-2/3 justify-center my-auto place-content-center items-center ml-36 space-y-24 mt-28'>
+        <section className='flex flex-col w-2/3 justify-center my-auto place-content-center items-center ml-36 space-y-24 mt-20'>
           <div>
-            <h2 className='font-manrope text-2xl mb-6'>Insight Analysis</h2>
-            <div className='p-12 text-primary rounded-lg bg-gray-200 shadow-gray-700 shadow-lg font-poppins overflow-y-scroll'>
-              {longRecommendation?.recommendation.content.item1}
-            </div>
-          </div>
-          <div>
-            <h2 className='font-manrope text-2xl mb-6'>What can you do as a leader?</h2>
-            <div className='p-12 text-primary rounded-lg bg-gray-200 mb-16 shadow-gray-700 overflow-y-scroll shadow-lg font-poppins '>
-              {Object.entries(longRecommendation?.recommendation.content.item2).map(([key, value]) => (
+            <h2 className='font-manrope text-2xl mb-6 dark:text-tertiary'>What can you do as a leader?</h2>
+            <div className='p-12 text-primary rounded-lg dark:bg-gray-900 bg-gray-200 mb-16 shadow-gray-700 shadow-lg font-poppins '>
+              <UsePagination shortRecomendation={longRecommendation?.content.item2} containerRef={null} />
+              {/* {Object.entries(longRecommendation?.content.item2).map(([key, value]) => (
                 <div key={key}>
                   <h2 className='font-bold font-poppins'>{key}:</h2>
                   <p>{value}</p>
                 </div>
-              ))}
+              ))} */}
+              <div className='   bottom-0 ml-4 mt-2'>
+                <span className='w-full place-items-center my-auto text-primary dark:text-tertiary text-sm'>
+                  Did you find this insight accurate?{" "}
+                  <a className='text-lg cursor-pointer' onClick={handleVote}>
+                    👍
+                  </a>{" "}
+                  <a onClick={handleVote} className='text-lg cursor-pointer'>
+                    👎
+                  </a>
+                </span>
+              </div>
+            </div>
+            <div className='dark:bg-gray-900'>
+              <h2 className='font-manrope text-2xl mb-6 dark:text-tertiary'>Insight Analysis</h2>
+              <div className='p-12 text-primary rounded-lg bg-gray-200 dark:bg-gray-900 dark:text-tertiary shadow-gray-700 shadow-lg font-poppins '>
+                {longRecommendation?.content.item1}
+              </div>
             </div>
           </div>
         </section>
-        <section className='flex flex-col w-2/6 justify-center my-auto place-content-center items-center ml-24 space-y-24 mt-40'>
-          <div className='h-2/3 p-12 text-center text-primary rounded-lg bg-gray-200 shadow-gray-700 shadow-lg font-poppins'>
-            <img className='w-12 text-center justify-center m-auto mb-4' src={graph} alt='' />
-            <span className='font-bold justify-center'>{longRecommendation?.recommendation.general_satisfaction}%</span>
-
-            <div>General Satisfaction</div>
-          </div>
-          <div className='h-2/3 p-12 text-primary text-center rounded-lg bg-gray-200 shadow-gray-700 shadow-lg font-poppins'>
-            <img className='w-12 text-center justify-center m-auto mb-4' src={arrowdown} alt='' />
-            <span className='font-bold justify-center'>
-              {Object.values(longRecommendation?.recommendation.quadrant)}%
-            </span>
-            <div>{Object.keys(longRecommendation?.recommendation.quadrant)}</div>
-          </div>
+        <section className='flex flex-col w-1/3 h-5/6 flex-wrap space-x-2 justify-center text-center my-auto place-content-center items-center ml-36 space-y-16 mt-24'>
+          {/* Cuadrantes */}
+          <Cuadrants icon={<FaSmile />} label='General Satisfaction' value={longRecommendation?.General_Satisfaction} color='bg-[#8136c2]' />
+          <Cuadrants icon={<MdOutlineSelfImprovement />} label='Self Satisfaction' value={longRecommendation?.["Self Satisfaction"]} color='bg-[#FF6384]' />
+          <Cuadrants icon={<FaUsers />} label='Team Collaboration' value={longRecommendation?.["Team Collaboration"]} color='bg-[#36A2EB]' />
+          <Cuadrants icon={<FaTools />} label='Work Engagement' value={longRecommendation?.["Work Engagement"]} color='bg-[#ebb734]' />
+          <Cuadrants icon={<FaHome />} label='Workspace Well-Being' value={longRecommendation?.["Workspace Well-Being"]} color='bg-[#5a2f80]' />
         </section>
       </div>
     </DashboardLayout>

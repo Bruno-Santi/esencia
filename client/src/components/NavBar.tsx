@@ -1,37 +1,63 @@
+import React, { useEffect, useState } from "react";
+import { IoIosArrowDropdown } from "react-icons/io";
+import { MenuItem, Menu, IconButton, Icon, Avatar } from "@mui/material";
+import avatar from "../assets/avatarnav2.png";
+import { ThemeChange } from "./ThemeChange";
 import { useAuthSlice } from "../hooks/useAuthSlice";
 import { useDashboard } from "../hooks/useDashboard";
 import { useModal } from "../hooks";
 import { ModalMembers } from "../dashboard/components/ModalMembers";
 import { NavBarResponsive } from "./NavBarResponsive";
-import { IoIosArrowDropdown } from "react-icons/io";
-import { useEffect, useState } from "react";
-import avatar from "../assets/avatarnav2.png";
-import { ThemeChange } from "./ThemeChange";
+import { IoPersonOutline, IoMoonOutline, IoClipboardOutline, IoLogOutOutline } from "react-icons/io5";
+import { MdOutlineLanguage } from "react-icons/md";
+import { deepOrange, deepPurple } from "@mui/material/colors"; // Importa colores según tus preferencias
+import { SideBar } from "./SideBar";
+
 export const NavBar = () => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-
-  const closeDropdown = () => {
-    setIsDropdownOpen(false);
-  };
-
+  const [anchorEl, setAnchorEl] = useState(null);
   const { startLogingOut } = useAuthSlice();
   const { activeTeam, user, startGettingMembers, startToggleModal } = useDashboard();
   const { isOpen, closeModal, openModal } = useModal();
-  const userNameLength = user?.email?.length;
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const [theme, setTheme] = useState("light");
+
   useEffect(() => {
-    console.log(userNameLength);
+    const localTheme = localStorage.getItem("theme");
+    if (localTheme) {
+      setTheme(localTheme);
+      if (localTheme === "dark") document.querySelector("html").classList.toggle("dark", true);
+    } else {
+      setTheme("light");
+      localStorage.setItem("theme", "light");
+    }
   }, []);
+
+  const handleChangeTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
+
+    document.querySelector("html").classList.toggle("dark", newTheme === "dark");
+  };
 
   return (
     <>
       <div className='lg:hidden md:hidden sm:block'>
         <NavBarResponsive />
       </div>
-      <nav className='sm:hidden md:block lg:block flex w-full  sticky bg-primary h-20 py-6 justify-around dark:border-b-2 dark:border-gray-600'>
+      <nav className='sm:hidden md:block lg:block flex w-full  relative bg-primary h-20 py-6 justify-around dark:border-b-2 dark:border-gray-600'>
+        <div className='absolute top-2'>
+          {" "}
+          <SideBar />
+        </div>
         <div className='w-full flex justify-center items-center'>
           {activeTeam && (
             <div className=''>
@@ -40,7 +66,6 @@ export const NavBar = () => {
                 onClick={() => {
                   openModal();
                   startGettingMembers(activeTeam._id);
-
                   startToggleModal();
                 }}
                 className='btn-primary rounded-lg p-2 text-lg font-poppins duration-700 hover:bg-tertiary hover:text-primary'
@@ -50,43 +75,110 @@ export const NavBar = () => {
             </div>
           )}
 
-          <div className='flex mt-2 ml-24 border-quaternary  border-2 p-1 rounded-md right-4 bottom-3 absolute bg-gradient-to-r from-indigo-950 dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800 '>
-            <img src={avatar} alt='avatar' className='h-12 w-12 rounded-full border-white border-2' />
-            {/* <FaRegUserCircle className='text-tertiary h-12 w-12 mr-1' /> */}
+          <div className='flex mt-4  ml-24 border-quaternary  border-2 p-1 rounded-md right-4 bottom-3 absolute bg-gradient-to-r from-indigo-950 dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800 '>
+            <Avatar style={{ backgroundColor: deepPurple[400], color: "white", marginTop: "3px" }}>{user?.name && user.name[0].toUpperCase()}</Avatar>
             <div className='flex flex-col'>
               <span className='text-tertiary my-auto ml-2 font-poppins text-[16px]'>{user?.name}</span>
               <span className='text-tertiary my-auto ml-2 font-poppins text-[16px]'>{user?.email}</span>
             </div>
 
-            <a
-              className={`text-${isDropdownOpen ? "tertiary" : "secondary"} m-auto text-4xl ml-2 cursor-pointer duration-500  -rotate-${
-                isDropdownOpen ? "90" : "0"
-              }`}
-              onClick={toggleDropdown}
+            <IconButton className={`text-${anchorEl ? "tertiary" : "secondary"} m-auto text-4xl ml-2 cursor-pointer duration-500`} onClick={handleClick}>
+              <IoIosArrowDropdown className='text-tertiary' />
+            </IconButton>
+            <Menu
+              id='simple-menu'
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+              PaperProps={{
+                style: {
+                  right: "20px",
+                  width: "360px",
+                  backgroundColor: `${theme === "dark" ? "#1A1423" : "rgba(255, 255, 255, 1)"}`,
+                  marginTop: "10px",
+                },
+              }}
+              className='bg-black/20'
             >
-              <IoIosArrowDropdown />
-            </a>
-          </div>
-
-          {isDropdownOpen && (
-            <div className='absolute z-40 top-20 right-4 bg-white border border-tertiary p-2 rounded-md dark:bg-black dark:border-none'>
-              <div
-                onClick={() => {
-                  startLogingOut();
-                  closeDropdown();
+              <MenuItem
+                onClick={handleClose}
+                sx={{
+                  "&:hover": {
+                    backgroundColor: "rgba(0, 0, 0, 0.10)",
+                  },
                 }}
-                className='btn-primary p-2  rounded-lg font-poppins w-fit hover:bg-tertiary hover:text-primary duration-700 cursor-pointer'
               >
-                <span className='text-md '>Log Out</span>
-              </div>
-            </div>
-          )}
+                <IoPersonOutline className='mr-2 text-primary dark:text-tertiary' />
+                <span className=' w-full p-2 font-poppins dark:text-tertiary'>Profile</span>
+              </MenuItem>
+              <MenuItem
+                onClick={handleClose}
+                sx={{
+                  "&:hover": {
+                    backgroundColor: "rgba(0, 0, 0, 0.10)",
+                  },
+                }}
+              >
+                <IoClipboardOutline className='mr-2 text-primary dark:text-tertiary' />
+                <span className=' w-full p-2 font-poppins dark:text-tertiary'>Board</span>
+              </MenuItem>
+              <MenuItem
+                onClick={handleChangeTheme}
+                sx={{
+                  "&:hover": {
+                    backgroundColor: "rgba(0, 0, 0, 0.10)",
+                  },
+                }}
+              >
+                <IoMoonOutline className='mr-2 text-primary dark:text-tertiary' />
+                <span className='  p-2 font-poppins dark:text-tertiary'>Theme:</span>
+                {theme === "light" ? (
+                  <span className=' dark:text-tertiary' onClick={handleChangeTheme}>
+                    Light
+                  </span>
+                ) : (
+                  <span onClick={handleChangeTheme} className=' dark:text-tertiary'>
+                    Dark
+                  </span>
+                )}
+              </MenuItem>
+              <MenuItem
+                sx={{
+                  "&:hover": {
+                    backgroundColor: "rgba(0, 0, 0, 0.10)",
+                  },
+                }}
+              >
+                <MdOutlineLanguage className='mr-2 text-primary dark:text-tertiary' />
+                <span className=' w-fit p-2 font-poppins dark:text-tertiary'>Language:</span>
+                <span className=' w-fit p-2 font-poppins dark:text-tertiary'>EN</span>
+              </MenuItem>
+
+              <MenuItem
+                onClick={handleClose}
+                sx={{
+                  "&:hover": {
+                    backgroundColor: "rgba(0, 0, 0, 0.10)",
+                  },
+                }}
+              >
+                <IoLogOutOutline className='mr-2 text-secondary dark:text-red-700' />
+                <span
+                  onClick={() => {
+                    startLogingOut();
+                    handleClose();
+                  }}
+                  className='p-2 font-poppins text-secondary dark:text-red-700 duration-700 hover:text-primary cursor-pointer'
+                >
+                  Log Out
+                </span>
+              </MenuItem>
+            </Menu>
+          </div>
         </div>
         {isOpen && <ModalMembers closeModal={closeModal} />}
-        <div className={user?.email.length > 20 ? `pr-24 absolute right-72 bottom-6` : `pr-14 absolute right-72 bottom-6`}>
-          {" "}
-          <ThemeChange />
-        </div>
+        <div className={user?.email.length > 20 ? `pr-24 absolute right-72 bottom-6` : `pr-14 absolute right-72 bottom-6`}> </div>
       </nav>
     </>
   );
