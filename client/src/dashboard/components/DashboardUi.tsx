@@ -143,9 +143,9 @@ export const DashboardUi = () => {
               Retrospectives
             </button>
             <button
-              disabled={!Object.entries(longRecommendation)}
+              disabled={!Object.entries(longRecommendation) || longRecommendation === "There is no enough data"}
               className={
-                Object.entries(longRecommendation).length > 0
+                Object.entries(longRecommendation).length > 0 && longRecommendation !== "There is no enough data"
                   ? "btn-primary font-poppins md:text-base md:p-1 lg:text-xl rounded-md lg:p-2 duration-700 hover:bg-amber-100 hover:text-primary"
                   : "bg-gray-500 text-tertiary font-poppins md:text-base md:p-1 lg:text-xl rounded-md lg:p-2 duration-700"
               }
