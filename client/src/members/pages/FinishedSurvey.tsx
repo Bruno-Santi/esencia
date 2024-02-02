@@ -1,12 +1,15 @@
 import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ConfettiExplosion from "react-confetti-explosion";
+import { useDashboard } from "../../hooks/useDashboard";
 export const FinishedSurvey = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { startSettingActiveTeam, activeTeam } = useDashboard();
   console.log(location.pathname);
-
+  const scrum_id = localStorage.getItem("scrum_id");
   useEffect(() => {
+    if (scrum_id) startSettingActiveTeam(activeTeam);
     setTimeout(() => {
       navigate("/");
     }, 5000);

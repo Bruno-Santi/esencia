@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { IoIosArrowDropdown } from "react-icons/io";
-import { MenuItem, Menu, IconButton, Icon, Avatar } from "@mui/material";
-import avatar from "../assets/avatarnav2.png";
-import { ThemeChange } from "./ThemeChange";
+import { MenuItem, Menu, IconButton, Avatar } from "@mui/material";
+
 import { useAuthSlice } from "../hooks/useAuthSlice";
 import { useDashboard } from "../hooks/useDashboard";
 import { useModal } from "../hooks";
@@ -10,7 +9,7 @@ import { ModalMembers } from "../dashboard/components/ModalMembers";
 import { NavBarResponsive } from "./NavBarResponsive";
 import { IoPersonOutline, IoMoonOutline, IoClipboardOutline, IoLogOutOutline } from "react-icons/io5";
 import { MdOutlineLanguage } from "react-icons/md";
-import { deepOrange, deepPurple } from "@mui/material/colors"; // Importa colores según tus preferencias
+import { deepPurple } from "@mui/material/colors";
 import { SideBar } from "./SideBar";
 
 export const NavBar = () => {

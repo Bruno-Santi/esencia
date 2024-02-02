@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { CiCirclePlus } from "react-icons/ci";
+import { useState } from "react";
+
 import { useModal } from "../hooks";
 import { ModalTeam } from "../dashboard/components/ModalTeam";
 import { useDashboard } from "../hooks/useDashboard";
@@ -9,6 +9,8 @@ import AddIcon from "@mui/icons-material/Add";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Teams } from "../dashboard/components/Teams";
 import ViewSidebarIcon from "@mui/icons-material/ViewSidebar";
+import MenuIcon from "@mui/icons-material/Menu";
+
 export const SideBar = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false); // Estado para el Drawer
 
@@ -29,9 +31,6 @@ export const SideBar = () => {
       {/* Barra lateral con Drawer en modo temporal (temporary) */}
       <Drawer variant='temporary' anchor='left' open={isDrawerOpen} onClose={toggleDrawer}>
         <List>
-          {/* Equipo sin el Accordion */}
-
-          {/* Accordion solo para "Add Team" */}
           <Accordion onClick={stopPropagation}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <ListItemIcon>
@@ -60,7 +59,7 @@ export const SideBar = () => {
       {/* Icono para abrir y cerrar el Drawer */}
       <div>
         <IconButton onClick={toggleDrawer} size='large'>
-          <ViewSidebarIcon className='text-tertiary w-36' fontSize='large' />
+          <MenuIcon className='text-tertiary w-36' fontSize='large' />
         </IconButton>
       </div>
 
