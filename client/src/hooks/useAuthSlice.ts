@@ -38,6 +38,7 @@ export const useAuthSlice = () => {
       console.log({ email, password });
       dispatch(clearErrorMessage());
       localStorage.setItem("authToken", JSON.stringify(resp.data.token));
+      console.log("asd");
 
       // await startCheckingUser();
       localStorage.setItem("isAuthenticated", true);
@@ -49,10 +50,14 @@ export const useAuthSlice = () => {
       if (!firstLog) localStorage.setItem("firstLoggin", "0");
       firstLog == "1" ? handleNavigate("/dashboard") : handleNavigate("/onboarding");
     } catch (error) {
-      console.log(error.response.data);
+      console.log(error);
 
-      const errorMessage = error.response?.data?.message || error.message;
-
+      let errorMessage = error.response?.data?.message || error.message;
+      if (
+        error.response.data.message[0] === "password must be longer than or equal to 8 characters" ||
+        error.response.data.message[0] === "Invalid email or password"
+      )
+        errorMessage = "Invalid email or password";
       dispatch(onLogOut(errorMessage));
     }
   };

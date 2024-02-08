@@ -117,7 +117,7 @@ export const DashboardUi = () => {
 
         <div
           className='bg-tertiary shadow-lg
-         shadow-primary/50  lg:h-[400px] md:h-[360px]
+         shadow-primary/50  lg:h-fit md:h-[360px]
          dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800
       w-full col-span-3 md:col-span-2 md:row-span-2 lg:row-span-1 rounded-md'
         >
@@ -142,25 +142,8 @@ export const DashboardUi = () => {
             >
               Retrospectives
             </button>
-            <button
-              disabled={!Object.entries(longRecommendation) || longRecommendation === "There is no enough data"}
-              className={
-                Object.entries(longRecommendation).length > 0 && longRecommendation !== "There is no enough data"
-                  ? "btn-primary font-poppins md:text-base md:p-1 lg:text-xl rounded-md lg:p-2 duration-700 hover:bg-amber-100 hover:text-primary"
-                  : "bg-gray-500 text-tertiary font-poppins md:text-base md:p-1 lg:text-xl rounded-md lg:p-2 duration-700"
-              }
-              onClick={handleNavigateToFeedBack}
-            >
-              Sprint Feedback
-            </button>
-            <button
-              className='btn-primary 
-                     font-poppins text-sm rounded-md p-2 md:p-1 duration-700 lg:p-2 lg:text-xl md:text-base
-                      hover:bg-amber-100 hover:text-primary'
-            >
-              Reports
-            </button>
           </div>
+          <DataCollectionReport />
         </div>
 
         <div
@@ -168,7 +151,6 @@ export const DashboardUi = () => {
       w-full lg:col-span-4 md:col-span-2 mt-2 row-span-2 rounded-md justify-center m-auto place-content-center'
         >
           <TrendingTopics />
-          <DataCollectionReport />
         </div>
 
         <div

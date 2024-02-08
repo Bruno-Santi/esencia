@@ -9,32 +9,31 @@ import { toastSuccess } from "../../helpers";
 import { FaSmile, FaUsers, FaTools, FaHome } from "react-icons/fa";
 import { MdOutlineSelfImprovement } from "react-icons/md";
 import { Cuadrants } from "./Cuadrants";
+import { useNavigate } from "react-router-dom";
 
 export const FeedBack = () => {
   useDocumentTitle("Feedback | Esencia.app");
-
+  const navigate = useNavigate();
   const { longRecommendation } = useDashboard();
   const handleVote = () => {
     toastSuccess("Thanks for your feedback! 🤗");
   };
   useEffect(() => {
     console.log(longRecommendation);
-  }, []);
-  return (
+  }, [longRecommendation]);
+  if (longRecommendation === null || !longRecommendation) return navigate("/dashboard");
+  return Object.keys(longRecommendation).length === 0 ? (
+    navigate("/dashboard")
+  ) : (
     <DashboardLayout>
-      <BackButton />
+      {/* <BackButton /> */}
       <div className='flex min-h-screen pb-6'>
-        <section className='flex flex-col w-2/3 justify-center my-auto place-content-center items-center ml-12 space-y-24 mt-20'>
+        <section className='flex flex-col w-2/3 justify-center my-auto place-content-center items-center ml-12 space-y-24 mt-10'>
           <div>
             <h2 className='font-manrope text-2xl mb-6 dark:text-tertiary'>What can you do as a leader?</h2>
             <div className='lg:p-12 md:p-10 text-primary rounded-lg dark:bg-gray-900 bg-gray-200 mb-16 shadow-gray-700 shadow-lg font-poppins '>
               <UsePagination shortRecomendation={longRecommendation?.content.item2} containerRef={null} />
-              {/* {Object.entries(longRecommendation?.content.item2).map(([key, value]) => (
-                <div key={key}>
-                  <h2 className='font-bold font-poppins'>{key}:</h2>
-                  <p>{value}</p>
-                </div>
-              ))} */}
+
               <div className='   bottom-0 ml-4 mt-2'>
                 <span className='w-full place-items-center my-auto text-primary dark:text-tertiary text-sm'>
                   Did you find this insight accurate?{" "}
