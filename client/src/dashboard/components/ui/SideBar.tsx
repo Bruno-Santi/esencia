@@ -16,7 +16,7 @@ export const SideBar = ({ children }) => {
   const [expanded, setExpanded] = useState(false);
   const [teamsOpen, setTeamsOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-  s;
+  
   const theme = localStorage.getItem("theme");
 
   React.useEffect(() => {
