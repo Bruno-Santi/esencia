@@ -11,7 +11,7 @@ export const TrendingTopics = () => {
         className='bg-tertiary shadow-lg rounded-md
       shadow-primary/50 dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800 font-poppins text-xl justify-center flex h-4/6 items-center'
       >
-        <span className='text-primary dark:text-tertiary'>No topics yet</span>
+        <span className='text-primary/60 dark:text-tertiary'>No topics yet</span>
       </div>
     );
   return (

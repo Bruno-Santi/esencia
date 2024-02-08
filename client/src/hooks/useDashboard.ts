@@ -168,7 +168,7 @@ export const useDashboard = () => {
     const sprint = userTeams.find((team) => team._id === id).sprint;
     await starGettingData(String(id), sprint);
 
-    console.log(id, activeTeam.sprint);
+    console.log(id, String(activeTeam.sprint));
   };
 
   const startCreatingTeam = async (newTeam: UserTeams, scrumId) => {
@@ -247,7 +247,6 @@ export const useDashboard = () => {
 
   const startCreatingSurvey = async (teamName: string, teamId: string) => {
     setSurveyLoading(true);
-    console.log(finalRandomizedQuestions);
 
     const questions = finalRandomizedQuestions;
     const questionValues = Object.values(questions);
@@ -256,14 +255,14 @@ export const useDashboard = () => {
       questions: questionValues,
     };
     try {
-      console.log(teamId);
-
       const users = await startGettingMembers(teamId);
-      console.log({ data });
 
-      if (!users) {
+      if (users.length === 0 || !users || users.length === undefined) {
         toastWarning(`The team ${teamName} doesn't have any member.`);
+        setSurveyLoading(false);
       } else {
+        console.log("holis");
+
         const response = await api.post(`/api/survey/day-survey/`, data);
         console.log(response);
 

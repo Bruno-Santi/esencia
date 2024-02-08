@@ -6,6 +6,7 @@ import { useAuthSlice } from "../hooks/useAuthSlice";
 import { OnBoardingRoutes } from "../onboarding/routes/OnBoardingRoutes";
 import { MembersRoutes } from "../members/routes/";
 import { useEffect, useState } from "react";
+import { TeamsRoutes } from "../teams/routes/TeamsRoutes";
 
 export const AppRouter = () => {
   const [searchParams1] = useSearchParams();
@@ -90,7 +91,7 @@ export const AppRouter = () => {
               {userTokenLocal && <Route element={<MembersRoutes />} path={`/members/*`} />}
               <Route element={<OnBoardingRoutes />} path={`/onboarding/*`} />
               <Route element={<DashboardRoutes />} path={`/dashboard/*`} />
-
+              <Route element={<TeamsRoutes />} path={`/teams/*`} />
               {firstLogging === "0" ? (
                 <Route element={<Navigate to={"/onboarding"} />} path={`/auth/*`} />
               ) : (

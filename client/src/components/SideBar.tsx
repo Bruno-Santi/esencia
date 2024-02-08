@@ -8,8 +8,11 @@ import TeamsIcon from "@mui/icons-material/Group";
 import AddIcon from "@mui/icons-material/Add";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Teams } from "../dashboard/components/Teams";
-import ViewSidebarIcon from "@mui/icons-material/ViewSidebar";
+
 import MenuIcon from "@mui/icons-material/Menu";
+
+import ContentPasteIcon from "@mui/icons-material/ContentPaste";
+import OfflineBoltOutlinedIcon from "@mui/icons-material/OfflineBoltOutlined";
 
 export const SideBar = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false); // Estado para el Drawer
@@ -48,6 +51,47 @@ export const SideBar = () => {
                     <AddIcon />
                   </ListItemIcon>
                   <ListItemText primary='Add Team' />
+                </ListItem>
+              </List>
+            </AccordionDetails>
+          </Accordion>
+          <Accordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <ListItemIcon>
+                <OfflineBoltOutlinedIcon />
+              </ListItemIcon>
+              <ListItemText primary='Avaible Actions' />
+            </AccordionSummary>
+            <AccordionDetails>
+              <List>
+                <ListItem>
+                  <div>board 1</div>
+                </ListItem>
+                <ListItem button onClick={openModalMembers}>
+                  <ListItemIcon>
+                    <AddIcon />
+                  </ListItemIcon>
+                </ListItem>
+              </List>
+            </AccordionDetails>
+          </Accordion>
+          <Accordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <ListItemIcon>
+                <ContentPasteIcon />
+              </ListItemIcon>
+              <ListItemText primary='Board' />
+            </AccordionSummary>
+            <AccordionDetails>
+              <List>
+                <ListItem>
+                  <div>board 1</div>
+                </ListItem>
+                <ListItem button onClick={openModalMembers}>
+                  <ListItemIcon>
+                    <AddIcon />
+                  </ListItemIcon>
+                  <ListItemText primary='Add Board' />
                 </ListItem>
               </List>
             </AccordionDetails>

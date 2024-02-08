@@ -3,17 +3,17 @@ import { RxDoubleArrowLeft, RxDoubleArrowRight } from "react-icons/rx";
 
 export const UsePaginationTopics = ({ topics, containerRef }) => {
   const [paginaActual, setPaginaActual] = useState(1);
-  const itemsPorPagina = 2;
+  const itemsPorPagina = 4;
 
   const inicioIndex = (paginaActual - 1) * itemsPorPagina;
   const finIndex = paginaActual * itemsPorPagina;
   const datosPagina = topics.slice(inicioIndex, finIndex);
-
   useEffect(() => {
     console.log(topics);
-  }, [topics]);
+    console.log(datosPagina);
+  }, [datosPagina]);
 
-  const paginasTotales = Math.ceil(topics.length / itemsPorPagina);
+  const paginasTotales = Math.ceil(datosPagina.length / itemsPorPagina);
 
   const cambiarPagina = (nuevaPagina) => {
     setPaginaActual(nuevaPagina);

@@ -1,18 +1,27 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { IoIosArrowDropdown } from "react-icons/io";
 import { MenuItem, Menu, IconButton, Avatar } from "@mui/material";
-
+import { SideBar, SideBarContext, SideBarItem } from "../dashboard/components/ui/SideBar";
 import { useAuthSlice } from "../hooks/useAuthSlice";
 import { useDashboard } from "../hooks/useDashboard";
-import { useModal } from "../hooks";
+import { useModal, useNavigateTo } from "../hooks";
 import { ModalMembers } from "../dashboard/components/ModalMembers";
 import { NavBarResponsive } from "./NavBarResponsive";
 import { IoPersonOutline, IoMoonOutline, IoClipboardOutline, IoLogOutOutline } from "react-icons/io5";
 import { MdOutlineLanguage } from "react-icons/md";
 import { deepPurple } from "@mui/material/colors";
-import { SideBar } from "./SideBar";
+// import { SideBar } from "./SideBar";
+import { GrGroup } from "react-icons/gr";
+import { PiDeviceTabletSpeakerBold } from "react-icons/pi";
+import { MdOutlineInsertChart } from "react-icons/md";
+import { IoSettingsOutline } from "react-icons/io5";
+import { CiCircleQuestion } from "react-icons/ci";
+import { MdOutlineDashboard } from "react-icons/md";
+import { toastWarning } from "../helpers/toastWarning";
 
 export const NavBar = () => {
+  const { longRecommendation } = useDashboard();
+  const { handleNavigate } = useNavigateTo();
   const [anchorEl, setAnchorEl] = useState(null);
   const { startLogingOut } = useAuthSlice();
   const { activeTeam, user, startGettingMembers, startToggleModal } = useDashboard();
@@ -39,6 +48,7 @@ export const NavBar = () => {
     }
   }, []);
 
+  const sideBarRef = useRef(null);
   const handleChangeTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
@@ -53,14 +63,39 @@ export const NavBar = () => {
         <NavBarResponsive />
       </div>
       <nav className='sm:hidden md:block lg:block flex w-full  relative bg-primary h-20 py-6 justify-around dark:border-b-2 dark:border-gray-600'>
-        <div className='absolute top-2'>
+        <div className='absolute top-0 min-h-screen'>
           {" "}
-          <SideBar />
+          {/* <SideBar /> */}
+          <SideBar ref={sideBarRef}>
+            <SideBarItem icon={<GrGroup />} text='Teams' />
+            <span onClick={() => handleNavigate("/dashboard")}>
+              <SideBarItem icon={<MdOutlineDashboard />} text='Dashboard' />
+            </span>
+
+            {!Object.entries(longRecommendation) || longRecommendation === "There is no enough data" ? (
+              <>
+                <span onClick={() => toastWarning("There is no enough data to show the feedback page")}>
+                  <SideBarItem icon={<MdOutlineInsertChart />} text='Reports' />
+                </span>
+              </>
+            ) : (
+              <span onClick={() => handleNavigate("/dashboard/feedback")}>
+                <SideBarItem icon={<MdOutlineInsertChart />} text='Reports' />
+              </span>
+            )}
+            <span onClick={() => handleNavigate("/teams/boards")}>
+              <SideBarItem icon={<PiDeviceTabletSpeakerBold />} text='Boards' />
+            </span>
+            <hr />
+            <SideBarItem icon={<IoSettingsOutline />} text='Settings' />
+            <SideBarItem icon={<CiCircleQuestion />} text='Faq' />
+          </SideBar>
+          <SideBarContext.Provider />
         </div>
-        <div className='w-full flex justify-center items-center'>
+        <div className='w-full flex justify-center items-center '>
           {activeTeam && (
             <div className=''>
-              <span className='text-tertiary font-poppins mr-4 my-auto text-lg'>{activeTeam.name}</span>
+              <span className='text-tertiary font-poppins mr-4 my-auto text-lg ml-24'>{activeTeam.name}</span>
               <span
                 onClick={() => {
                   openModal();

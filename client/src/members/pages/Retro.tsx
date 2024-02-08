@@ -60,245 +60,265 @@ export const Retro = ({ token, team_id, user_id, scrum_id }) => {
       <section className='flex justify-center m-auto mt-4 font-poppins text-tertiary space-x-2'>
         <section className='grid grid-cols-12 p-2 relative grid-rows-5 gap-5 '>
           {/* Div 1 */}
-          <div className='bg-gray-400 relative row-start-1 p-40 px-60 row-end-3 col-start-1 col-end-7 rounded-lg text-2xl flex items-center justify-center'>
+          <div className='bg-gray-400 relative row-start-1 p-40  overflow-y-scroll px-[300px] row-end-3 col-start-1 col-end-7 rounded-lg text-2xl flex items-center justify-center'>
             {questions?.c1}
-            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 absolute'>
+            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-5 absolute h-full pt-2'>
               {stickyNotes &&
                 stickyNotes
                   .filter((note, index, arr) => arr.findIndex((n) => n.value === note.value && n.column === "c1") === index)
                   .map((note, index) => (
-                    <div
-                      key={index}
-                      style={{
-                        backgroundColor: "rgba(255, 255, 102, 0.7)", // Amarillo pastel
-                        // Otras propiedades de estilo que desees agregar
-                      }}
-                      className='text-primary p-1 grid grid-cols-5 grid-rows-5 md:[130px] md:h-[140px] lg:w-[150px] lg:h-[150px] text-lg relative'
-                    >
-                      <span className='md:text-xs lg:text-sm w-[120px]' style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
-                        {note.value}
-                      </span>
+                    <>
+                      <div
+                        key={index}
+                        style={{
+                          backgroundColor: "rgba(255, 255, 102, 0.7)",
+                        }}
+                        className='p-3  overflow-y-scroll  md:[130px] md:h-[140px] lg:w-[170px] lg:h-[150px] text-lg relative'
+                      >
+                        <div className=' text-primary pb-1  md:text-sm lg:text-lg left-2 flex w-full space-x-3'>
+                          <button
+                            onClick={() => handleVote("c1", "thumb_up", note.value)}
+                            style={{ color: userVotes[note.value] === "thumb_up" ? "green" : "black" }}
+                            className='flex'
+                          >
+                            <FaRegThumbsUp />
+                            <span className='md:text-[10px] lg:text-sm flex'>({note.thumb_up})</span>
+                          </button>
+                          <button
+                            onClick={() => handleVote("c1", "thumb_down", note.value)}
+                            style={{ color: userVotes[note.value] === "thumb_down" ? "red" : "black" }}
+                            className='flex'
+                          >
+                            <FaRegThumbsDown />
+                            <span className='md:text-[10px] lg:text-sm flex'>({note.thumb_down})</span>
+                          </button>
 
-                      <div className='absolute bottom-0 md:text-sm lg:text-lg left-2 flex space-x-2'>
-                        <button
-                          onClick={() => handleVote("c1", "thumb_up", note.value)}
-                          style={{ color: userVotes[note.value] === "thumb_up" ? "green" : "black" }}
+                          {user_id == note.user_id && (
+                            <div className='absolute -bottom-10 right-2 flex space-x-2'>
+                              <button onClick={() => handleDeleteNoteByValue(note.value)}>
+                                <FaRegTrashAlt />
+                              </button>
+                            </div>
+                          )}
+                          {scrum_id == note.user_id && (
+                            <div className='absolute   right-2 flex space-x-2'>
+                              <button onClick={() => handleDeleteNoteByValue(note.value)}>
+                                <FaRegTrashAlt />
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                        <span
+                          className='md:text-xs text-primary lg:text-sm w-[150px]  overflow-y-scroll'
+                          style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}
                         >
-                          <FaRegThumbsUp />
-                          <span className='md:text-[10px] lg:text-sm flex'>({note.thumb_up})</span>
-                        </button>
-                        <button
-                          onClick={() => handleVote("c1", "thumb_down", note.value)}
-                          style={{ color: userVotes[note.value] === "thumb_down" ? "red" : "black" }}
-                        >
-                          <FaRegThumbsDown />
-                          <span className='md:text-[10px] lg:text-sm flex'>({note.thumb_down})</span>
-                        </button>
+                          <p>{note.value}</p>
+                        </span>
                       </div>
-
-                      {user_id == note.user_id && (
-                        <div className='absolute bottom-2 right-2 flex space-x-2'>
-                          <button onClick={() => handleDeleteNoteByValue(note.value)}>
-                            <FaRegTrashAlt />
-                          </button>
-                        </div>
-                      )}
-                      {scrum_id == note.user_id && (
-                        <div className='absolute bottom-2 right-2 flex space-x-2'>
-                          <button onClick={() => handleDeleteNoteByValue(note.value)}>
-                            <FaRegTrashAlt />
-                          </button>
-                        </div>
-                      )}
-                    </div>
+                    </>
                   ))}
             </div>
             <i
               onClick={() => handleClick("c1")}
-              className='absolute bottom-4 text-primary duration-500 hover:text-tertiary cursor-pointer animate-pulse right-4'
+              className='absolute bottom-1  text-primary duration-500 hover:text-tertiary cursor-pointer animate-pulse right-4'
             >
               <FaRegStickyNote />
             </i>
           </div>
           {/* Div 2 */}
-          <div className='bg-gray-400 relative row-start-1 row-end-3 col-start-7 col-end-13 rounded-lg text-2xl flex items-center justify-center'>
+          <div className='bg-gray-400 relative row-start-1 p-40  overflow-y-scroll px-[300px] row-end-3 col-start-7 col-end-13 rounded-lg text-2xl flex items-center justify-center'>
             {questions?.c2}
-            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 absolute'>
+            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-5 absolute h-full pt-2'>
               {stickyNotes &&
                 stickyNotes
                   .filter((note, index, arr) => arr.findIndex((n) => n.value === note.value && n.column === "c2") === index)
                   .map((note, index) => (
-                    <div
-                      key={index}
-                      style={{
-                        backgroundColor: "rgba(255, 255, 102, 0.7)", // Amarillo pastel
-                        // Otras propiedades de estilo que desees agregar
-                      }}
-                      className='text-primary p-1 grid grid-cols-5 grid-rows-5 md:[120px] md:h-[120px] lg:w-[145px] lg:h-[145px] text-lg relative'
-                    >
-                      <span className='md:text-xs lg:text-sm w-[120px]' style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
-                        {note.value}
-                      </span>
+                    <>
+                      <div
+                        key={index}
+                        style={{
+                          backgroundColor: "rgba(255, 255, 102, 0.7)",
+                        }}
+                        className='p-3  overflow-y-scroll  md:[130px] md:h-[140px] lg:w-[170px] lg:h-[150px] text-lg relative'
+                      >
+                        <div className=' text-primary pb-1  md:text-sm lg:text-lg left-2 flex w-full space-x-3'>
+                          <button
+                            onClick={() => handleVote("c2", "thumb_up", note.value)}
+                            style={{ color: userVotes[note.value] === "thumb_up" ? "green" : "black" }}
+                            className='flex'
+                          >
+                            <FaRegThumbsUp />
+                            <span className='md:text-[10px] lg:text-sm flex'>({note.thumb_up})</span>
+                          </button>
+                          <button
+                            onClick={() => handleVote("c2", "thumb_down", note.value)}
+                            style={{ color: userVotes[note.value] === "thumb_down" ? "red" : "black" }}
+                            className='flex'
+                          >
+                            <FaRegThumbsDown />
+                            <span className='md:text-[10px] lg:text-sm flex'>({note.thumb_down})</span>
+                          </button>
 
-                      <div className='absolute md:text-sm lg:text-lg bottom-2 left-2 flex space-x-2'>
-                        <button
-                          onClick={() => handleVote("c2", "thumb_up", note.value)}
-                          style={{ color: userVotes[note.value] === "thumb_up" ? "green" : "black" }}
+                          {user_id == note.user_id && (
+                            <div className='absolute -bottom-10 right-2 flex space-x-2'>
+                              <button onClick={() => handleDeleteNoteByValue(note.value)}>
+                                <FaRegTrashAlt />
+                              </button>
+                            </div>
+                          )}
+                          {scrum_id == note.user_id && (
+                            <div className='absolute   right-2 flex space-x-2'>
+                              <button onClick={() => handleDeleteNoteByValue(note.value)}>
+                                <FaRegTrashAlt />
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                        <span
+                          className='md:text-xs text-primary lg:text-sm w-[150px]  overflow-y-scroll'
+                          style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}
                         >
-                          <FaRegThumbsUp />
-                          <span className='md:text-[10px] lg:text-sm flex'>({note.thumb_up})</span>
-                        </button>
-                        <button
-                          onClick={() => handleVote("c2", "thumb_down", note.value)}
-                          style={{ color: userVotes[note.value] === "thumb_down" ? "red" : "black" }}
-                        >
-                          <FaRegThumbsDown />
-                          <span className='md:text-[10px] lg:text-sm flex'>({note.thumb_down})</span>
-                        </button>
+                          <p>{note.value}</p>
+                        </span>
                       </div>
-
-                      {user_id == note.user_id && (
-                        <div className='absolute bottom-2 right-2 flex space-x-2'>
-                          <button onClick={() => handleDeleteNoteByValue(note.value)}>
-                            <FaRegTrashAlt />
-                          </button>
-                        </div>
-                      )}
-                      {scrum_id == note.user_id && (
-                        <div className='absolute bottom-2 right-2 flex space-x-2'>
-                          <button onClick={() => handleDeleteNoteByValue(note.value)}>
-                            <FaRegTrashAlt />
-                          </button>
-                        </div>
-                      )}
-                    </div>
+                    </>
                   ))}
             </div>
             <i
               onClick={() => handleClick("c2")}
-              className='absolute bottom-4 text-primary duration-500 hover:text-tertiary cursor-pointer animate-pulse right-4'
+              className='absolute bottom-1  text-primary duration-500 hover:text-tertiary cursor-pointer animate-pulse right-4'
             >
               <FaRegStickyNote />
             </i>
           </div>
-          <div className='bg-gray-400 relative row-start-3 row-end-5 col-start-1 col-end-7 rounded-lg text-2xl flex items-center justify-center'>
+          <div className='bg-gray-400 relative p-40  overflow-y-scroll px-[250px] row-start-3 row-end-5 col-start-1 col-end-7 rounded-lg text-2xl flex items-center justify-center'>
             {questions?.c3}
-            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 absolute'>
+            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-5 absolute h-full pt-2'>
               {stickyNotes &&
                 stickyNotes
                   .filter((note, index, arr) => arr.findIndex((n) => n.value === note.value && n.column === "c3") === index)
                   .map((note, index) => (
-                    <div
-                      key={index}
-                      style={{
-                        backgroundColor: "rgba(255, 255, 102, 0.7)", // Amarillo pastel
-                        // Otras propiedades de estilo que desees agregar
-                      }}
-                      className='text-primary p-1 grid grid-cols-5 grid-rows-5 md:[120px] md:h-[120px] lg:w-[145px] lg:h-[145px] text-lg relative'
-                    >
-                      <span className='md:text-xs lg:text-sm w-[120px]' style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
-                        {note.value}
-                      </span>
+                    <>
+                      <div
+                        key={index}
+                        style={{
+                          backgroundColor: "rgba(255, 255, 102, 0.7)",
+                        }}
+                        className='p-3  overflow-y-scroll  md:[130px] md:h-[140px] lg:w-[170px] lg:h-[150px] text-lg relative'
+                      >
+                        <div className=' text-primary pb-1  md:text-sm lg:text-lg left-2 flex w-full space-x-3'>
+                          <button
+                            onClick={() => handleVote("c3", "thumb_up", note.value)}
+                            style={{ color: userVotes[note.value] === "thumb_up" ? "green" : "black" }}
+                            className='flex'
+                          >
+                            <FaRegThumbsUp />
+                            <span className='md:text-[10px] lg:text-sm flex'>({note.thumb_up})</span>
+                          </button>
+                          <button
+                            onClick={() => handleVote("c3", "thumb_down", note.value)}
+                            style={{ color: userVotes[note.value] === "thumb_down" ? "red" : "black" }}
+                            className='flex'
+                          >
+                            <FaRegThumbsDown />
+                            <span className='md:text-[10px] lg:text-sm flex'>({note.thumb_down})</span>
+                          </button>
 
-                      <div className='absolute bottom-2  md:text-sm lg:text-lg left-2 flex space-x-2'>
-                        <button
-                          onClick={() => handleVote("c3", "thumb_up", note.value)}
-                          style={{ color: userVotes[note.value] === "thumb_up" ? "green" : "black" }}
+                          {user_id == note.user_id && (
+                            <div className='absolute -bottom-10 right-2 flex space-x-2'>
+                              <button onClick={() => handleDeleteNoteByValue(note.value)}>
+                                <FaRegTrashAlt />
+                              </button>
+                            </div>
+                          )}
+                          {scrum_id == note.user_id && (
+                            <div className='absolute   right-2 flex space-x-2'>
+                              <button onClick={() => handleDeleteNoteByValue(note.value)}>
+                                <FaRegTrashAlt />
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                        <span
+                          className='md:text-xs text-primary lg:text-sm w-[150px]  overflow-y-scroll'
+                          style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}
                         >
-                          <FaRegThumbsUp />
-                          <span className='md:text-[10px] lg:text-sm flex'>({note.thumb_up})</span>
-                        </button>
-                        <button
-                          onClick={() => handleVote("c3", "thumb_down", note.value)}
-                          style={{ color: userVotes[note.value] === "thumb_down" ? "red" : "black" }}
-                        >
-                          <FaRegThumbsDown />
-                          <span className='md:text-[10px] lg:text-sm flex'>({note.thumb_down})</span>
-                        </button>
+                          <p>{note.value}</p>
+                        </span>
                       </div>
-
-                      {user_id == note.user_id && (
-                        <div className='absolute bottom-2  md:text-sm lg:text-lg right-2 flex space-x-2'>
-                          <button onClick={() => handleDeleteNoteByValue(note.value)}>
-                            <FaRegTrashAlt />
-                          </button>
-                        </div>
-                      )}
-                      {scrum_id == note.user_id && (
-                        <div className='absolute bottom-2 right-2 flex space-x-2'>
-                          <button onClick={() => handleDeleteNoteByValue(note.value)}>
-                            <FaRegTrashAlt />
-                          </button>
-                        </div>
-                      )}
-                    </div>
+                    </>
                   ))}
             </div>
             <i
               onClick={() => handleClick("c3")}
-              className='absolute bottom-4 text-primary duration-500 hover:text-tertiary cursor-pointer animate-pulse right-4'
+              className='absolute bottom-1  text-primary duration-500 hover:text-tertiary cursor-pointer animate-pulse right-4'
             >
               <FaRegStickyNote />
             </i>
           </div>
 
           {/* Div 4 */}
-          <div className='bg-gray-400 relative row-start-3 row-end-5 col-start-7 col-end-13 rounded-lg text-2xl flex items-center justify-center'>
+          <div className='bg-gray-400 relative p-40  overflow-y-scroll px-[250px] row-start-3 row-end-5 col-start-7 col-end-13 rounded-lg text-2xl flex items-center justify-center'>
             {questions?.c4}
-            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 absolute'>
+            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-5 absolute h-full pt-2'>
               {stickyNotes &&
                 stickyNotes
                   .filter((note, index, arr) => arr.findIndex((n) => n.value === note.value && n.column === "c4") === index)
                   .map((note, index) => (
-                    <div
-                      key={index}
-                      style={{
-                        backgroundColor: "rgba(255, 255, 102, 0.7)", // Amarillo pastel
-                        // Otras propiedades de estilo que desees agregar
-                      }}
-                      className='text-primary p-1 grid grid-cols-5 grid-rows-5 md:[120px] md:h-[120px] lg:w-[145px] lg:h-[145px] text-lg relative'
-                    >
-                      <span className='md:text-xs lg:text-sm w-[120px]' style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
-                        {note.value}
-                      </span>
+                    <>
+                      <div
+                        key={index}
+                        style={{
+                          backgroundColor: "rgba(255, 255, 102, 0.7)",
+                        }}
+                        className='p-3  overflow-y-scroll  md:[130px] md:h-[140px] lg:w-[170px] lg:h-[150px] text-lg relative'
+                      >
+                        <div className=' text-primary pb-1  md:text-sm lg:text-lg left-2 flex w-full space-x-3'>
+                          <button
+                            onClick={() => handleVote("c4", "thumb_up", note.value)}
+                            style={{ color: userVotes[note.value] === "thumb_up" ? "green" : "black" }}
+                            className='flex'
+                          >
+                            <FaRegThumbsUp />
+                            <span className='md:text-[10px] lg:text-sm flex'>({note.thumb_up})</span>
+                          </button>
+                          <button
+                            onClick={() => handleVote("c4", "thumb_down", note.value)}
+                            style={{ color: userVotes[note.value] === "thumb_down" ? "red" : "black" }}
+                            className='flex'
+                          >
+                            <FaRegThumbsDown />
+                            <span className='md:text-[10px] lg:text-sm flex'>({note.thumb_down})</span>
+                          </button>
 
-                      <div className='absolute bottom-2  md:text-sm lg:text-lg left-2 flex space-x-2'>
-                        <button
-                          onClick={() => handleVote("c4", "thumb_up", note.value)}
-                          style={{ color: userVotes[note.value] === "thumb_up" ? "green" : "black" }}
+                          {user_id == note.user_id && (
+                            <div className='absolute -bottom-10 right-2 flex space-x-2'>
+                              <button onClick={() => handleDeleteNoteByValue(note.value)}>
+                                <FaRegTrashAlt />
+                              </button>
+                            </div>
+                          )}
+                          {scrum_id == note.user_id && (
+                            <div className='absolute   right-2 flex space-x-2'>
+                              <button onClick={() => handleDeleteNoteByValue(note.value)}>
+                                <FaRegTrashAlt />
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                        <span
+                          className='md:text-xs text-primary lg:text-sm w-[150px]  overflow-y-scroll'
+                          style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}
                         >
-                          <FaRegThumbsUp />
-                          <span className='md:text-[10px] lg:text-sm flex'>({note.thumb_up})</span>
-                        </button>
-                        <button
-                          onClick={() => handleVote("c4", "thumb_down", note.value)}
-                          style={{ color: userVotes[note.value] === "thumb_down" ? "red" : "black" }}
-                        >
-                          <FaRegThumbsDown />
-                          <span className='md:text-[10px] lg:text-sm flex'>({note.thumb_down})</span>
-                        </button>
+                          <p>{note.value}</p>
+                        </span>
                       </div>
-
-                      {user_id == note.user_id && (
-                        <div className='absolute bottom-2 right-2 flex space-x-2'>
-                          <button onClick={() => handleDeleteNoteByValue(note.value)}>
-                            <FaRegTrashAlt />
-                          </button>
-                        </div>
-                      )}
-                      {scrum_id == note.user_id && (
-                        <div className='absolute bottom-2 right-2 flex space-x-2'>
-                          <button onClick={() => handleDeleteNoteByValue(note.value)}>
-                            <FaRegTrashAlt />
-                          </button>
-                        </div>
-                      )}
-                    </div>
+                    </>
                   ))}
             </div>
             <i
               onClick={() => handleClick("c4")}
-              className='absolute bottom-4 text-primary duration-500 hover:text-tertiary cursor-pointer animate-pulse right-4'
+              className='absolute bottom-1  text-primary duration-500 hover:text-tertiary cursor-pointer animate-pulse right-4'
             >
               <FaRegStickyNote />
             </i>
