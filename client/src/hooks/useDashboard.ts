@@ -258,7 +258,7 @@ export const useDashboard = () => {
       const { members } = await startGettingMembers(teamId);
       console.log(members);
 
-      if (members === 0 || !members || members.length === undefined) {
+      if (members.length === 0) {
         toastWarning(`The team ${teamName} doesn't have any member.`);
         setSurveyLoading(false);
       } else {
