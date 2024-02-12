@@ -245,7 +245,7 @@ export const useDashboard = () => {
     }
   };
 
-  const startCreatingSurvey = async (teamName: string, teamId: string) => {
+ const startCreatingSurvey = async (teamName: string, teamId: string) => {
     setSurveyLoading(true);
 
     const questions = finalRandomizedQuestions;
@@ -255,9 +255,10 @@ export const useDashboard = () => {
       questions: questionValues,
     };
     try {
-      const users = await startGettingMembers(teamId);
+      const { members } = await startGettingMembers(teamId);
+      console.log(members);
 
-      if (users.length === 0 || !users || users.length === undefined) {
+      if (members === 0 || !members || members.length === undefined) {
         toastWarning(`The team ${teamName} doesn't have any member.`);
         setSurveyLoading(false);
       } else {
