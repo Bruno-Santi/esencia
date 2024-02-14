@@ -132,7 +132,7 @@ cuadrant_cohef: [0.5, 0.1, 0.4, 0.1],
 id: "question24",
 question2: "¿Lograste completar tus tareas planificadas el día anterior?",
 cuadrant_cohef: [0.4, 0.2, 0.3, 0.1],
-}
+},
 
 {
 id: "question25",
@@ -144,11 +144,11 @@ cuadrant_cohef: [0.1, 0.1, 0.5, 0.3],
 id: "question26",
 question2: "¿Qué tan bien te sentiste trabajando en equipo en tu última jornada de trabajo?",
 cuadrant_cohef: [0.3, 0.5, 0.2, 0.1],
-}
+},
 
 {
 id: "question27",
-question2: "¿Hubo algún obstáculo importante que te impidió avanzar en tus tareas? (1: Muchos, 10: Ninguno)",",
+question2: "¿Hubo algún obstáculo importante que te impidió avanzar en tus tareas? (1: Muchos, 10: Ninguno)",
 cuadrant_cohef: [0.1, 0.1, 0.4, 0.4],
 },
 
@@ -156,7 +156,7 @@ cuadrant_cohef: [0.1, 0.1, 0.4, 0.4],
 id: "question28",
 question2: "En una escala del 1 al 10, ¿Qué tan claro te sentiste sobre tus prioridades en tu última jornada de trabajo?",
 cuadrant_cohef: [0.4, 0.1, 0.4, 0.1],
-}
+},
 
 {
 id: "question29",
@@ -174,11 +174,11 @@ cuadrant_cohef: [0.2, 0.6, 0.1, 0.2],
 id: "question31",
 question2: "¿Te sentiste inspirado o creativo durante tu última jornada laboral?",
 cuadrant_cohef: [0.4, 0.1, 0.3, 0.2],
-}
+},
 
 {
 id: "question32",
-question2: "¿Te enfrentaste a algún problema técnico que afectara tu trabajo en tu última jornada laboral? (1: Muchos, 10: Ninguno)",",
+question2: "¿Te enfrentaste a algún problema técnico que afectara tu trabajo en tu última jornada laboral? (1: Muchos, 10: Ninguno)",
 cuadrant_cohef: [0.2, 0.1, 0.6, 0.1],
 },
 
@@ -234,7 +234,7 @@ cuadrant_cohef: [0.1, 0.4, 0.4, 0.1],
 id: "question41",
 question2: "¿Te enfrentaste a algún desafío interesante o gratificante en tu última jornada de trabajo?",
 cuadrant_cohef: [0.2, 0.2, 0.5, 0.1],
-}
+},
 
 {
 id: "question42",
