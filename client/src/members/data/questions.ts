@@ -125,7 +125,7 @@ cuadrant_cohef: [0.1, 0.3, 0.4, 0.2],
 {
 id: "question23",
 question: "¿Te sientes motivado para trabajar en tu próxima jornada de trabajo?",
-cuadrant_cohef: [0.5, 0.1, 0.4, 0.1],
+cuadrant_cohef: [0.5, 0, 0.4, 0.1],
 },
 
 {
@@ -136,14 +136,14 @@ cuadrant_cohef: [0.4, 0.2, 0.3, 0.1],
 
 {
 id: "question25",
-question: "¿Cómo calificarías tu nivel de estrés en tu última jornada de trabajo?",
+question: "¿Cómo calificarías tu nivel de estrés en tu última jornada de trabajo? (0: Mucho, 10: Poco)",
 cuadrant_cohef: [0.1, 0.1, 0.5, 0.3],
 },
 
 {
 id: "question26",
 question: "¿Qué tan bien te sentiste trabajando en equipo en tu última jornada de trabajo?",
-cuadrant_cohef: [0.3, 0.5, 0.2, 0.1],
+cuadrant_cohef: [0.3, 0.5, 0.1, 0.1],
 },
 
 {
@@ -161,7 +161,7 @@ cuadrant_cohef: [0.4, 0.1, 0.4, 0.1],
 {
 id: "question29",
 question: "¿Te sentiste apoyado por tus colegas en tu última jornada de trabajo?",
-cuadrant_cohef: [0.2, 0.6, 0.1, 0.2],
+cuadrant_cohef: [0.2, 0.6, 0, 0.2],
 },
 
 
@@ -239,7 +239,7 @@ cuadrant_cohef: [0.2, 0.2, 0.5, 0.1],
 {
 id: "question42",
 question: "¿Te sentiste bien equilibrando tu vida laboral y personal en tu última jornada de trabajo?",
-cuadrant_cohef: [0.2, 0.2, 0.4, 0.4],
+cuadrant_cohef: [0.2, 0.1, 0.3, 0.4],
 },
 
 {
@@ -256,7 +256,7 @@ cuadrant_cohef: [0.1, 0.3, 0.4, 0.2],
 
 {
 id: "question45",
-question: "¿Cuántas veces te sentiste interrumpido durante tus momentos de máxima concentración en tu última jornada de trabajo?",
+question: "¿Cuántas veces te sentiste interrumpido durante tus momentos de máxima concentración en tu última jornada de trabajo? (0: Mucho, 10: Poco)",
 cuadrant_cohef: [0.3, 0.4, 0.1, 0.2],
 },
 
