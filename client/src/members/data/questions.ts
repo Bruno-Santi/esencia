@@ -112,55 +112,55 @@ const questions: QUESTIONS[] = [
   },
 {
 id: "question21",
-question2: "En una escala del 1 al 10, ¿Qué tan productivo te sientes en tu última jornada de trabajo?",
+question: "En una escala del 1 al 10, ¿Qué tan productivo te sientes en tu última jornada de trabajo?",
 cuadrant_cohef: [0.5, 0.1, 0.3, 0.1],
 },
 
 {
 id: "question22",
-question2: "¿Cuántas interrupciones experimentaste durante tu última jornada laboral? (1: Muchas, 10: Ninguna)",
+question: "¿Cuántas interrupciones experimentaste durante tu última jornada laboral? (1: Muchas, 10: Ninguna)",
 cuadrant_cohef: [0.1, 0.3, 0.4, 0.2],
 },
 
 {
 id: "question23",
-question2: "¿Te sientes motivado para trabajar en tu próxima jornada de trabajo?",
+question: "¿Te sientes motivado para trabajar en tu próxima jornada de trabajo?",
 cuadrant_cohef: [0.5, 0.1, 0.4, 0.1],
 },
 
 {
 id: "question24",
-question2: "¿Lograste completar tus tareas planificadas el día anterior?",
+question: "¿Lograste completar tus tareas planificadas el día anterior?",
 cuadrant_cohef: [0.4, 0.2, 0.3, 0.1],
 },
 
 {
 id: "question25",
-question2: "¿Cómo calificarías tu nivel de estrés en tu última jornada de trabajo?",
+question: "¿Cómo calificarías tu nivel de estrés en tu última jornada de trabajo?",
 cuadrant_cohef: [0.1, 0.1, 0.5, 0.3],
 },
 
 {
 id: "question26",
-question2: "¿Qué tan bien te sentiste trabajando en equipo en tu última jornada de trabajo?",
+question: "¿Qué tan bien te sentiste trabajando en equipo en tu última jornada de trabajo?",
 cuadrant_cohef: [0.3, 0.5, 0.2, 0.1],
 },
 
 {
 id: "question27",
-question2: "¿Hubo algún obstáculo importante que te impidió avanzar en tus tareas? (1: Muchos, 10: Ninguno)",
+question: "¿Hubo algún obstáculo importante que te impidió avanzar en tus tareas? (1: Muchos, 10: Ninguno)",
 cuadrant_cohef: [0.1, 0.1, 0.4, 0.4],
 },
 
 {
 id: "question28",
-question2: "En una escala del 1 al 10, ¿Qué tan claro te sentiste sobre tus prioridades en tu última jornada de trabajo?",
+question: "En una escala del 1 al 10, ¿Qué tan claro te sentiste sobre tus prioridades en tu última jornada de trabajo?",
 cuadrant_cohef: [0.4, 0.1, 0.4, 0.1],
 },
 
 {
 id: "question29",
-question2: "¿Te sentiste apoyado por tus colegas en tu última jornada de trabajo?",
+question: "¿Te sentiste apoyado por tus colegas en tu última jornada de trabajo?",
 cuadrant_cohef: [0.2, 0.6, 0.1, 0.2],
 },
 
@@ -172,37 +172,37 @@ cuadrant_cohef: [0.2, 0.6, 0.1, 0.2],
 
 {
 id: "question31",
-question2: "¿Te sentiste inspirado o creativo durante tu última jornada laboral?",
+question: "¿Te sentiste inspirado o creativo durante tu última jornada laboral?",
 cuadrant_cohef: [0.4, 0.1, 0.3, 0.2],
 },
 
 {
 id: "question32",
-question2: "¿Te enfrentaste a algún problema técnico que afectara tu trabajo en tu última jornada laboral? (1: Muchos, 10: Ninguno)",
+question: "¿Te enfrentaste a algún problema técnico que afectara tu trabajo en tu última jornada laboral? (1: Muchos, 10: Ninguno)",
 cuadrant_cohef: [0.2, 0.1, 0.6, 0.1],
 },
 
 {
 id: "question33",
-question2: "¿Experimentaste algún logro significativo en tu última jornada de trabajo?",
+question: "¿Experimentaste algún logro significativo en tu última jornada de trabajo?",
 cuadrant_cohef: [0.5, 0.1, 0.3, 0.1],
 },
 
 {
 id: "question34",
-question2: "¿Qué tan satisfecho estás con tu nivel de concentración en tu última jornada de trabajo?",
+question: "¿Qué tan satisfecho estás con tu nivel de concentración en tu última jornada de trabajo?",
 cuadrant_cohef: [0.3, 0.1, 0.5, 0.1],
 },
 
 {
 id: "question35",
-question2: "¿Recibiste feedback útil o constructivo en tu última jornada de trabajo?",
+question: "¿Recibiste feedback útil o constructivo en tu última jornada de trabajo?",
 cuadrant_cohef: [0.2, 0.6, 0.1, 0.1],
 },
 
 {
 id: "question36",
-question2: "¿Cuánto tiempo dedicaste en tu última jornada de trabajo a actividades de desarrollo profesional?",
+question: "¿Cuánto tiempo dedicaste en tu última jornada de trabajo a actividades de desarrollo profesional?",
 cuadrant_cohef: [0.1, 0.1, 0.5, 0.3],
 },
 
@@ -214,61 +214,61 @@ cuadrant_cohef: [0.1, 0.1, 0.5, 0.3],
 
 {
 id: "question38",
-question2: "¿Qué tan bien te sentiste colaborando con otros equipos o departamentos en tu última jornada de trabajo?",
+question: "¿Qué tan bien te sentiste colaborando con otros equipos o departamentos en tu última jornada de trabajo?",
 cuadrant_cohef: [0.2, 0.6, 0.1, 0.1],
 },
 
 {
 id: "question39",
-question2: "¿Cuánto tiempo dedicaste en tu última jornada de trabajo a tareas no relacionadas con el trabajo?",
+question: "¿Cuánto tiempo dedicaste en tu última jornada de trabajo a tareas no relacionadas con el trabajo?",
 cuadrant_cohef: [0.1, 0.4, 0.2, 0.3],
 },
 
 {
 id: "question40",
-question2: "¿Qué tan satisfecho estás con la comunicación dentro del equipo en tu última jornada de trabajo?",
+question: "¿Qué tan satisfecho estás con la comunicación dentro del equipo en tu última jornada de trabajo?",
 cuadrant_cohef: [0.1, 0.4, 0.4, 0.1],
 },
 
 {
 id: "question41",
-question2: "¿Te enfrentaste a algún desafío interesante o gratificante en tu última jornada de trabajo?",
+question: "¿Te enfrentaste a algún desafío interesante o gratificante en tu última jornada de trabajo?",
 cuadrant_cohef: [0.2, 0.2, 0.5, 0.1],
 },
 
 {
 id: "question42",
-question2: "¿Te sentiste bien equilibrando tu vida laboral y personal en tu última jornada de trabajo?",
+question: "¿Te sentiste bien equilibrando tu vida laboral y personal en tu última jornada de trabajo?",
 cuadrant_cohef: [0.2, 0.2, 0.4, 0.4],
 },
 
 {
 id: "question43",
-question2: "¿Tuviste la oportunidad de aprender algo nuevo en tu última jornada de trabajo?",
+question: "¿Tuviste la oportunidad de aprender algo nuevo en tu última jornada de trabajo?",
 cuadrant_cohef: [0.3, 0.2, 0.3, 0.2],
 },
 
 {
 id: "question44",
-question2: "¿Te sentiste bien apoyado por tu líder o supervisor en tu última jornada de trabajo?",
+question: "¿Te sentiste bien apoyado por tu líder o supervisor en tu última jornada de trabajo?",
 cuadrant_cohef: [0.1, 0.3, 0.4, 0.2],
 },
 
 {
 id: "question45",
-question2: "¿Cuántas veces te sentiste interrumpido durante tus momentos de máxima concentración en tu última jornada de trabajo?",
+question: "¿Cuántas veces te sentiste interrumpido durante tus momentos de máxima concentración en tu última jornada de trabajo?",
 cuadrant_cohef: [0.3, 0.4, 0.1, 0.2],
 },
 
 {
 id: "question46",
-question2: "¿Lograste cumplir tus objetivos personales en tu última jornada de trabajo?",
+question: "¿Lograste cumplir tus objetivos personales en tu última jornada de trabajo?",
 cuadrant_cohef: [0.3, 0.2, 0.4, 0.1],
 },
 
 {
 id: "question47",
-question2: "¿Qué tan efectiva fue la colaboración con otros equipos en tu última jornada de trabajo?",
+question: "¿Qué tan efectiva fue la colaboración con otros equipos en tu última jornada de trabajo?",
 cuadrant_cohef: [0.1, 0.4, 0.4, 0.1],
 },
 
@@ -280,13 +280,13 @@ cuadrant_cohef: [0.1, 0.4, 0.4, 0.1],
 
 {
 id: "question49",
-question2: "¿Te sentiste satisfecho con la calidad de tu trabajo en tu última jornada de trabajo?",
+question: "¿Te sentiste satisfecho con la calidad de tu trabajo en tu última jornada de trabajo?",
 cuadrant_cohef: [0.4, 0.1, 0.4, 0.1],
 },
 
 {
 id: "question50",
-question2: "¿Lograste alcanzar tus metas en tu última jornada de trabajo?",
+question: "¿Lograste alcanzar tus metas en tu última jornada de trabajo?",
 cuadrant_cohef: [0.4, 0.1, 0.4, 0.1],
 }
 ];
