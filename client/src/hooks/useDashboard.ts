@@ -22,7 +22,7 @@ import { getTeamData } from "../helpers/getTeamData";
 import { toastSuccess, toastWarning } from "../helpers";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { finalRandomizedQuestions } from "../members/data/questions";
+import { finalRandomizedQuestions, generateRandomQuestions } from "../members/data/questions";
 
 export const useDashboard = () => {
   const [surveyLoading, setSurveyLoading] = useState(false);
@@ -248,7 +248,7 @@ export const useDashboard = () => {
  const startCreatingSurvey = async (teamName: string, teamId: string) => {
     setSurveyLoading(true);
 
-    const questions = finalRandomizedQuestions;
+    const questions = generateRandomQuestions();
     const questionValues = Object.values(questions);
     const data = {
       team_id: teamId,
