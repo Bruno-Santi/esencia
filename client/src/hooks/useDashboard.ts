@@ -19,10 +19,12 @@ import { useState } from "react";
 import api, { baseURL } from "../helpers/apiToken";
 import { getTeamData } from "../helpers/getTeamData";
 
-import { toastSuccess, toastWarning } from "../helpers";
+import { getRandomColor, toastSuccess, toastWarning } from "../helpers";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { finalRandomizedQuestions } from "../members/data/questions";
+import { finalRandomizedQuestions, generateRandomQuestions } from "../members/data/questions";
+import { useBoards } from "../teams/hooks/useBoards";
+import { cleanBoards } from "../store/boards/boardsSlice";
 
 export const useDashboard = () => {
   const [surveyLoading, setSurveyLoading] = useState(false);
@@ -48,11 +50,22 @@ export const useDashboard = () => {
   } = useSelector(({ dashboard }) => dashboard);
 
   const startSettingTeams = async () => {
+    console.log(user);
+
     try {
-      const { data } = await api.get(`/api/team/${user.id}`);
-      console.log(data);
-      dispatch(onSetUserTeams({ userTeams: data }));
-      localStorage.setItem("userTeams", JSON.stringify(data.teams));
+      if (user.role) {
+        const { data } = await api.get(`/api/team/${user.id}`);
+        console.log(data);
+        dispatch(onSetUserTeams({ userTeams: data }));
+        localStorage.setItem("userTeams", JSON.stringify(data.teams));
+      } else {
+        const { data } = await api.get(`/api/members/teams/${user.id}`);
+        console.log(data);
+
+        dispatch(onSetUserTeams({ userTeams: data }));
+        localStorage.setItem("userTeams", JSON.stringify(data.teams));
+      }
+
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -194,6 +207,7 @@ export const useDashboard = () => {
   const startAddingMember = async (userData, teamId) => {
     console.log(userData, teamId);
     setCreatingLoading(true);
+    const avtColor = getRandomColor();
     try {
       const formData = {
         teamId: teamId,
@@ -201,6 +215,7 @@ export const useDashboard = () => {
         name: userData.first_name,
 
         email: userData.email,
+        avtColor: avtColor,
       };
       console.log(formData);
 
@@ -245,10 +260,10 @@ export const useDashboard = () => {
     }
   };
 
- const startCreatingSurvey = async (teamName: string, teamId: string) => {
+  const startCreatingSurvey = async (teamName: string, teamId: string) => {
     setSurveyLoading(true);
 
-    const questions = finalRandomizedQuestions;
+    const questions = generateRandomQuestions();
     const questionValues = Object.values(questions);
     const data = {
       team_id: teamId,
@@ -301,7 +316,17 @@ export const useDashboard = () => {
       toast.warning("Error deleting member");
     }
   };
-
+  const startInvitingMember = async (memberId, memberName) => {
+    console.log(activeTeam._id);
+    try {
+      const resp = await api.post(`/api/members/invite/${memberId}`, { teamId: activeTeam._id });
+      toastSuccess(`El miembro ${memberName} ha sido invitado a la plataforma`);
+      startGettingMembers(activeTeam._id);
+    } catch (error) {
+      console.log(error);
+      toastWarning(`Hubo un error al invitar al miembro`);
+    }
+  };
   return {
     startSettingActiveTeam,
     starGettingData,
@@ -330,7 +355,7 @@ export const useDashboard = () => {
     dataLoading,
     closeModal,
     isOpen,
-
+    startInvitingMember,
     longRecommendation,
     startDeletingMember,
   };

@@ -2,14 +2,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "../dashboard";
 import { AuthState } from "./interfaces";
 
-// Definición de la interfaz AuthState
-
-// UserType debería ser reemplazado con el tipo real de tu usuario si es necesario
-
-// Obtén el usuario del almacenamiento local
 const userLogged = localStorage.getItem("userLogged");
 
-// Estado inicial basado en la interfaz AuthState
 const initialState: AuthState = {
   status: userLogged ? "authenticated" : "non-authenticated",
   user: userLogged ? JSON.parse(userLogged) : null,
@@ -18,7 +12,6 @@ const initialState: AuthState = {
   loading: false,
 };
 
-// Crea el slice utilizando el estado y las funciones definidas
 export const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -30,6 +23,8 @@ export const authSlice = createSlice({
       state.loading = true;
     },
     onLogin: (state, action: PayloadAction<User>) => {
+      console.log(action.payload);
+
       state.status = "authenticated";
       state.user = action.payload;
       state.errorMessage = null;

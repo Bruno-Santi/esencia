@@ -5,7 +5,9 @@ import { List } from "@mui/material";
 
 export const Teams: React.FC = () => {
   const { userTeams } = useDashboard();
-  useEffect(() => {}, [userTeams]);
+  useEffect(() => {
+    console.log(userTeams);
+  }, [userTeams]);
 
   return (
     <List>

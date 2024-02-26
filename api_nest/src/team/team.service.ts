@@ -9,6 +9,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Team } from './entities/team.entity';
 import { AuthService } from 'src/auth/auth.service';
+import { convertStringToObj } from '../../common/utils/converStringToObj';
 
 @Injectable()
 export class TeamService {
@@ -72,9 +73,11 @@ export class TeamService {
     console.log(team_id);
 
     try {
-      const team = await this.teamModel.findOne({ _id: team_id });
+      const team = await this.teamModel.findOne({
+        _id: convertStringToObj(team_id),
+      });
       console.log(team);
-      console.log(team.name);
+
       if (!team) throw new BadRequestException(`Team ${team_id} doesn't exist`);
       return team;
     } catch (error) {

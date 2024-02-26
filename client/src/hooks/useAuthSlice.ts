@@ -5,7 +5,7 @@ import { useNavigateTo } from ".";
 import { useEffect } from "react";
 import { onLogOutUser, onSetUser } from "../store/dashboard/dashboardSlice";
 import api from "../helpers/apiToken";
-import { toastSuccess } from "../helpers";
+import { getRandomColor, toastSuccess } from "../helpers";
 import axios from "axios";
 
 export const useAuthSlice = () => {
@@ -30,6 +30,21 @@ export const useAuthSlice = () => {
   //     dispatch(onLogOut(""));
   //   }
   // };
+  const startLoginMember = async ({ email, password }) => {
+    console.log({ email, password });
+
+    try {
+      const resp = await api.post(`/api/members/login`, { email, password });
+      localStorage.setItem("authToken", JSON.stringify(resp.data.token));
+      dispatch(clearErrorMessage());
+      localStorage.setItem("isAuthenticated", true);
+      dispatch(onSetUser(resp.data.user));
+      dispatch(onLogin(resp.data.user));
+      handleNavigate("/dashboard");
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const startLoginUser = async ({ email, password }: { email: string; password: string }) => {
     console.log({ email, password });
 
@@ -39,6 +54,9 @@ export const useAuthSlice = () => {
       dispatch(clearErrorMessage());
       localStorage.setItem("authToken", JSON.stringify(resp.data.token));
       console.log("asd");
+      console.log(resp);
+      const { role } = resp.data.user;
+      console.log(role);
 
       // await startCheckingUser();
       localStorage.setItem("isAuthenticated", true);
@@ -48,7 +66,11 @@ export const useAuthSlice = () => {
 
       dispatch(onLogin(resp.data.user));
       if (!firstLog) localStorage.setItem("firstLoggin", "0");
-      firstLog == "1" ? handleNavigate("/dashboard") : handleNavigate("/onboarding");
+      if (resp.data.user.role) {
+        firstLog == "1" ? handleNavigate("/dashboard") : handleNavigate("/onboarding");
+      } else {
+        handleNavigate("/dashboard");
+      }
     } catch (error) {
       console.log(error);
 
@@ -64,9 +86,10 @@ export const useAuthSlice = () => {
 
   const startRegisteringUser = async ({ name, email, password }) => {
     console.log(user);
-
+    const avtColor = getRandomColor();
+    const role = "admin";
     try {
-      const resp = await api.post(`/api/auth/register`, { name, email, password });
+      const resp = await api.post(`/api/auth/register`, { name, email, password, avtColor, role });
       toastSuccess(`Successfully registered. Redirecting to login. 👍`);
       handleNavigate("/auth/login");
       dispatch(clearErrorMessage());
@@ -87,7 +110,6 @@ export const useAuthSlice = () => {
     localStorage.removeItem("surveyData");
     dispatch(onLogOut(""));
     dispatch(onLogOutUser());
-    handleNavigate("/auth/login");
   };
 
   const cleanErrorMessage = () => dispatch(clearErrorMessage());
@@ -102,5 +124,6 @@ export const useAuthSlice = () => {
     startLoginUser,
     userTeams,
     user,
+    startLoginMember,
   };
 };

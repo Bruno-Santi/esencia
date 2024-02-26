@@ -3,28 +3,34 @@ import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { authSlice } from "./auth/authSlice";
 import { dashboardSlice } from "./dashboard/dashboardSlice";
+import boardsSlice from "./boards/boardsSlice";
 
-// Configuración para persistir el reducer 'auth'
 const authPersistConfig = {
   key: "auth",
   storage,
-  blacklist: ["loading", "errorMessage"], // Opciones para excluir propiedades específicas del estado
+  blacklist: ["loading", "errorMessage"],
 };
 
-// Configuración para persistir el reducer 'dashboard'
 const dashboardPersistConfig = {
   key: "dashboard",
   storage,
-  blacklist: [], // Opciones para excluir propiedades específicas del estado
+  blacklist: [],
+};
+
+const boardPersistConfig = {
+  key: "board",
+  storage,
+  blacklist: [],
 };
 
 const persistedAuthReducer = persistReducer(authPersistConfig, authSlice.reducer);
 const persistedDashboardReducer = persistReducer(dashboardPersistConfig, dashboardSlice.reducer);
-
+const persistedBoardReducer = persistReducer(boardPersistConfig, boardsSlice);
 export const store = configureStore({
   reducer: {
     auth: persistedAuthReducer,
     dashboard: persistedDashboardReducer,
+    board: persistedBoardReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

@@ -10,7 +10,7 @@ import { useAuthSlice } from "../../hooks/useAuthSlice";
 export const ModalMembers: React.FC<{
   closeModal: () => void;
 }> = ({ closeModal }) => {
-  const { creatingLoading } = useAuthSlice();
+  const { creatingLoading, user } = useAuthSlice();
   const { membersActiveTeam, activeTeam, startToggleModal } = useDashboard();
   const [addMember, setAddMember] = useState(false);
   const theme = localStorage.getItem("theme");
@@ -37,18 +37,23 @@ export const ModalMembers: React.FC<{
       </DialogTitle>
       <DialogContent className='dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800  dark:text-tertiary'>
         <div className='flex flex-col'>
-          <div
-            onClick={toggleAddMember}
-            className={`${
-              creatingLoading ? "btn-secondary" : "btn-primary"
-            } flex w-fit text-xl  mt-4 p-2 rounded-md cursor-pointer duration-700 font-poppins hover:bg-tertiary hover:text-primary`}
-          >
-            Add{" "}
-            <i className='text-3xl ml-2 my-auto '>
-              <CiCirclePlus />
-            </i>
-          </div>
-          {addMember && <AddMemberModal key={addMember.toString()} closeAddMember={toggleAddMember} />}
+          {user.role ? (
+            <div
+              onClick={toggleAddMember}
+              className={`${
+                creatingLoading ? "btn-secondary" : "btn-primary"
+              } flex w-fit text-xl  mt-4 p-2 rounded-md cursor-pointer duration-700 font-poppins hover:bg-tertiary hover:text-primary`}
+            >
+              Add{" "}
+              <i className='text-3xl ml-2 my-auto '>
+                <CiCirclePlus />
+              </i>
+            </div>
+          ) : (
+            ""
+          )}
+          {user.role ? addMember && <AddMemberModal key={addMember.toString()} closeAddMember={toggleAddMember} /> : ""}
+
           {membersActiveTeam.length ? <MembersTable /> : ""}
         </div>
       </DialogContent>

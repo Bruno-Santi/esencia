@@ -7,6 +7,8 @@ import { OnBoardingRoutes } from "../onboarding/routes/OnBoardingRoutes";
 import { MembersRoutes } from "../members/routes/";
 import { useEffect, useState } from "react";
 import { TeamsRoutes } from "../teams/routes/TeamsRoutes";
+import { Login } from "../teams/pages/Login";
+import ReactGA from "react-ga";
 
 export const AppRouter = () => {
   const [searchParams1] = useSearchParams();
@@ -21,7 +23,8 @@ export const AppRouter = () => {
   useEffect(() => {
     if (status === "authenticated") localStorage.setItem("isAuthenticated", "true");
   }, []);
-
+  const TRACKING_ID = "G-TX9FWF4RZR";
+  ReactGA.initialize(TRACKING_ID);
   useEffect(() => {
     console.log(searchParams.get("token"));
     console.log(searchParams1.get("token"));
@@ -83,6 +86,7 @@ export const AppRouter = () => {
         </div>
       ) : (
         <Routes>
+          <Route element={<Login />} path={"/teams/login"} />
           {isAuthenticated1 || authToken ? (
             <>
               {/* Rutas para usuarios autenticados */}
@@ -101,6 +105,7 @@ export const AppRouter = () => {
           ) : (
             <>
               {/* Rutas para usuarios no autenticados */}
+              <Route element={<Login />} path={"/teams/login"} />
               {userToken && <Route element={<MembersRoutes />} path={`/members/*`} />}
               {userTokenLocal && <Route element={<MembersRoutes />} path={`/members/*`} />}
 

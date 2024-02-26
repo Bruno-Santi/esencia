@@ -13,4 +13,8 @@ export class CreateAuthDto {
   @IsNotEmpty()
   @MinLength(8)
   password: string;
+  @IsString()
+  avtColor: string;
+  @IsString()
+  role: string;
 }

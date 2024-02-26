@@ -7,14 +7,32 @@ export class Member extends Document {
     required: true,
   })
   name: string;
+
   @Prop({
     required: true,
+    unique: true, // Asegura que el correo electrónico sea único
   })
   email: string;
+
   @Prop({
     required: true,
   })
   teamId: Types.ObjectId;
+
+  @Prop({
+    required: true,
+  })
+  avtColor: string;
+
+  @Prop({
+    default: false,
+  })
+  isRegistered: boolean;
+
+  @Prop({
+    required: false,
+  })
+  password: string;
 }
 
 export const MemberSchema = SchemaFactory.createForClass(Member);

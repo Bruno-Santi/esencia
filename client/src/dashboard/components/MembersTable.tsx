@@ -1,99 +1,104 @@
-import { useTable } from "react-table";
-import { FiEdit, FiTrash2 } from "react-icons/fi";
-import { useDashboard } from "../../hooks/useDashboard";
 import React, { useEffect } from "react";
+import { FiTrash2 } from "react-icons/fi";
+import { useDashboard } from "../../hooks/useDashboard";
+import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { toast } from "react-toastify";
+import { useAuthSlice } from "../../hooks/useAuthSlice";
 
 export const MembersTable = () => {
-  const { activeTeam, membersActiveTeam, startGettingMembers, startDeletingMember } = useDashboard();
+  const { activeTeam, membersActiveTeam, startGettingMembers, startDeletingMember, startInvitingMember } = useDashboard();
   const theme = localStorage.getItem("theme");
+  const { user } = useAuthSlice();
   const handleAccept = (userId, memberName) => {
     startDeletingMember(userId, activeTeam._id, memberName);
   };
 
   const handleCancel = () => toast.error("Cancelled");
-
+  const handleInvite = (memberId, memberName) => {
+    startInvitingMember(memberId, memberName);
+  };
   const startDeletingMemberInComponent = (id, name) => {
     console.log(id);
     toast.info(
       <div className='flex flex-col'>
         <p className='font-poppins mb-2'>Are you sure deleting {name} from this team?</p>
         <div className='flex space-x-2'>
-          <button onClick={handleCancel} className='btn-secondary w-2/3 space-x-2 p-1 font-poppins rounded-md'>
+          <Button onClick={handleCancel} variant='contained' color='secondary'>
             ❌
-          </button>
-
-          <button onClick={() => handleAccept(id, name)} className='btn-primary w-2/3 p-1 font-poppins rounded-md'>
+          </Button>
+          <Button onClick={() => handleAccept(id, name)} variant='contained' color='primary'>
             ✅
-          </button>
+          </Button>
         </div>
       </div>
     );
   };
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: "Name",
-        accessor: "name",
-      },
-      {
-        Header: "Email",
-        accessor: "email",
-      },
-
-      {
-        Header: "Delete",
-        accessor: "delete",
-        Cell: ({ row }) => (
-          <span className='text-red-600 cursor-pointer  text-lg lg:text-2xl'>
-            <FiTrash2 onClick={() => startDeletingMemberInComponent(row.original._id, row.original.name)} />
-          </span>
-        ),
-      },
-    ],
-    []
-  );
 
   useEffect(() => {
     startGettingMembers(activeTeam._id);
   }, [membersActiveTeam.length]);
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
-    columns,
-    data: membersActiveTeam || [],
-  });
   return (
-    <div className='w-full overflow-x-auto max-h-96 overflow-y-scroll my-12'>
-      <table {...getTableProps()} className={`table-auto rounded text-left border-2 border-${theme !== "dark" ? `primary/30` : `secondary text-tertiary`}`}>
-        <thead className='border-b border-blue-gray-100 bg-blue-gray-50 p-4'>
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()} className=''>
-              {headerGroup.headers.map((column) => (
-                <th {...column.getHeaderProps()} className='justify-start border-b flex-row h-20 my-auto mx-auto border-blue-gray-100 bg-blue-gray-50 px-4'>
-                  {column.render("Header")}
-                </th>
-              ))}
-            </tr>
+    <TableContainer>
+      <Table className='font-poppins'>
+        <TableHead>
+          <TableRow>
+            <TableCell>Avatar</TableCell>
+            <TableCell>Name</TableCell>
+
+            {user.role ? (
+              <>
+                {" "}
+                <TableCell>Email</TableCell>
+                <TableCell>Status</TableCell>
+                <TableCell>Delete</TableCell>
+              </>
+            ) : (
+              ""
+            )}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {membersActiveTeam.map((member) => (
+            <TableRow key={member._id}>
+              <TableCell>
+                <div className='flex items-center'>
+                  <div className={`rounded-full h-8 w-8 flex items-center justify-center mr-2 ${member.avtColor}`}>
+                    <span className='text-tertiary font-bold'> {member.name[0]}</span>
+                  </div>
+                </div>
+              </TableCell>
+
+              <TableCell>{member.name}</TableCell>
+
+              {user.role ? (
+                <>
+                  {" "}
+                  <TableCell>{member.email}</TableCell>
+                  <TableCell>
+                    {!member.isRegistered ? (
+                      <Button onClick={() => handleInvite(member._id, member.name)} variant='contained' color='primary'>
+                        Invite
+                      </Button>
+                    ) : (
+                      "Registered"
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <span className='text-red-600 cursor-pointer text-lg lg:text-2xl'>
+                      <FiTrash2 onClick={() => startDeletingMemberInComponent(member._id, member.name)} />
+                    </span>
+                  </TableCell>
+                </>
+              ) : (
+                ""
+              )}
+            </TableRow>
           ))}
-        </thead>
-        <tbody {...getTableBodyProps()} className=''>
-          {rows.map((row) => {
-            prepareRow(row);
-            return (
-              <tr
-                {...row.getRowProps()}
-                className={`${theme !== "dark" ? `odd:bg-secondary/20` : `odd:bg-blue-950`} w-fit h-20 my-auto mx-auto justify-start px-4`}
-              >
-                {row.cells.map((cell) => (
-                  <td {...cell.getCellProps()} className='lg:w-3/4 lg:px-4'>
-                    {cell.render("Cell")}
-                  </td>
-                ))}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };
+
+export default MembersTable;

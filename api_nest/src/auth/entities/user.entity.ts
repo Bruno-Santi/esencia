@@ -8,7 +8,11 @@ export class ScrumMaster extends Document {
     required: true,
   })
   name: string;
-
+  @Prop({
+    unique: false,
+    required: true,
+  })
+  role: string;
   @Prop({
     unique: true,
     required: true,
@@ -20,6 +24,12 @@ export class ScrumMaster extends Document {
     required: true,
   })
   password: string;
+
+  @Prop({
+    unique: false,
+    required: true,
+  })
+  avtColor: string;
 }
 
 export const ScrumMasterSchema = SchemaFactory.createForClass(ScrumMaster);

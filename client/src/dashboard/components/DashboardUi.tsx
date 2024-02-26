@@ -11,8 +11,10 @@ import { UsePagination } from "../../helpers/UsePagination";
 import { TrendingTopics } from ".";
 import { toastSuccess } from "../../helpers/toastSuccess";
 import { ClipLoader } from "react-spinners";
+import { useAuthSlice } from "../../hooks/useAuthSlice";
 
 export const DashboardUi = () => {
+  const { user } = useAuthSlice();
   const {
     startCreatingSurvey,
 
@@ -121,28 +123,32 @@ export const DashboardUi = () => {
          dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800
       w-full col-span-3 md:col-span-2 md:row-span-2 lg:row-span-1 rounded-md'
         >
-          <div className='flex flex-col space-y-8 p-2 m-auto md:col-span-3 '>
-            <span className='font-poppins text-primary flex mt-4 ml-4 text-2xl dark:text-tertiary font-bold'>Avaible Actions</span>
-            <button
-              disabled={surveyLoading}
-              onClick={() => startCreatingSurvey(activeTeam.name, activeTeam._id)}
-              className={
-                !surveyLoading
-                  ? "btn-primary font-poppins dark:hover:border-white dark:hover:border-1 dark:hover:duration-500 md:text-base md:p-1 lg:text-xl rounded-md lg:p-2 duration-700 hover:bg-amber-100 hover:text-primary"
-                  : "btn-secondary font-poppins text-xl rounded-md p-2 duration-700 "
-              }
-            >
-              Pulse Survey
-            </button>
-            <button
-              onClick={() => handleNavigate("/dashboard/retro")}
-              className='btn-primary font-poppins md:text-base md:p-1 lg:text-xl rounded-md
+          {user.role ? (
+            <div className='flex flex-col space-y-8 p-2 m-auto md:col-span-3 '>
+              <span className='font-poppins text-primary flex mt-4 ml-4 text-2xl dark:text-tertiary font-bold'>Avaible Actions</span>
+              <button
+                disabled={surveyLoading}
+                onClick={() => startCreatingSurvey(activeTeam.name, activeTeam._id)}
+                className={
+                  !surveyLoading
+                    ? "btn-primary font-poppins dark:hover:border-white dark:hover:border-1 dark:hover:duration-500 md:text-base md:p-1 lg:text-xl rounded-md lg:p-2 duration-700 hover:bg-amber-100 hover:text-primary"
+                    : "btn-secondary font-poppins text-xl rounded-md p-2 duration-700 "
+                }
+              >
+                Pulse Survey
+              </button>
+              <button
+                onClick={() => handleNavigate("/dashboard/retro")}
+                className='btn-primary font-poppins md:text-base md:p-1 lg:text-xl rounded-md
               lg:p-2 duration-700 hover:bg-amber-100
                hover:text-primary'
-            >
-              Retrospectives
-            </button>
-          </div>
+              >
+                Retrospectives
+              </button>
+            </div>
+          ) : (
+            ""
+          )}
           <DataCollectionReport />
         </div>
 

@@ -18,6 +18,7 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { CiCircleQuestion } from "react-icons/ci";
 import { MdOutlineDashboard } from "react-icons/md";
 import { toastWarning } from "../helpers/toastWarning";
+import { useBoards } from "../teams/hooks/useBoards";
 
 export const NavBar = () => {
   const { longRecommendation } = useDashboard();
@@ -26,7 +27,7 @@ export const NavBar = () => {
   const { startLogingOut } = useAuthSlice();
   const { activeTeam, user, startGettingMembers, startToggleModal } = useDashboard();
   const { isOpen, closeModal, openModal } = useModal();
-
+  const { startCleaningBoards } = useBoards();
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -39,6 +40,8 @@ export const NavBar = () => {
 
   useEffect(() => {
     const localTheme = localStorage.getItem("theme");
+    console.log(user);
+
     if (localTheme) {
       setTheme(localTheme);
       if (localTheme === "dark") document.querySelector("html").classList.toggle("dark", true);
@@ -46,7 +49,7 @@ export const NavBar = () => {
       setTheme("light");
       localStorage.setItem("theme", "light");
     }
-  }, []);
+  }, [user]);
 
   const sideBarRef = useRef(null);
   const handleChangeTheme = () => {
@@ -110,8 +113,10 @@ export const NavBar = () => {
           )}
 
           <div className='flex mt-4  ml-24 border-quaternary  border-2 p-1 rounded-md right-4 bottom-3 absolute bg-gradient-to-r from-indigo-950 dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800 '>
-            <Avatar style={{ backgroundColor: deepPurple[400], color: "white", marginTop: "3px" }}>{user?.name && user.name[0].toUpperCase()}</Avatar>
-            <div className='flex flex-col'>
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center mt-1 ${user.avtColor}`}>
+              <span className='text-white text-lg text-center'>{user?.name && user.name[0].toUpperCase()}</span>
+            </div>
+            <div className={`flex flex-col`}>
               <span className='text-tertiary my-auto ml-2 font-poppins text-[16px]'>{user?.name}</span>
               <span className='text-tertiary my-auto ml-2 font-poppins text-[16px]'>{user?.email}</span>
             </div>
@@ -202,6 +207,7 @@ export const NavBar = () => {
                   onClick={() => {
                     startLogingOut();
                     handleClose();
+                    startCleaningBoards();
                   }}
                   className='p-2 font-poppins text-secondary dark:text-red-700 duration-700 hover:text-primary cursor-pointer'
                 >

@@ -47,6 +47,7 @@ export class AuthService {
       const { email, password } = await getUserDto;
 
       const user = await this.scrumMasterModel.findOne({ email: email });
+      console.log(user);
 
       if (!user) throw new BadRequestException(`Invalid email or password`);
       const passwordValid = await passwordCompare(password, user.password);
@@ -64,6 +65,8 @@ export class AuthService {
           id: user._id,
           name: user.name,
           email: user.email,
+          avtColor: user.avtColor,
+          role: user.role,
         },
         teams,
       };

@@ -10,6 +10,8 @@ export class DataController {
 
   @Get('/get_long_recommendation/:teamid')
   getLong(@Param('teamid') teamId: string) {
+    console.log(teamId);
+
     return this.dataService.getLongRecommendation(teamId);
   }
 

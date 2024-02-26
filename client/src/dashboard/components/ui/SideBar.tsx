@@ -9,6 +9,7 @@ import { GrGroup } from "react-icons/gr";
 import { ModalTeam } from "../ModalTeam";
 import { useModal } from "../../../hooks";
 import AddIcon from "@mui/icons-material/Add";
+import { useAuthSlice } from "../../../hooks/useAuthSlice";
 
 export const SideBarContext = createContext({ expanded: false, setExpanded: () => {}, teamsOpen: false, setTeamsOpen: () => {} });
 
@@ -16,7 +17,7 @@ export const SideBar = ({ children }) => {
   const [expanded, setExpanded] = useState(false);
   const [teamsOpen, setTeamsOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-  
+
   const theme = localStorage.getItem("theme");
 
   React.useEffect(() => {
@@ -74,7 +75,7 @@ export const SideBarItem = ({ icon, text, active, alert }) => {
   React.useEffect(() => {
     console.log(theme);
   }, [theme]);
-
+  const { user } = useAuthSlice();
   return (
     <li
       className={`
@@ -108,12 +109,16 @@ export const SideBarItem = ({ icon, text, active, alert }) => {
             <AccordionDetails>
               <Typography>
                 <Teams />
+                {user?.role ? (
+                  <ListItemIcon onClick={openModal}>
+                    <span className='font-poppins justify-center text-center m-auto'>
+                      <AddIcon /> New Team
+                    </span>
+                  </ListItemIcon>
+                ) : (
+                  ""
+                )}
 
-                <ListItemIcon onClick={openModal}>
-                  <span className='font-poppins justify-center text-center m-auto'>
-                    <AddIcon /> New Team
-                  </span>
-                </ListItemIcon>
                 <div>{isOpen && <ModalTeam closeModal={closeModal} />}</div>
               </Typography>
             </AccordionDetails>

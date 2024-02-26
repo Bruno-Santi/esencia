@@ -9,6 +9,8 @@ import { SurveyModule } from './survey/survey.module';
 import { SendGridModule } from '@ntegral/nestjs-sendgrid';
 import { DataModule } from './data/data.module';
 import { RetroModule } from './retro/retro.module';
+import { BoardsModule } from './boards/boards.module';
+import { BoardgatewayModule } from './boardgateway/boardgateway.module';
 
 @Module({
   imports: [
@@ -28,6 +30,8 @@ import { RetroModule } from './retro/retro.module';
     SurveyModule,
     DataModule,
     RetroModule,
+    BoardsModule,
+    BoardgatewayModule,
   ],
   exports: [],
   controllers: [],

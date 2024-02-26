@@ -5,13 +5,18 @@ export class CreateMemberDto {
   @IsNotEmpty()
   @MinLength(2)
   name: string;
+
   @IsString()
   @IsNotEmpty()
   @MinLength(5)
   @IsEmail()
   email: string;
+
   @IsString()
   @IsNotEmpty()
   @MinLength(2)
   teamId: string;
+
+  @IsString()
+  avtColor: string;
 }
