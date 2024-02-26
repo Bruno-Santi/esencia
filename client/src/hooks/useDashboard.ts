@@ -23,8 +23,6 @@ import { getRandomColor, toastSuccess, toastWarning } from "../helpers";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { finalRandomizedQuestions, generateRandomQuestions } from "../members/data/questions";
-import { useBoards } from "../teams/hooks/useBoards";
-import { cleanBoards } from "../store/boards/boardsSlice";
 
 export const useDashboard = () => {
   const [surveyLoading, setSurveyLoading] = useState(false);
