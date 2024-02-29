@@ -15,14 +15,16 @@ export class DataController {
     return this.dataService.getLongRecommendation(teamId);
   }
 
-  @Get('/dashboard-data/:teamid/:sprint')
+  @Get('/dashboard-data/:teamid/:sprint/:members')
   getDashData(
     @Param('teamid') teamId: string,
     @Param('sprint') sprint: string,
+    @Param('members') members: string,
   ) {
     console.log(teamId);
     console.log(sprint);
+    console.log(members);
 
-    return this.dataService.getDashboardData(teamId, sprint);
+    return this.dataService.getDashboardData(teamId, sprint, members);
   }
 }

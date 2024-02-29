@@ -30,7 +30,7 @@ export const store = configureStore({
   reducer: {
     auth: persistedAuthReducer,
     dashboard: persistedDashboardReducer,
-    board: persistedBoardReducer,
+    board: boardsSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

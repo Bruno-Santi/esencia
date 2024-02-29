@@ -224,4 +224,70 @@ export class BoardgatewayGateway implements OnGatewayConnection {
     }
     console.log(payload);
   }
+
+  @SubscribeMessage('addNewCheckList')
+  async handleNewCheckList(client: Socket, payload: any) {
+    try {
+      const { boardId, cardId, checkListTitle } = payload;
+      console.log(boardId, cardId, checkListTitle);
+
+      // Guardar el nuevo checklist usando el servicio correspondiente
+      const newCheckList = await this.boardgatewayService.addNewCheckList(
+        boardId,
+        cardId,
+        checkListTitle,
+      );
+
+      this.server.emit('boardDataUpdated', [newCheckList]);
+
+      console.log('New checklist added:', newCheckList);
+    } catch (error) {
+      console.error('Error adding new checklist:', error);
+    }
+  }
+
+  @SubscribeMessage('addNewCheckListItem')
+  async handleAddNewItem(client: Socket, payload: any) {
+    try {
+      const { boardId, cardId, checkListId, newItemContent } = payload;
+      console.log(boardId, cardId, checkListId, newItemContent);
+
+      // Guardar el nuevo ítem en el checklist usando el servicio correspondiente
+      const newItem = await this.boardgatewayService.addNewItem(
+        boardId,
+        cardId,
+        checkListId,
+        newItemContent,
+      );
+
+      this.server.emit('boardDataUpdated', [newItem]);
+
+      console.log('New item added:', newItem);
+    } catch (error) {
+      console.error('Error adding new item:', error);
+    }
+  }
+
+  @SubscribeMessage('startTogglingItem')
+  async handleStartTogglingItem(client: Socket, payload: any) {
+    try {
+      const { boardId, cardId, checkListId, itemId } = payload;
+      console.log(boardId, cardId, checkListId, itemId);
+
+      // Toggle the item's isChecked property using the corresponding service method
+      const toggledItem = await this.boardgatewayService.toggleCheckListItem(
+        boardId,
+        cardId,
+        checkListId,
+        itemId,
+      );
+
+      // Emit the updated board data to connected clients
+      this.server.emit('boardDataUpdated', [toggledItem]);
+
+      console.log('Item toggled successfully:', toggledItem);
+    } catch (error) {
+      console.error('Error toggling item:', error);
+    }
+  }
 }

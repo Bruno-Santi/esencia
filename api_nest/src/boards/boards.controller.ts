@@ -8,6 +8,8 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  NotFoundException,
+  Put,
 } from '@nestjs/common';
 import { BoardsService } from './boards.service';
 import { CardService } from './card.service';
@@ -83,5 +85,77 @@ export class BoardController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async removeCard(@Param('card_id') card_id: string) {
     const card = await this.cardService.remove(card_id);
+  }
+
+  @Post(`cards/checklist/:id`)
+  async addTitleCheckList(
+    @Param('id') id: string,
+    @Body() messageBody: { title: string },
+  ) {
+    console.log(id, messageBody);
+
+    try {
+      const cardId = id;
+      const title = messageBody.title;
+
+      const updatedCheckList = await this.cardService.addTitleToCheckList(
+        cardId,
+        title,
+      );
+
+      return {
+        message: 'Title added to checklist',
+        checkList: updatedCheckList,
+      };
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
+  }
+
+  @Post(`cards/checklist/:id/item`)
+  async addCheckItem(
+    @Param('id') id: string,
+    @Body() body, // El cuerpo de la solicitud debe contener el contenido del nuevo ítem
+  ) {
+    console.log(body.newItem2, id);
+    const { content } = body.newItem2;
+    try {
+      const cardId = id;
+
+      const updatedCheckList = await this.cardService.addItemToCheckList(
+        cardId,
+        content,
+      );
+
+      return {
+        message: 'Item added to checklist',
+        checkList: updatedCheckList,
+      };
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
+  }
+  @Put('cards/checklist/:cardId/item/:itemId')
+  async toggleItemCheckStatus(
+    @Param('cardId') cardId: string,
+    @Param('itemId') itemId: string,
+  ) {
+    console.log(cardId, itemId);
+
+    try {
+      const updatedItem = await this.cardService.toggleItemCheckStatus(
+        cardId,
+        itemId,
+      );
+
+      return {
+        message: 'Item check status updated successfully',
+        item: updatedItem,
+      };
+    } catch (error) {
+      throw new NotFoundException(
+        `Error toggling item status: ${error.message}`,
+      );
+    }
   }
 }

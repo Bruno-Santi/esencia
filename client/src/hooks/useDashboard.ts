@@ -97,8 +97,12 @@ export const useDashboard = () => {
   const startGettingDataFunc = async (id, sprint, triggered) => {
     try {
       console.log(sprint);
+      console.log(activeTeam);
 
-      const surveyData = await getTeamData(id, sprint);
+      const members = await startGettingMembers(activeTeam._id);
+      console.log(members.members.length);
+
+      const surveyData = await getTeamData(id, members.members.length);
       console.log(surveyData);
       if (
         surveyData.longRecommendation !== "There is no enough data" ||

@@ -15,7 +15,6 @@ export class BoardgatewayService {
   ) {}
 
   saveBoardData(boardId: string, boardData): void {
-    // Verifica si ya existe un array de datos de tablero para este ID
     const existingData = this.boards.get(boardId);
     if (existingData) {
       // Si existe, actualiza los datos
@@ -23,13 +22,12 @@ export class BoardgatewayService {
         (data) => data._id === boardData._id,
       );
       if (index !== -1) {
-        existingData[index] = boardData; // Reemplaza los datos antiguos con los nuevos
+        existingData[index] = boardData;
       } else {
         existingData.push(boardData);
       }
       this.boards.set(boardId, existingData);
     } else {
-      // Si no existe, crea un nuevo array y lo guarda
       this.boards.set(boardId, [boardData]);
     }
   }
@@ -57,14 +55,12 @@ export class BoardgatewayService {
     const boardData = this.boards.get(boardId);
     console.log(boardData);
 
-    // Encuentra la columna correspondiente
     const column = boardData.columns.find(
       (column) => column.name === newCard.status,
     );
     if (column) {
-      // Agrega la nueva tarjeta a la columna
       column.cards.push(newCard);
-      // Guarda los cambios en el tablero
+
       this.saveBoardData(boardId, boardData);
     } else {
       console.error('Columna no encontrada para la tarjeta:', newCard);
@@ -79,7 +75,6 @@ export class BoardgatewayService {
     newComment: any,
   ): Promise<void> {
     try {
-      // Obtener los datos del tablero
       const boardData = await this.getBoardData(boardId);
       await this.cardService.addCommentToCard(cardId, newComment);
       if (!boardData) {
@@ -88,14 +83,13 @@ export class BoardgatewayService {
 
       let targetCard;
 
-      // Buscar la tarjeta en todas las columnas del tablero
       for (const column of boardData.columns) {
         targetCard = column.cards.find(
           (card) => card._id.toString() === cardId,
         );
 
         if (targetCard) {
-          break; // Salir del bucle si se encuentra la tarjeta
+          break;
         }
       }
 
@@ -110,9 +104,6 @@ export class BoardgatewayService {
         targetCard.comments = [];
       }
 
-      // Agrega el nuevo comentario a la tarjeta
-
-      // Agregar el nuevo comentario a la tarjeta
       targetCard.comments.push(newComment);
 
       // Guardar los cambios en el tablero
@@ -124,7 +115,6 @@ export class BoardgatewayService {
     }
   }
   async updateCardStatus(cardId: string, newStatus: string): Promise<void> {
-    // Implementa la lógica para actualizar el estado de la tarjeta en la base de datos
     console.log(cardId, newStatus);
     const updateCardDto: UpdateCardDto = { status: newStatus };
     console.log(updateCardDto);
@@ -181,14 +171,13 @@ export class BoardgatewayService {
         status: newData.status,
       };
       await this.cardService.updateStatus(cardId, updateCardDto);
-      // Buscar la tarjeta por su ID
+
       for (const column of boardData.columns) {
         const cardIndex = column.cards.findIndex(
           (card) => card._id.toString() === convertedCardId.toString(),
         );
 
         if (cardIndex !== -1) {
-          // Actualizar el título y la descripción de la tarjeta
           console.log('Tarjeta encontrada:', column.cards[cardIndex]);
           console.log('Nuevos datos:', newData);
 
@@ -214,7 +203,6 @@ export class BoardgatewayService {
     status,
   ): Promise<void> {
     try {
-      // Obtener los datos del tablero
       const boardData = await this.getBoardData(boardId);
 
       if (!boardData) {
@@ -309,6 +297,131 @@ export class BoardgatewayService {
       return board;
     } catch (error) {
       throw new Error(`Error removing assignee from card: ${error.message}`);
+    }
+  }
+
+  async addNewCheckList(
+    boardId: string,
+    cardId: string,
+    checkListTitle: string,
+  ) {
+    try {
+      const updatedCard = await this.cardService.addTitleToCheckList(
+        cardId,
+        checkListTitle,
+      );
+
+      const boardData = await this.getBoardData(boardId);
+
+      return boardData;
+    } catch (error) {
+      console.error('Error adding new checklist:', error.message);
+      throw error;
+    }
+  }
+
+  async addNewItem(
+    boardId: string,
+    cardId: string,
+    checkListId: string,
+    newItemContent: { content: string; isChecked: boolean },
+  ) {
+    console.log(newItemContent);
+
+    try {
+      const boardData = await this.getBoardData(boardId);
+      const newItem2 = await this.cardService.addItemToCheckList(
+        cardId,
+        newItemContent.content,
+      );
+      console.log(newItem2);
+
+      const targetCard = boardData.columns
+        .flatMap((column) => column.cards)
+        .find((card) => card._id.toString() === cardId);
+
+      if (!targetCard) {
+        throw new NotFoundException(
+          `Card with ID ${cardId} not found in board with ID ${boardId}`,
+        );
+      }
+
+      const targetCheckList = targetCard.checkList.find(
+        (checkList) => checkList._id.toString() === checkListId,
+      );
+
+      if (!targetCheckList) {
+        throw new NotFoundException(
+          `Checklist with ID ${checkListId} not found in card with ID ${cardId}`,
+        );
+      }
+
+      const newItem = {
+        content: newItemContent.content,
+        isChecked: newItemContent.isChecked,
+        _id: newItem2,
+      };
+
+      targetCheckList.checkItems.push(newItem);
+
+      await this.saveBoardData(boardId, boardData);
+
+      return boardData;
+    } catch (error) {
+      console.error('Error adding new item:', error.message);
+      throw error;
+    }
+  }
+
+  async toggleCheckListItem(
+    boardId: string,
+    cardId: string,
+    checkListId: string,
+    itemId: string,
+  ) {
+    try {
+      const boardData = await this.getBoardData(boardId);
+      await this.cardService.toggleItemCheckStatus(cardId, itemId);
+
+      const targetCard = boardData.columns
+        .flatMap((column) => column.cards)
+        .find((card) => card._id.toString() === cardId);
+
+      if (!targetCard) {
+        throw new NotFoundException(
+          `Card with ID ${cardId} not found in board with ID ${boardId}`,
+        );
+      }
+
+      const targetCheckList = targetCard.checkList.find(
+        (checkList) => checkList._id.toString() === checkListId,
+      );
+
+      if (!targetCheckList) {
+        throw new NotFoundException(
+          `Checklist with ID ${checkListId} not found in card with ID ${cardId}`,
+        );
+      }
+
+      // Encontrar el ítem en el checklist
+      const targetItem = targetCheckList.checkItems.find(
+        (item) => item._id.toString() === itemId,
+      );
+
+      if (!targetItem) {
+        throw new NotFoundException(
+          `Item with ID ${itemId} not found in checklist with ID ${checkListId}`,
+        );
+      }
+
+      targetItem.isChecked = !targetItem.isChecked;
+
+      await this.saveBoardData(boardId, boardData);
+
+      return boardData;
+    } catch (error) {
+      console.error('Error toggling checklist item:', error.message);
+      throw error;
     }
   }
 }

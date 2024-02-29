@@ -4,13 +4,13 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import mongoose, { Model, Mongoose, Types } from 'mongoose';
 import { CreateCardDto, UpdateCardDto } from './dto/create-card.dto';
 
 import { Board } from 'src/boards/entities/board.entity';
 import { convertStringToObj } from 'common/utils/converStringToObj';
 
-import { Card } from './entities/card.entity';
+import { Card, CheckItem, CheckList } from './entities/card.entity';
 
 @Injectable()
 export class CardService {
@@ -159,10 +159,12 @@ export class CardService {
     const convertedId = new Types.ObjectId(cardId);
     const card = await this.cardModel.findOne(convertedId);
     console.log(card);
+    console.log(newComment);
 
     if (!card) {
       throw new NotFoundException(`Card with ID ${cardId} not found`);
     }
+    console.log(card.comments);
 
     // Agregar el nuevo comentario a la tarjeta
     card.comments.push(newComment);
@@ -171,5 +173,125 @@ export class CardService {
     await card.save();
 
     return card;
+  }
+
+  async addTitleToCheckList(cardId: string, title: string) {
+    try {
+      const convertedId = new Types.ObjectId(cardId);
+      const card = await this.cardModel.findById(convertedId);
+
+      if (!card) {
+        throw new NotFoundException(`Card with ID ${cardId} not found`);
+      }
+
+      let checkList = card.checkList[0]; // Obtenemos el primer checklist (asumimos que solo hay uno)
+
+      if (!checkList) {
+        // Si no hay un checklist, lo creamos y asignamos el título
+        checkList = new CheckList(title);
+        card.checkList.push(checkList);
+      } else {
+        // Si ya hay un checklist, actualizamos su título
+        checkList.title = title;
+      }
+
+      await card.save(); // Guardamos los cambios en la tarjeta
+
+      return checkList; // Devolvemos el checklist actualizado
+    } catch (error) {
+      throw new NotFoundException(
+        `Error adding title to checklist of card with ID ${cardId}`,
+      );
+    }
+  }
+
+  async addItemToCheckList(cardId: string, newItem: string) {
+    console.log(cardId, newItem);
+
+    try {
+      const convertedId = new Types.ObjectId(cardId);
+      const card = await this.cardModel.findById(cardId);
+      console.log(card);
+
+      if (!card) {
+        throw new NotFoundException(`Card with ID ${cardId} not found`);
+      }
+      console.log(card);
+
+      const checkList = card.checkList[0]; // Obtenemos el primer checklist (asumimos que solo hay uno)
+      console.log(checkList);
+
+      if (!checkList) {
+        // Si no hay un checklist, lanzamos una excepción
+        throw new NotFoundException(
+          `Checklist not found in card with ID ${cardId}`,
+        );
+      }
+
+      // Creamos un nuevo ítem para el checklist
+      const newItemObj = new CheckItem();
+      newItemObj.content = newItem;
+      newItemObj.isChecked = false;
+      newItemObj._id = new Types.ObjectId();
+      // Agregamos el nuevo ítem al checklist
+      checkList.checkItems.push(newItemObj);
+
+      await card.save(); // Guardamos los cambios en la tarjeta
+
+      return newItemObj._id; // Devolvemos el checklist actualizado
+    } catch (error) {
+      throw new NotFoundException(
+        `Error adding item to checklist of card with ID ${cardId}`,
+      );
+    }
+  }
+
+  async toggleItemCheckStatus(cardId: string, itemId: string) {
+    console.log(itemId);
+
+    try {
+      const convertedItemId = new Types.ObjectId(itemId);
+      const card = await this.cardModel.findById(cardId);
+      if (!card) {
+        throw new NotFoundException(`Card with ID ${cardId} not found`);
+      }
+
+      const checkList = card.checkList[0];
+      if (!checkList) {
+        throw new NotFoundException(
+          `Checklist not found in card with ID ${cardId}`,
+        );
+      }
+      console.log(checkList.checkItems);
+
+      const item = checkList.checkItems.find(
+        (item) => item._id.toString() === itemId,
+      );
+      console.log(item);
+
+      if (!item) {
+        throw new NotFoundException(
+          `Item with ID ${itemId} not found in the checklist`,
+        );
+      }
+
+      // Cambiar el estado isChecked del ítem
+      console.log('Before toggling isChecked:', item.isChecked);
+
+      // Cambiar el estado isChecked del ítem
+      item.isChecked = !item.isChecked;
+      card.markModified('checkList');
+      await card.save();
+      // Después de cambiar isChecked
+      console.log('After toggling isChecked:', item.isChecked);
+
+      return item;
+    } catch (error) {
+      console.log(error);
+
+      throw new NotFoundException(
+        `Error toggling item status in the checklist of card with ID ${cardId}`,
+      );
+    }
   }
 }

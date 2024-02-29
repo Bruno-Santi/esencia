@@ -50,6 +50,7 @@ export class MembersService {
       const members = await this.memberModel
         .find({ teamId: convertedTeamId })
         .select('name email avtColor isRegistered');
+      console.log(members);
 
       return {
         members,

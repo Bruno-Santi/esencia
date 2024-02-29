@@ -46,7 +46,7 @@ export const Boards = () => {
             </li>
           </ul>
         </div>
-        {activeBoard.length && <ActiveBoardHeader activeBoard={activeBoard} />}
+        {activeBoard.length > 0 && <ActiveBoardHeader activeBoard={activeBoard} />}
       </div>
       {activeBoard[0] === "null" || !activeBoard.length ? (
         <NoSelectedBoard />
@@ -54,12 +54,13 @@ export const Boards = () => {
         <DragDropContext onDragEnd={onDragEnd}>
           <div className='grid grid-cols-4 gap-5 mr-10'>
             {activeBoard[0] !== null &&
-              activeBoard.map((board) =>
-                board.columns.map((column) => (
-                  <Droppable droppableId={column.name} key={column._id}>
-                    {(provided) => <BoardColumn key={column._id} title={column.name} items={column.cards} provided={provided} activeBoard={activeBoard} />}
-                  </Droppable>
-                ))
+              activeBoard?.map(
+                (board) =>
+                  board?.columns.map((column) => (
+                    <Droppable droppableId={column.name} key={column._id}>
+                      {(provided) => <BoardColumn key={column._id} title={column.name} items={column.cards} provided={provided} activeBoard={activeBoard} />}
+                    </Droppable>
+                  ))
               )}
           </div>
         </DragDropContext>

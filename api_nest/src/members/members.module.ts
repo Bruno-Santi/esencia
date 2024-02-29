@@ -25,6 +25,6 @@ import { JwtModule } from '@nestjs/jwt';
     JwtModule,
     TeamModule,
   ],
-  exports: [MembersModule, MongooseModule],
+  exports: [MembersModule, MongooseModule, MembersService],
 })
 export class MembersModule {}

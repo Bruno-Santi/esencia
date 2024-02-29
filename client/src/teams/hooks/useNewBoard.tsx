@@ -35,6 +35,7 @@ export const useNewBoard = () => {
 
       await boardCreated(data);
     } catch (error) {
+      if (error.message == "Cannot read properties of null (reading 'emit')") return;
       toastWarning(`Error while creating board`);
     }
   };

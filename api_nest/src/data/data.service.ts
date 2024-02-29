@@ -2,12 +2,14 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import axios from 'axios';
 import { Model, Types } from 'mongoose';
+import { MembersService } from 'src/members/members.service';
 import { Team } from 'src/team/entities/team.entity';
 
 @Injectable()
 export class DataService {
   constructor(
     @InjectModel(Team.name) private readonly teamModel: Model<Team>,
+    private readonly membersService: MembersService,
   ) {}
   async getLongRecommendation(teamId) {
     try {
@@ -29,14 +31,15 @@ export class DataService {
     }
   }
 
-  async getDashboardData(teamId, sprint) {
+  async getDashboardData(teamId, sprint, members) {
     try {
       console.log(teamId, sprint);
+      console.log(members);
 
       await this.checkTeam(teamId);
 
       const short = await axios.post(
-        `${process.env.API_DATA}/short_recommendation?team_id=${teamId}&sprint=${sprint}`,
+        `${process.env.API_DATA}/short_recommendation?team_id=${teamId}&sprint=${sprint}&members=${members}`,
       );
       const data2 = await axios.post(
         `${process.env.API_DATA}/get_topics?sprint=${sprint}&team_id=${teamId}`,

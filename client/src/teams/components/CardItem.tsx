@@ -5,11 +5,14 @@ import { BsFillSendFill } from "react-icons/bs";
 
 import { useOpenTask } from "../hooks/useOpenTask";
 import { Button, Modal } from "@mui/base";
-import { Container, Divider, TextField } from "@mui/material";
+import { Container, Divider, Pagination, TextField } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
 import { IoPersonAddOutline, IoPersonOutline, IoSaveSharp } from "react-icons/io5";
 import { useDashboard } from "../../hooks/useDashboard";
 import { useBoards } from "../hooks/useBoards";
+import CommentsPagination from "./CommentsPagination";
+import { useNewCheckList } from "../hooks/useNewCheckList";
+import { CheckList } from "./CheckList";
 export const CardItem = ({ item }) => {
   console.log(item);
   const [comment, setComment] = useState("");
@@ -19,6 +22,7 @@ export const CardItem = ({ item }) => {
   const handleCommentChange = (e) => {
     setComment(e.target.value);
   };
+
   const { startSettingAssigneeCard, startChangingDescription, startRemovingAssigneeCard, startDeletingNewCard, activeTeam, startAddingNewComment } =
     useBoards();
   const { user } = useDashboard();
@@ -36,7 +40,7 @@ export const CardItem = ({ item }) => {
   const handleOutCard = () => {
     startRemovingAssigneeCard(item._id, user.id);
   };
-
+  const { checkListTitle, handleChangeCheckListTitle, handleSubmitNewCheckList, toggleCheckListTitleModal, checkListTitleModal } = useNewCheckList(item._id);
   useEffect(() => {
     console.log(activeTeam);
   }, []);
@@ -80,6 +84,7 @@ export const CardItem = ({ item }) => {
     };
     startChangingDescription(item._id, item.boardId, newData);
   };
+
   const useStyles = makeStyles((theme) => ({
     overlay: {
       position: "fixed",
@@ -87,9 +92,10 @@ export const CardItem = ({ item }) => {
       left: 0,
       width: "100%",
       height: "100%",
-      backgroundColor: "rgba(0, 0, 0, 0.5)", // Fondo oscuro semi-transparente
-      zIndex: 999, // Asegúrate de que el overlay esté por debajo del modal
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+      zIndex: 999,
     },
+
     modalContainer: {
       position: "absolute",
       width: 1000,
@@ -103,7 +109,7 @@ export const CardItem = ({ item }) => {
       transform: "translate(-50%, -50%)",
       outline: "none",
       borderRadius: 8,
-      zIndex: 1000, // Asegúrate de que el modal esté por encima del overlay
+      zIndex: 1000,
     },
     button: {
       marginTop: theme.spacing(2),
@@ -122,14 +128,16 @@ export const CardItem = ({ item }) => {
   const handleDeleteCard = (cardId, boardId, status) => {
     startDeletingNewCard(cardId, boardId, status);
   };
+
   const { toggleTaskModal, openTaskModal } = useOpenTask();
+
   return (
     <div className='bg-white text-primary rounded-md p-3 mt-3 relative' onClick={toggleTaskModal}>
       <span className=''>{item?.title}</span>
       <div className='flex justify-between pt-3'>
         <div className='flex space-x-4 items-center'>
           <span className='flex space-x-2 items-center'>
-            <HiOutlineChatAlt2 className='mr-1 text-gray-500 w-4 ' /> {comment.length}
+            <HiOutlineChatAlt2 className='mr-1 text-gray-500 w-4 ' /> {item?.comments.length}
           </span>
 
           <ul className='flex items-center absolute right-3 space-x-1'>
@@ -165,6 +173,12 @@ export const CardItem = ({ item }) => {
                         margin='normal'
                       />
                     </Container>
+                    <Container>
+                      {" "}
+                      <Divider className='py-2 mb-2' />
+                      {item.checkList.length > 0 && <CheckList checkList={item.checkList} cardId={item._id} />}
+                    </Container>
+
                     {item.title !== title || item.description !== description ? (
                       <div className='flex justify-center duration-300 font-poppins text-sm space-x-4'>
                         <div onClick={handleSubmitTitleDescription} className='cursor-pointer p-2 btn-primary rounded-md'>
@@ -208,6 +222,21 @@ export const CardItem = ({ item }) => {
                         >
                           Eliminar Tarjeta
                         </div>
+                        {!item.checkList.length ? (
+                          <div
+                            onClick={toggleCheckListTitleModal}
+                            className='flex cursor-pointer bg-secondary text-sm p-2 font-poppins text-tertiary rounded-md hover:bg-primary duration-300'
+                          >
+                            Agregar checklist
+                          </div>
+                        ) : (
+                          <button
+                            disabled
+                            className='flex cursor-pointer bg-gray-500 text-sm p-2 font-poppins text-tertiary rounded-md hover:bg-primary duration-300'
+                          >
+                            Agregar checklist
+                          </button>
+                        )}
                         {/* ADD MEMBERS */}
                         <div className='flex-col justify-center'>
                           <h2 className='justify-center absolute top-2 right-8'>
@@ -228,24 +257,8 @@ export const CardItem = ({ item }) => {
                       <Container className='mt-10'>
                         <Divider />
                         <div className='mt-6'>Comentarios</div>
-                        <ul>
-                          {item.comments?.map((comment, index) => (
-                            <div className='flex flex-col font-poppins' key={index}>
-                              <div className='border rounded-md p-3 ml-3 my-3'>
-                                <div className='flex gap-3 items-center'>
-                                  <div
-                                    className={`${comment.member.avtColor} object-cover w-8 h-8 rounded-full border-2 flex justify-center cursor-pointer my-auto`}
-                                  >
-                                    <span className='text-tertiary my-auto'>{comment.member.name[0]}</span>{" "}
-                                  </div>
-                                  <h3 className='font-normal'>{comment.member.name}</h3> {/* Mostrar el nombre del usuario */}
-                                </div>
-                                <p className='text-gray-600 mt-2 w-[350px] break-words'>{comment.comment}</p>
-                                {/* Mostrar el texto del comentario */}
-                              </div>
-                            </div>
-                          ))}
-                        </ul>
+                        <div>{item.comments && <CommentsPagination comments={item.comments} />}</div>
+
                         <div>
                           <TextField
                             label='Añadir comentario'
@@ -273,6 +286,35 @@ export const CardItem = ({ item }) => {
             </Modal>
           </>
         )}
+        <Modal open={checkListTitleModal} onClose={toggleCheckListTitleModal} onClick={(e) => handlePropagation(e)}>
+          <div className={classes.modalContainer}>
+            <Container>
+              <div className='flex flex-col '>
+                <h2 className='font-poppins py-2 text-lg'>Checklist</h2>
+              </div>
+              <TextField label='Título' variant='outlined' value={checkListTitle} onChange={(e) => handleChangeCheckListTitle(e)} fullWidth margin='normal' />
+              {/* <TextField
+                label='Description'
+                variant='outlined'
+                value={taskDescription}
+                onChange={(e) => setTaskDescription(e.target.value)}
+                fullWidth
+                multiline
+                rows={4}
+                margin='normal'
+              /> */}
+              <div className='space-x-2 pt-2'>
+                <button
+                  onClick={() => handleSubmitNewCheckList()}
+                  className={` bg-secondary font-poppins rounded-md p-2 text-teal-50 hover:bg-primary duration-300`}
+                >
+                  Añadir
+                </button>
+                <button className={` bg-tertiary font-poppins rounded-md p-2 text-primary hover:bg-primary/30 duration-300`}>Cancelar</button>
+              </div>
+            </Container>
+          </div>
+        </Modal>
       </div>
     </div>
   );

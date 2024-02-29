@@ -339,6 +339,56 @@ export const useBoards = () => {
       console.log(error);
     }
   };
+
+  const startAddingNewCheckList = async (cardId: string, checkListTitle: string) => {
+    const boardId = activeBoard[0]._id;
+    try {
+      if (socketRef.current) {
+        socketRef.current.emit("addNewCheckList", { boardId, cardId, checkListTitle });
+      } else {
+        const socket = io(`${URL_DEPLOY}${NAMESPACE}`, {
+          query: { boardId: boardId },
+        });
+        socket.emit("addNewCheckList", { boardId, cardId, checkListTitle });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const startAddingNewItemCheckList = async (cardId, newItemContent, checkListId) => {
+    const boardId = activeBoard[0]._id;
+    try {
+      if (socketRef.current) {
+        socketRef.current.emit("addNewCheckListItem", { boardId, cardId, checkListId, newItemContent });
+      } else {
+        const socket = io(`${URL_DEPLOY}${NAMESPACE}`, {
+          query: { boardId: boardId },
+        });
+        socket.emit("addNewCheckListItem", { boardId, cardId, checkListId, newItemContent });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const startTogglingItem = async (cardId, checkListId, itemId) => {
+    const boardId = activeBoard[0]._id;
+    console.log(cardId, checkListId, itemId);
+
+    try {
+      if (socketRef.current) {
+        socketRef.current.emit("startTogglingItem", { boardId, cardId, checkListId, itemId });
+      } else {
+        const socket = io(`${URL_DEPLOY}${NAMESPACE}`, {
+          query: { boardId: boardId },
+        });
+        socket.emit("startTogglingItem", { boardId, cardId, checkListId, itemId });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return {
     startAddingNewComment,
     startGettingTeamBoards,
@@ -359,5 +409,8 @@ export const useBoards = () => {
     activeTeam,
     startRemovingAssigneeCard,
     startDeletingNewCard,
+    startAddingNewCheckList,
+    startAddingNewItemCheckList,
+    startTogglingItem,
   };
 };
