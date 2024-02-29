@@ -36,6 +36,7 @@ export const useBoards = () => {
   const toggleModal = () => setModalCard(!modalCard);
   const URL_LOCAL = "http://localhost:3000";
   const URL_DEPLOY = "https://esencia-api.onrender.com";
+  //https://esencia-api.onrender.com
   const NAMESPACE = "/boardgateway";
   useEffect(() => {
     if (Object.keys(activeBoardLocal).length) {
@@ -68,8 +69,10 @@ export const useBoards = () => {
     }
   }, [activeBoardLocal]);
 
-  const connectToServer = (boardId) => {
+  const connectToServer = async (boardId) => {
     socketRef.current.emit("boardIdAvailable", boardId);
+
+    console.log(activeBoardLocal);
   };
 
   const addListeners = (socket) => {
@@ -103,6 +106,7 @@ export const useBoards = () => {
     if (activeTeam) {
       try {
         const response = await api.get(`/api/boards/${activeTeam._id}`);
+        await startGettingMembers(activeTeam._id);
         dispatch(setTeamBoards(response.data.boards));
       } catch (error) {
         console.log(error);

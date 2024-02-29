@@ -99,7 +99,7 @@ export const CardItem = ({ item }) => {
     modalContainer: {
       position: "absolute",
       width: 1000,
-      height: "fit",
+      height: "90%",
       backgroundColor: theme.palette.background.paper,
       border: "2px solid #000",
       boxShadow: theme.shadows[5],
@@ -154,7 +154,7 @@ export const CardItem = ({ item }) => {
           <>
             <div className={classes.overlay}></div>
             <Modal open={openTaskModal} onClose={toggleTaskModal} onClick={(e) => handlePropagation(e)}>
-              <div className={classes.modalContainer}>
+              <div className={`${classes.modalContainer} overflow-y-scroll`}>
                 <div className='flex'>
                   {/* Columna Izquierda */}
                   <div className='flex-2'>
@@ -168,7 +168,7 @@ export const CardItem = ({ item }) => {
                         value={description}
                         fullWidth
                         multiline
-                        rows={16}
+                        rows={10}
                         className='p-2 '
                         margin='normal'
                       />
@@ -195,48 +195,50 @@ export const CardItem = ({ item }) => {
 
                   {/* Columna Derecha */}
                   <div className='flex-1 ml-4 mt-6'>
-                    <div className='flex flex-col justify-start items-start space-y-4'>
+                    <div className='flex flex-col justify-start items-start space-y-4 '>
                       {/* JOIN */}
 
                       <div className='flex ml-6 space-x-6'>
-                        {!currentlyAssignee ? (
+                        <div className='flex flex-col space-y-2'>
+                          {!currentlyAssignee ? (
+                            <div
+                              onClick={handleJoinCard}
+                              className='flex cursor-pointer bg-secondary text-sm p-2 font-poppins text-tertiary rounded-md hover:bg-primary duration-300'
+                            >
+                              Unirme
+                              <IoPersonOutline className='my-auto ml-2' />
+                            </div>
+                          ) : (
+                            <div
+                              onClick={handleOutCard}
+                              className='flex cursor-pointer bg-secondary text-sm p-2 font-poppins text-tertiary rounded-md hover:bg-primary duration-300'
+                            >
+                              Salir
+                              <IoPersonOutline className='my-auto ml-2' />
+                            </div>
+                          )}
                           <div
-                            onClick={handleJoinCard}
+                            onClick={() => handleDeleteCard(item._id, item.boardId, item.status)}
                             className='flex cursor-pointer bg-secondary text-sm p-2 font-poppins text-tertiary rounded-md hover:bg-primary duration-300'
                           >
-                            Unirme
-                            <IoPersonOutline className='my-auto ml-2' />
+                            Eliminar Tarjeta
                           </div>
-                        ) : (
-                          <div
-                            onClick={handleOutCard}
-                            className='flex cursor-pointer bg-secondary text-sm p-2 font-poppins text-tertiary rounded-md hover:bg-primary duration-300'
-                          >
-                            Salir
-                            <IoPersonOutline className='my-auto ml-2' />
-                          </div>
-                        )}
-                        <div
-                          onClick={() => handleDeleteCard(item._id, item.boardId, item.status)}
-                          className='flex cursor-pointer bg-secondary text-sm p-2 font-poppins text-tertiary rounded-md hover:bg-primary duration-300'
-                        >
-                          Eliminar Tarjeta
+                          {!item.checkList.length ? (
+                            <div
+                              onClick={toggleCheckListTitleModal}
+                              className='flex cursor-pointer bg-secondary text-sm p-2 font-poppins text-tertiary rounded-md hover:bg-primary duration-300'
+                            >
+                              Agregar checklist
+                            </div>
+                          ) : (
+                            <button
+                              disabled
+                              className='flex cursor-pointer bg-gray-500 text-sm p-2 font-poppins text-tertiary rounded-md hover:bg-primary duration-300'
+                            >
+                              Agregar checklist
+                            </button>
+                          )}
                         </div>
-                        {!item.checkList.length ? (
-                          <div
-                            onClick={toggleCheckListTitleModal}
-                            className='flex cursor-pointer bg-secondary text-sm p-2 font-poppins text-tertiary rounded-md hover:bg-primary duration-300'
-                          >
-                            Agregar checklist
-                          </div>
-                        ) : (
-                          <button
-                            disabled
-                            className='flex cursor-pointer bg-gray-500 text-sm p-2 font-poppins text-tertiary rounded-md hover:bg-primary duration-300'
-                          >
-                            Agregar checklist
-                          </button>
-                        )}
                         {/* ADD MEMBERS */}
                         <div className='flex-col justify-center'>
                           <h2 className='justify-center absolute top-2 right-8'>
@@ -256,7 +258,7 @@ export const CardItem = ({ item }) => {
 
                       <Container className='mt-10'>
                         <Divider />
-                        <div className='mt-6'>Comentarios</div>
+                        <div className='mt-6'>Comentarios ({item.comments.length})</div>
                         <div>{item.comments && <CommentsPagination comments={item.comments} />}</div>
 
                         <div>

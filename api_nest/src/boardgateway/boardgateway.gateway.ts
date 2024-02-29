@@ -18,8 +18,10 @@ export class BoardgatewayGateway implements OnGatewayConnection {
   @SubscribeMessage('boardIdAvailable')
   async handleConnection(client: Socket) {
     const boardId = client.handshake.query.boardId;
-    console.log(client.handshake.query);
+    console.log(boardId);
 
+    console.log(client.handshake.query);
+    client.join(boardId);
     console.log('Cliente conectado con ID:', client.id, 'y boardId:', boardId);
 
     // Aquí puedes cargar los datos del tablero y las tarjetas desde el servicio y enviarlos al cliente
@@ -56,7 +58,7 @@ export class BoardgatewayGateway implements OnGatewayConnection {
     console.log(boardId);
 
     // Emitir el evento 'boardDataUpdated' a todos los clientes suscritos al tablero
-    this.server.emit('boardDataUpdated', [boardData]);
+    this.server.to(boardId).emit('boardDataUpdated', [boardData]);
     console.log(boardData);
   }
 
@@ -67,12 +69,12 @@ export class BoardgatewayGateway implements OnGatewayConnection {
     try {
       const { newAssignee, status } = payload;
       const { cardId } = newAssignee[0];
+      const boardId = newAssignee[0].boardId;
       const boardData = await this.boardgatewayService.getBoardData(
         newAssignee[0].boardId,
       );
       console.log(boardData);
       console.log(status);
-      this.server.emit('boardDataUpdated', [boardData]);
 
       const newBoardData =
         await this.boardgatewayService.updateCardAssigneesInBoard(
@@ -86,8 +88,9 @@ export class BoardgatewayGateway implements OnGatewayConnection {
         newAssignee[0].boardId,
         boardData,
       );
-      console.log(boardData);
-      this.server.emit('boardDataUpdated', [newBoardData]);
+      console.log(boardId);
+
+      this.server.to(boardId).emit('boardDataUpdated', [newBoardData]);
     } catch (error) {
       console.error('Error handling new assignee addition:', error);
     }
@@ -111,8 +114,9 @@ export class BoardgatewayGateway implements OnGatewayConnection {
           client,
         );
 
-      // Emitir el evento 'boardDataUpdated' con los nuevos datos del tablero
-      this.server.emit('boardDataUpdated', [newBoardData]);
+      this.server
+        .to(payload.dataToRemove.boardId)
+        .emit('boardDataUpdated', [newBoardData]);
     } catch (error) {
       console.error('Error handling assignee removal:', error);
     }
@@ -131,8 +135,7 @@ export class BoardgatewayGateway implements OnGatewayConnection {
 
       await this.boardgatewayService.saveBoardData(boardId, newBoardData);
 
-      // Emitir evento de actualización a los clientes
-      this.server.emit('boardDataUpdated', [newBoardData]);
+      this.server.to(boardId).emit('boardDataUpdated', [newBoardData]);
       console.log(newBoardData);
 
       console.log(`Tarjeta con ID ${cardId} eliminada exitosamente.`);
@@ -177,7 +180,7 @@ export class BoardgatewayGateway implements OnGatewayConnection {
 
       await this.boardgatewayService.saveBoardData(boardId, boardData);
 
-      this.server.emit('boardDataUpdated', [boardData]);
+      this.server.to(boardId).emit('boardDataUpdated', [boardData]);
       console.log(boardData.columns);
       await this.boardgatewayService.updateCardStatus(cardId, newStatus);
     } catch (error) {
@@ -200,7 +203,7 @@ export class BoardgatewayGateway implements OnGatewayConnection {
 
       const boardData = await this.boardgatewayService.getBoardData(boardId);
 
-      this.server.emit('boardDataUpdated', [boardData]);
+      this.server.to(boardId).emit('boardDataUpdated', [boardData]);
       console.log(boardData);
     } catch (error) {
       console.error('Error updating title and description:', error);
@@ -217,7 +220,7 @@ export class BoardgatewayGateway implements OnGatewayConnection {
         payload.cardId,
         payload.comment,
       );
-      this.server.emit('boardDataUpdated', [newBoardData]);
+      this.server.to(payload.boardId).emit('boardDataUpdated', [newBoardData]);
       console.log(newBoardData);
     } catch (error) {
       console.log(error);
@@ -238,8 +241,7 @@ export class BoardgatewayGateway implements OnGatewayConnection {
         checkListTitle,
       );
 
-      this.server.emit('boardDataUpdated', [newCheckList]);
-
+      this.server.to(boardId).emit('boardDataUpdated', [newCheckList]);
       console.log('New checklist added:', newCheckList);
     } catch (error) {
       console.error('Error adding new checklist:', error);
@@ -260,8 +262,7 @@ export class BoardgatewayGateway implements OnGatewayConnection {
         newItemContent,
       );
 
-      this.server.emit('boardDataUpdated', [newItem]);
-
+      this.server.to(boardId).emit('boardDataUpdated', [newItem]);
       console.log('New item added:', newItem);
     } catch (error) {
       console.error('Error adding new item:', error);
@@ -282,9 +283,7 @@ export class BoardgatewayGateway implements OnGatewayConnection {
         itemId,
       );
 
-      // Emit the updated board data to connected clients
-      this.server.emit('boardDataUpdated', [toggledItem]);
-
+      this.server.to(boardId).emit('boardDataUpdated', [toggledItem]);
       console.log('Item toggled successfully:', toggledItem);
     } catch (error) {
       console.error('Error toggling item:', error);
