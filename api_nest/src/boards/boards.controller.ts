@@ -45,6 +45,14 @@ export class BoardController {
 
     return this.boardsService.findOne(id);
   }
+
+  @Get('/find-board-sprint/:team_id/:sprint')
+  findOneSprint(
+    @Param('team_id') team_id: string,
+    @Param('sprint') sprint: string,
+  ) {
+    return this.boardsService.findOneBySprint(team_id, sprint);
+  }
   @Patch(':board_id')
   updateBoard(
     @Param('board_id') board_id: string,

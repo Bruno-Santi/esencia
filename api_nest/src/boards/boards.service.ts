@@ -15,9 +15,16 @@ export class BoardsService {
   ) {}
   private async checkTeam(team_id: string) {
     console.log(team_id);
+    try {
+      const team = await this.teamService.findOne(convertStringToObj(team_id));
+      if (!team) throw new BadRequestException(`Team ${team_id} doesn't exist`);
 
-    const team = await this.teamService.findOne(convertStringToObj(team_id));
-    if (!team) throw new BadRequestException(`Team ${team_id} doesn't exist`);
+      return {
+        ok: true,
+      };
+    } catch (error) {
+      throw new BadRequestException(`Team ${team_id} doesn't exist`);
+    }
   }
 
   private async checkBoard(board_id: string) {
@@ -50,16 +57,28 @@ export class BoardsService {
       throw new BadRequestException(error.message);
     }
   }
+  async findOneBySprint(team_id, sprint) {
+    try {
+      const resp = await this.checkTeam(team_id);
+      console.log(resp);
+
+      const board = await this.boardModel.find({ team_id, sprint }).populate({
+        path: 'columns.cards',
+        model: 'Card',
+      });
+      return board;
+    } catch (error) {
+      console.log(error);
+    }
+  }
   async findOne(id) {
     const convertedId = new Types.ObjectId(id);
-    console.log(convertedId);
 
     try {
       const board = await this.boardModel.findById(convertedId).populate({
         path: 'columns.cards',
         model: 'Card',
       });
-      console.log(board);
 
       return board;
     } catch (error) {

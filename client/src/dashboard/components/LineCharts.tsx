@@ -4,7 +4,7 @@ import "chartjs-adapter-moment";
 import { useDashboard } from "../../hooks/useDashboard";
 import { formatDate } from "../../helpers";
 
-export const LineCharts = () => {
+export const LineCharts = ({ height = "8em" }) => {
   const themeLocal = localStorage.getItem("theme");
   const [theme, setTheme] = useState();
   const { linesMetrics } = useDashboard();
@@ -101,7 +101,7 @@ export const LineCharts = () => {
   return (
     <div>
       <div>
-        <canvas id='SesionLine' ref={chartContainer} style={{ marginBottom: "10px", width: "100%", height: "8em", margin: "auto", padding: 10 }} />
+        <canvas id='SesionLine' ref={chartContainer} style={{ marginBottom: "10px", width: "100%", height: `${height}`, margin: "auto", padding: 10 }} />
       </div>
     </div>
   );

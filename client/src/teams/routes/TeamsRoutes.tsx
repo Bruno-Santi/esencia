@@ -15,6 +15,7 @@ export const TeamsRoutes = () => {
               <Routes>
                 <Route path='/' element={<Home />} />
                 <Route path='/reports' element={<Reports />} />
+
                 <Route path='/boards' element={<Boards />} />
               </Routes>
             </div>
