@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { TeamsRoutes } from "../teams/routes/TeamsRoutes";
 import { Login } from "../teams/pages/Login";
 import ReactGA from "react-ga";
+import { NewLandingPage } from "../components/NewLandingPage";
 
 export const AppRouter = () => {
   const [searchParams1] = useSearchParams();
@@ -48,7 +49,6 @@ export const AppRouter = () => {
     if (!authToken && !userToken && !userTokenLocal) {
       console.log("holis");
 
-      startLogingOut();
       setLoading(false);
     }
   }, []);
@@ -90,7 +90,7 @@ export const AppRouter = () => {
           {isAuthenticated1 || authToken ? (
             <>
               {/* Rutas para usuarios autenticados */}
-              <Route element={<LandingPage />} path={"/"} />
+              <Route element={<NewLandingPage />} path={"/"} />
               {userToken && <Route element={<MembersRoutes />} path={`/members/*`} />}
               {userTokenLocal && <Route element={<MembersRoutes />} path={`/members/*`} />}
               <Route element={<OnBoardingRoutes />} path={`/onboarding/*`} />
@@ -109,7 +109,7 @@ export const AppRouter = () => {
               {userToken && <Route element={<MembersRoutes />} path={`/members/*`} />}
               {userTokenLocal && <Route element={<MembersRoutes />} path={`/members/*`} />}
 
-              <Route element={<LandingPage />} path={"/"} />
+              <Route element={<NewLandingPage />} path={"/"} />
               <Route element={<AuthRoutes />} path={`/auth/*`} />
               <Route element={<Navigate to='/auth/login' />} path={`/dashboard/`} />
               <Route element={<Navigate to='/auth/login' />} path={`/onboarding/`} />

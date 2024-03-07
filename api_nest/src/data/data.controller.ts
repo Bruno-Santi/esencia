@@ -8,11 +8,11 @@ import { JwtAuthGuard } from 'common/jwt-guard/jwt-guard.guard';
 export class DataController {
   constructor(private readonly dataService: DataService) {}
 
-  @Get('/get_long_recommendation/:teamid')
-  getLong(@Param('teamid') teamId: string) {
-    console.log(teamId);
+  @Get('/get_reports/:teamid/:sprint')
+  getLong(@Param('teamid') teamId: string, @Param('sprint') sprint: string) {
+    console.log(teamId, sprint);
 
-    return this.dataService.getLongRecommendation(teamId);
+    return this.dataService.getReports(teamId, sprint);
   }
 
   @Get('/dashboard-data/:teamid/:sprint/:members')

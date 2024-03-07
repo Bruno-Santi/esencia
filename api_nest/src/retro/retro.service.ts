@@ -308,14 +308,21 @@ export class RetroService {
   async postRetro(data) {
     try {
       const resp = await axios.post(`${process.env.API_DATA}/retro`, data);
-      const trigger = await axios.post(
-        `${process.env.API_DATA}/reports?team_id=${data.team_id}&sprint=${data.sprint}`,
-      );
-      console.log(trigger);
-
+      console.log(data);
       console.log(resp);
+
+      axios
+        .post(
+          `${process.env.API_DATA}/report_2?team_id=${data.team_id}&sprint=${data.sprint}`,
+        )
+        .then(() => {
+          console.log('Trigger enviado correctamente');
+        })
+        .catch((error) => {
+          console.error('Error al enviar el trigger:', error);
+        });
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
     }
   }
   private updateStickyNotesInMemory(

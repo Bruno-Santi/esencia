@@ -82,7 +82,7 @@ export const NavBar = () => {
                 </span>
               </>
             ) : (
-              <span onClick={() => handleNavigate("/dashboard/feedback")}>
+              <span onClick={() => handleNavigate("/dashboard/reports")}>
                 <SideBarItem icon={<MdOutlineInsertChart />} text='Reports' />
               </span>
             )}

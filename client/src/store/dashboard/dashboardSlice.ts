@@ -12,6 +12,7 @@ const initialState: DashBoardState = {
   shortRecomendation: {},
   topics: [],
   longRecommendation: {},
+  activeReport: [],
   dataAmount: [],
   isLoading: false,
   modalOpen: false,
@@ -35,7 +36,9 @@ export const dashboardSlice = createSlice({
       state.shortRecomendation = "";
       state.metricsForToday = [];
       state.membersActiveTeam = [];
+      state.longRecommendation = {};
       state.topics = [];
+      state.activeReport = [];
     },
     onLoadingTeam: (state) => {
       state.isLoading = true;
@@ -49,6 +52,7 @@ export const dashboardSlice = createSlice({
       state.shortRecomendation = {};
       state.longRecommendation = {};
       state.topics = [];
+      state.activeReport = [];
     },
     onSetUserTeams: (
       state,
@@ -69,6 +73,7 @@ export const dashboardSlice = createSlice({
     ) => {
       const userTeam = state.userTeams.find((team) => team._id === action.payload.id);
       state.activeTeam = userTeam;
+      state.activeReport = [];
       state.isLoading = false;
       state.modalOpen = false;
     },
@@ -110,6 +115,16 @@ export const dashboardSlice = createSlice({
     onSetLongRecommendation: (state, { payload }) => {
       state.longRecommendation = payload;
     },
+    onSetActiveReport: (state, { payload }) => {
+      console.log(payload);
+      console.log(payload);
+      console.log(state.longRecommendation);
+      state.activeReport = [];
+      state.activeReport = state.longRecommendation.data.filter((recommendation) => recommendation.id === payload);
+      console.log(state.activeReport[0]);
+
+      console.log(payload);
+    },
   },
 });
 
@@ -126,6 +141,7 @@ export const {
   onToggleModal,
   onSetDataLoading,
   onSetLongRecommendation,
+  onSetActiveReport,
 } = dashboardSlice.actions;
 
 export default dashboardSlice.reducer;

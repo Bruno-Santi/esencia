@@ -23,4 +23,5 @@ export interface DashBoardState {
   //@ts-expect-error 'fafaf'
   membersActiveTeam: Members | [];
   modalOpen: boolean;
+  activeReport: string[];
 }

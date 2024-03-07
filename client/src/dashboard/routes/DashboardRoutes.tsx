@@ -18,8 +18,8 @@ export const DashboardRoutes = () => {
     <Routes>
       <Route element={<Main />} path='/' />
       <Route element={<Retrospectives />} path='/retro' />
-      <Route element={<FeedBack />} path='/feedback' />
-      <Route element={<NewReports />} path='/new-reports' />
+      <Route element={<NewReports />} path='/reports' />
+
       <Route path='/*' element={<Navigate to='/' replace />} />
     </Routes>
   );

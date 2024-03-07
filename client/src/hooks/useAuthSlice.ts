@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { clearErrorMessage, onChecking, onLogOut, onLogin } from "../store/auth/authSlice";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigateTo } from ".";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { onLogOutUser, onSetUser } from "../store/dashboard/dashboardSlice";
 import api from "../helpers/apiToken";
 import { getRandomColor, toastSuccess } from "../helpers";
@@ -15,7 +15,7 @@ export const useAuthSlice = () => {
   const { userTeams } = useSelector((state) => state.dashboard);
   const dispatch = useDispatch();
   const { handleNavigate } = useNavigateTo();
-
+  const [errorLoginMember, setErrorLoginMembers] = useState("");
   useEffect(() => {}, [loading]);
   // const startCheckingUser = async () => {
   //   dispatch(onChecking());
@@ -31,18 +31,18 @@ export const useAuthSlice = () => {
   //   }
   // };
   const startLoginMember = async ({ email, password }) => {
-    console.log({ email, password });
-
     try {
       const resp = await api.post(`/api/members/login`, { email, password });
+
       localStorage.setItem("authToken", JSON.stringify(resp.data.token));
       dispatch(clearErrorMessage());
       localStorage.setItem("isAuthenticated", true);
+      setErrorLoginMembers("");
       dispatch(onSetUser(resp.data.user));
       dispatch(onLogin(resp.data.user));
       handleNavigate("/dashboard");
     } catch (error) {
-      console.log(error);
+      setErrorLoginMembers(error.response.data.message);
     }
   };
   const startLoginUser = async ({ email, password }: { email: string; password: string }) => {
@@ -110,6 +110,7 @@ export const useAuthSlice = () => {
     localStorage.removeItem("surveyData");
     dispatch(onLogOut(""));
     dispatch(onLogOutUser());
+    handleNavigate("/");
   };
 
   const cleanErrorMessage = () => dispatch(clearErrorMessage());
@@ -125,5 +126,7 @@ export const useAuthSlice = () => {
     userTeams,
     user,
     startLoginMember,
+    setErrorLoginMembers,
+    errorLoginMember,
   };
 };

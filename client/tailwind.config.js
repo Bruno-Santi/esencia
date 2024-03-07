@@ -12,8 +12,8 @@ export default {
       },
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],
-
         manrope: ["Manrope", "sans-serif"],
+        inter: ["Inter", "sans-serif"],
       },
       screens: {
         sm: "360px",

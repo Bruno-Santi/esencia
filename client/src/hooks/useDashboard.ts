@@ -11,6 +11,7 @@ import {
   onToggleModal,
   onSetDataLoading,
   onSetLongRecommendation,
+  onSetActiveReport,
 } from "../store/dashboard/dashboardSlice";
 
 import { UserTeams } from "../store/dashboard/interfaces";
@@ -27,7 +28,7 @@ import { finalRandomizedQuestions, generateRandomQuestions } from "../members/da
 export const useDashboard = () => {
   const [surveyLoading, setSurveyLoading] = useState(false);
   const [creatingLoading, setCreatingLoading] = useState(false);
-
+  const [loadingReports, setLoadingReports] = useState(false);
   const dispatch = useDispatch();
   const { closeModal, isOpen } = useModal();
   const [loading, setLoading] = useState(true);
@@ -45,6 +46,7 @@ export const useDashboard = () => {
     topics,
     dataLoading,
     longRecommendation,
+    activeReport,
   } = useSelector(({ dashboard }) => dashboard);
 
   const startSettingTeams = async () => {
@@ -88,6 +90,7 @@ export const useDashboard = () => {
   const starGettingData = async (id: string, sprint = 0, triggered?: boolean) => {
     dispatch(onSetDataLoading(true));
     console.log(id, sprint);
+
     toast.promise(startGettingDataFunc(id, sprint, triggered), {
       pending: "Seeking for new data... 🕐",
       success: "Data received successfully! 🎉",
@@ -98,18 +101,15 @@ export const useDashboard = () => {
     try {
       console.log(sprint);
       console.log(activeTeam);
+      console.log(id);
 
-      const members = await startGettingMembers(activeTeam._id);
+      const members = await startGettingMembers(id);
       console.log(members.members.length);
 
       const surveyData = await getTeamData(id, members.members.length);
+      await startGettingReports(id, sprint);
       console.log(surveyData);
-      if (
-        surveyData.longRecommendation !== "There is no enough data" ||
-        surveyData.longRecommendation !== "There is no retro" ||
-        !surveyData.longRecommendation
-      )
-        dispatch(onSetLongRecommendation(surveyData.longRecommendation));
+
       if (surveyData === "No existe data de este equipo") toast.warning("There's no data for this team 😢");
       const datalocal = localStorage.getItem("surveyData");
       if (datalocal) localStorage.removeItem("surveyData");
@@ -162,6 +162,9 @@ export const useDashboard = () => {
     }
   };
   const startSettingActiveTeam = async (id: number) => {
+    dispatch(cleanActiveTeam());
+    console.log(id);
+
     modalOpen && startToggleModal();
     const dataToSave = {
       metricsForToday: [],
@@ -182,10 +185,26 @@ export const useDashboard = () => {
     );
     const sprint = userTeams.find((team) => team._id === id).sprint;
     await starGettingData(String(id), sprint);
-
+    await startGettingReports(String(id), sprint);
     console.log(id, String(activeTeam.sprint));
   };
+  const startGettingReports = async (team_id, sprint) => {
+    setLoadingReports(true);
+    try {
+      const { data } = await api.get(`/api/data/get_reports/${team_id}/${sprint}`);
+      setLoadingReports(false);
+      dispatch(onSetLongRecommendation(data));
+    } catch (error) {
+      setLoadingReports(false);
+      console.log(error);
+    }
+  };
 
+  const setActiveReport = (id) => {
+    console.log(id);
+
+    dispatch(onSetActiveReport(id));
+  };
   const startCreatingTeam = async (newTeam: UserTeams, scrumId) => {
     console.log(newTeam, scrumId);
 
@@ -360,5 +379,9 @@ export const useDashboard = () => {
     startInvitingMember,
     longRecommendation,
     startDeletingMember,
+    startGettingReports,
+    loadingReports,
+    setActiveReport,
+    activeReport,
   };
 };

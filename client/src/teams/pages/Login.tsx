@@ -4,12 +4,11 @@ import { useAuthSlice } from "../../hooks/useAuthSlice";
 export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { startLoginMember } = useAuthSlice();
+  const { startLoginMember, errorLoginMember, setErrorLoginMembers } = useAuthSlice();
   const handleLogin = (e) => {
     e.preventDefault();
-    // Aquí puedes agregar la lógica para manejar el inicio de sesión
-    console.log("Email:", email);
-    console.log("Password:", password);
+    setErrorLoginMembers("");
+
     const data = { email, password };
     startLoginMember(data);
   };
@@ -57,6 +56,7 @@ export const Login = () => {
           >
             Iniciar sesión
           </button>
+          {errorLoginMember && <span className='text-red-800 text-center flex items-center justify-center mt-4'>{errorLoginMember}</span>}
         </form>
       </div>
     </div>

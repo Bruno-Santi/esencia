@@ -177,8 +177,7 @@ export class MembersService {
         teams: team,
       };
     } catch (error) {
-      console.log(error);
-      return null;
+      throw new BadRequestException('Invalid credentials');
     }
   }
 }

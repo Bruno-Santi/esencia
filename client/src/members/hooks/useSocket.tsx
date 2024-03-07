@@ -44,7 +44,7 @@ export const useSocket = () => {
   let user_id = localStorage.getItem("user_id");
   const scrum_id = localStorage.getItem("scrum_id");
   const token = localStorage.getItem("authToken");
-
+  const { startSettingTeams } = useDashboard();
   const addListeners = () => {
     socket.once(SOCKET_EVENTS.CONNECT, handleConnect);
     socket.on(SOCKET_EVENTS.DISCONNECT, handleDisconnect);
@@ -221,6 +221,7 @@ export const useSocket = () => {
   const completeRetro = (team_id) => {
     socket.emit("completeRetro", { team_id });
     socket.emit("disconnectTeam", { team_id });
+    startSettingTeams().catch((error) => console.log(error));
   };
 
   const sendRetroToServer = async (teamId) => {

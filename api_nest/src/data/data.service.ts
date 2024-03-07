@@ -11,22 +11,31 @@ export class DataService {
     @InjectModel(Team.name) private readonly teamModel: Model<Team>,
     private readonly membersService: MembersService,
   ) {}
-  async getLongRecommendation(teamId) {
+  async getReports(teamId, sprint) {
     try {
-      const team = await this.checkTeam(teamId);
-      // const postRecommendation = await axios.post(
-      //   `${process.env.API_DATA}/report?team_id=${teamId}&sprint=${team?.sprint}`,
-      // );
-      const longRecommendation = await axios.get(
-        `${process.env.API_DATA}/get_long_recommendation?team_id=${teamId}`,
+      await this.checkTeam(teamId);
+      const reports = await axios.get(
+        `${process.env.API_DATA}/get_reports?team_id=${teamId}`,
       );
-      const { data } = longRecommendation;
+      const { data } = reports;
+
+      const modifiedData = data.map((report) => {
+        const { $oid: id } = report._id;
+
+        delete report._id;
+        return {
+          ...report,
+          id,
+        };
+      });
+
+      console.log(data);
+
       return {
-        data,
+        data: modifiedData,
       };
     } catch (error) {
       console.log(error);
-
       throw new BadRequestException(error.message);
     }
   }
@@ -47,17 +56,12 @@ export class DataService {
       const dashboardData = await axios.get(
         `${process.env.API_DATA}/dashboard_data?sprint=${sprint}&team_id=${teamId}`,
       );
-      const longRecommendation = await axios.post(
-        `${process.env.API_DATA}/report?team_id=${teamId}&sprint=${sprint}`,
-      );
 
       console.log(data2);
       console.log(short);
-      console.log(longRecommendation);
 
       const responseData = {
         data: dashboardData.data,
-        longRecommendation: longRecommendation.data,
       };
 
       console.log(responseData);
