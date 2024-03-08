@@ -36,19 +36,19 @@ export const NavLanding = () => {
           <img src={logo} className='w-16 h-16' alt='Logo' />
           <span className='ml-4 select-none'>ESENCIA.APP</span>
         </div>
-        <div className='ml-20 space-x-10'>
-          <span className='duration-300 hover:text-secondary cursor-pointer'>About</span>
+        <div className='ml-20 space-x-10 md:block lg:block sm:hidden'>
+          <span className='duration-300 hover:text-secondary cursor-pointer'>Nosotros</span>
           <span className='duration-300 hover:text-secondary cursor-pointer'>Features</span>
-          <span className='duration-300 hover:text-secondary cursor-pointer'>Pricing</span>
+          <span className='duration-300 hover:text-secondary cursor-pointer'>Precios</span>
         </div>
-        <div className='space-x-5 mr-20'>
+        <div className='space-x-5 mr-20  md:block lg:block sm:hidden'>
           {!user ? (
             <>
               <span onClick={() => handleNavigate("/auth/login")} className='duration-300 hover:text-secondary cursor-pointer'>
-                Login
+                Ingresa
               </span>
-              <span onClick={() => handleNavigate("/auth/register")} className='duration-300 hover:text-secondary font-bold cursor-pointer'>
-                Start free trial
+              <span onClick={() => handleNavigate("/auth/register")} className='duration-300 hover:text-secondary md:w-[10px] font-bold cursor-pointer'>
+                Comienza la prueba gratuita
               </span>
             </>
           ) : (

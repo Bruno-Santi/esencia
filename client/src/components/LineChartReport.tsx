@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import Chart from "chart.js/auto";
+import { format } from "date-fns";
 
 export const LineChartReport = ({ data, height = "8em" }) => {
   const chartContainer = useRef(null);
@@ -8,7 +9,7 @@ export const LineChartReport = ({ data, height = "8em" }) => {
   useEffect(() => {
     if (chartContainer.current && data && data.length > 0) {
       const formattedData = {
-        labels: data.map((entry) => entry.date),
+        labels: data.map((entry) => format(new Date(entry.date.$date), "yyyy-MM-dd")),
         datasets: [
           {
             label: "Daily General Satisfaction",
@@ -58,8 +59,9 @@ export const LineChartReport = ({ data, height = "8em" }) => {
                 type: "time",
                 time: {
                   unit: "day",
-                  parser: "ddd, DD MMM YYYY HH:mm:ss GMT",
-                  tooltipFormat: "ll",
+                  displayFormats: {
+                    day: "YYYY-MM-DD",
+                  },
                 },
               },
             },

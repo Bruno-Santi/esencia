@@ -7,9 +7,9 @@ export const NewLandingPage = () => {
       <NavLanding />
 
       <Home />
-      <About />
-      <Features />
       <Testimonials />
+      <Features />
+      <About />
       <Pricing />
       <Footer />
     </div>
