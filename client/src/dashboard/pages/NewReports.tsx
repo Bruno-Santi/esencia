@@ -71,9 +71,16 @@ export const NewReports = () => {
           <div className='font-poppins flex justify-center mt-4 items-center '>
             <ReportAccordion reports={longRecommendation} />
           </div>
-          <Grid container spacing={0} justifyContent='left' alignItems='center' ml={{ xs: 0, lg: 0 }} className='mb-20 gap-4 items-center space-x-10 pt-6'>
-            <Grid item xs={12} lg={5}>
-              <div className='flex space-x-0 ml-10 gap-6  font-poppins text-primary '>
+          <Grid
+            container
+            spacing={0}
+            justifyContent='left'
+            alignItems='center'
+            ml={{ xs: 0, lg: 0 }}
+            className='mb-20 gap-4 items-center lg:space-x-10 md:space-x-10 pt-6'
+          >
+            <Grid item xs={12} lg={6}>
+              <div className='flex space-x-0 lg:ml-10 md:ml-10 gap-6  font-poppins text-primary '>
                 <BoardReport title='Objetivos planificados' value={backlogValue} />
                 <BoardReport title='Objetivos en proceso' value={inProgressValue} />
                 <BoardReport title='Objetivos en revisión' value={inReviewValue} />
@@ -81,7 +88,7 @@ export const NewReports = () => {
               </div>
             </Grid>
             <Grid item xs={12} lg={6}>
-              <div className='flex text-center'>
+              <div className='flex text-center sm:flex sm:flex-col md:flex-row lg:flex-row '>
                 <Cuadrants
                   icon={<FaSmile />}
                   label='General Satisfaction'
@@ -117,7 +124,7 @@ export const NewReports = () => {
             <Grid item xs={12} lg={4}>
               <TaskTable tasks={activeReport[0]?.task} />
             </Grid>
-            <Grid item xs={12} lg={7} className='pl-36 pr-6'>
+            <Grid item xs={12} lg={7} className='lg:pl-36 md:pl-36 pr-6'>
               <div className=''>
                 {" "}
                 {/* Aumenta la altura para permitir dos líneas */}

@@ -44,14 +44,14 @@ export const MembersTable = () => {
         <TableHead>
           <TableRow>
             <TableCell>Avatar</TableCell>
-            <TableCell>Name</TableCell>
+            <TableCell>Nombre</TableCell>
 
             {user.role ? (
               <>
                 {" "}
                 <TableCell>Email</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Delete</TableCell>
+                <TableCell>Estado</TableCell>
+                <TableCell>Eliminar</TableCell>
               </>
             ) : (
               ""
@@ -78,10 +78,10 @@ export const MembersTable = () => {
                   <TableCell>
                     {!member.isRegistered ? (
                       <Button onClick={() => handleInvite(member._id, member.name)} variant='contained' color='primary'>
-                        Invite
+                        Invitar
                       </Button>
                     ) : (
-                      "Registered"
+                      "Registrado"
                     )}
                   </TableCell>
                   <TableCell>

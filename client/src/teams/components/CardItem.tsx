@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { ImAttachment } from "react-icons/im";
+import { useEffect, useState } from "react";
+
 import { HiOutlineChatAlt2 } from "react-icons/hi";
 import { BsFillSendFill } from "react-icons/bs";
-
+import { useTheme } from "@mui/material";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { useOpenTask } from "../hooks/useOpenTask";
 import { Button, Modal } from "@mui/base";
-import { Container, Divider, Pagination, TextField } from "@mui/material";
+import { Container, Divider, TextField } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
-import { IoPersonAddOutline, IoPersonOutline, IoSaveSharp } from "react-icons/io5";
+import { IoPersonOutline } from "react-icons/io5";
 import { useDashboard } from "../../hooks/useDashboard";
 import { useBoards } from "../hooks/useBoards";
 import CommentsPagination from "./CommentsPagination";
@@ -40,7 +41,7 @@ export const CardItem = ({ item }) => {
   const handleOutCard = () => {
     startRemovingAssigneeCard(item._id, user.id);
   };
-  const { checkListTitle, handleChangeCheckListTitle, handleSubmitNewCheckList, toggleCheckListTitleModal, checkListTitleModal } = useNewCheckList(item._id);
+  const { startAddingNewCheckList } = useBoards();
   useEffect(() => {
     console.log(activeTeam);
   }, []);
@@ -84,44 +85,51 @@ export const CardItem = ({ item }) => {
     };
     startChangingDescription(item._id, item.boardId, newData);
   };
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMediumScreen = useMediaQuery(theme.breakpoints.between("sm", "md"));
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up("lg"));
 
-  const useStyles = makeStyles((theme) => ({
-    overlay: {
-      position: "fixed",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-      backgroundColor: "rgba(0, 0, 0, 0.5)",
-      zIndex: 999,
-    },
+  const useStyles = makeStyles((theme) => {
+    return {
+      overlay: {
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        zIndex: 999,
+      },
+      modalContainer: {
+        position: "absolute",
+        width: isSmallScreen ? "90%" : isMediumScreen ? 600 : 1000,
+        height: "90%",
+        backgroundColor: theme.palette.background.paper,
+        border: "2px solid #000",
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing(2),
+        top: "52%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        outline: "none",
+        borderRadius: 8,
+        zIndex: 1000,
+      },
+      button: {
+        marginTop: theme.spacing(2),
+        marginRight: theme.spacing(2),
+        width: "200px",
+        backgroundColor: "black",
+      },
+    };
+  });
+  const classes = useStyles({ isSmallScreen, isMediumScreen });
 
-    modalContainer: {
-      position: "absolute",
-      width: 1000,
-      height: "90%",
-      backgroundColor: theme.palette.background.paper,
-      border: "2px solid #000",
-      boxShadow: theme.shadows[5],
-      padding: theme.spacing(2),
-      top: "50%",
-      left: "50%",
-      transform: "translate(-50%, -50%)",
-      outline: "none",
-      borderRadius: 8,
-      zIndex: 1000,
-    },
-    button: {
-      marginTop: theme.spacing(2),
-      marginRight: theme.spacing(2),
-      width: "200px",
-      backgroundColor: "black",
-    },
-  }));
   const handlePropagation = (e) => {
     e.stopPropagation();
   };
-  const classes = useStyles();
+
   console.log(item);
   const currentlyAssignee = item.assignees.some((assignee) => assignee.memberId === user.id);
   console.log(currentlyAssignee);
@@ -152,12 +160,29 @@ export const CardItem = ({ item }) => {
         </div>
         {openTaskModal && (
           <>
-            <div className={classes.overlay}></div>
-            <Modal open={openTaskModal} onClose={toggleTaskModal} onClick={(e) => handlePropagation(e)}>
-              <div className={`${classes.modalContainer} overflow-y-scroll`}>
-                <div className='flex'>
+            <div className={`${classes.overlay} `}></div>
+            <Modal
+              open={openTaskModal}
+              onClose={toggleTaskModal}
+              onClick={(e) => handlePropagation(e)}
+              className='animate__animated animate__fadeIn animate__fast'
+            >
+              <div className={`${classes.modalContainer} overflow-y-scroll h-1/3`}>
+                <div className='flex h-1/3 '>
                   {/* Columna Izquierda */}
-                  <div className='flex-2'>
+                  <div className='flex-2 w-3/6'>
+                    {item.title !== title || item.description !== description ? (
+                      <div className='flex justify-center duration-300 font-poppins text-sm space-x-4 mt-2'>
+                        <div onClick={handleSubmitTitleDescription} className='cursor-pointer p-2 btn-primary rounded-md'>
+                          Guardar
+                        </div>
+                        <div onClick={handleCleanState} className='cursor-pointer p-2 btn-secondary rounded-md'>
+                          Limpiar
+                        </div>
+                      </div>
+                    ) : (
+                      ""
+                    )}
                     <Container>
                       <TextField name='title' onChange={(e) => handleChangeInfo(e)} label='Titulo' variant='outlined' value={title} fullWidth margin='normal' />
                       <TextField
@@ -178,19 +203,6 @@ export const CardItem = ({ item }) => {
                       <Divider className='py-2 mb-2' />
                       {item.checkList.length > 0 && <CheckList checkList={item.checkList} cardId={item._id} />}
                     </Container>
-
-                    {item.title !== title || item.description !== description ? (
-                      <div className='flex justify-center duration-300 font-poppins text-sm space-x-4'>
-                        <div onClick={handleSubmitTitleDescription} className='cursor-pointer p-2 btn-primary rounded-md'>
-                          Guardar
-                        </div>
-                        <div onClick={handleCleanState} className='cursor-pointer p-2 btn-secondary rounded-md'>
-                          Limpiar
-                        </div>
-                      </div>
-                    ) : (
-                      ""
-                    )}
                   </div>
 
                   {/* Columna Derecha */}
@@ -225,7 +237,7 @@ export const CardItem = ({ item }) => {
                           </div>
                           {!item.checkList.length ? (
                             <div
-                              onClick={toggleCheckListTitleModal}
+                              onClick={() => startAddingNewCheckList(item._id)}
                               className='flex cursor-pointer bg-secondary text-sm p-2 font-poppins text-tertiary rounded-md hover:bg-primary duration-300'
                             >
                               Agregar checklist
@@ -259,7 +271,7 @@ export const CardItem = ({ item }) => {
                       <Container className='mt-10'>
                         <Divider />
                         <div className='mt-6'>Comentarios ({item.comments.length})</div>
-                        <div>{item.comments && <CommentsPagination comments={item.comments} />}</div>
+                        <div>{item.comments && <CommentsPagination comments={item.comments} cardId={item._id} />}</div>
 
                         <div>
                           <TextField
@@ -288,35 +300,6 @@ export const CardItem = ({ item }) => {
             </Modal>
           </>
         )}
-        <Modal open={checkListTitleModal} onClose={toggleCheckListTitleModal} onClick={(e) => handlePropagation(e)}>
-          <div className={classes.modalContainer}>
-            <Container>
-              <div className='flex flex-col '>
-                <h2 className='font-poppins py-2 text-lg'>Checklist</h2>
-              </div>
-              <TextField label='Título' variant='outlined' value={checkListTitle} onChange={(e) => handleChangeCheckListTitle(e)} fullWidth margin='normal' />
-              {/* <TextField
-                label='Description'
-                variant='outlined'
-                value={taskDescription}
-                onChange={(e) => setTaskDescription(e.target.value)}
-                fullWidth
-                multiline
-                rows={4}
-                margin='normal'
-              /> */}
-              <div className='space-x-2 pt-2'>
-                <button
-                  onClick={() => handleSubmitNewCheckList()}
-                  className={` bg-secondary font-poppins rounded-md p-2 text-teal-50 hover:bg-primary duration-300`}
-                >
-                  Añadir
-                </button>
-                <button className={` bg-tertiary font-poppins rounded-md p-2 text-primary hover:bg-primary/30 duration-300`}>Cancelar</button>
-              </div>
-            </Container>
-          </div>
-        </Modal>
       </div>
     </div>
   );

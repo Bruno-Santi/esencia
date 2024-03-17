@@ -29,7 +29,7 @@ export const ReportAccordion = ({ reports }) => {
     <Accordion
       expanded={expanded}
       onClick={() => setExpanded(!expanded)}
-      className='w-1/6 relative z-50'
+      className='md:w-1/6 lg:w-1/6 sm:w-2/3 relative z-50'
       style={{ backgroundColor: "white" }} // Aquí establecemos el color de fondo blanco
     >
       <AccordionSummary expandIcon={<FaChevronDown className='w-7 p-1 h-7 text-gray-500 rounded-full ml-3 shadow-sm cursor-pointer' />}>

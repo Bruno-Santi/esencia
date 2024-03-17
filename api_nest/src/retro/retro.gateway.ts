@@ -15,6 +15,7 @@ import { log } from 'console';
 export class RetroGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private isSendingRetro = false;
   private retroSentEmitted = false;
+
   constructor(private readonly retroService: RetroService) {}
 
   @WebSocketServer() wss: Server;
@@ -26,7 +27,7 @@ export class RetroGateway implements OnGatewayConnection, OnGatewayDisconnect {
   ) {
     console.log('Preguntas recibidas:', questions);
     await this.retroService.saveQuestionsInMemory(team_id, questions);
-    this.wss.emit('questions', { team_id, questions });
+    this.emitUpdates(team_id, 'questions', { team_id, questions });
     // Resto del código para guardar las preguntas...
   }
 
@@ -40,12 +41,13 @@ export class RetroGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
         await this.retroService.saveQuestionsInMemory(team_id, questions);
 
-        this.wss.emit('questions', { team_id, questions });
+        this.emitUpdates(team_id, 'questions', { team_id, questions });
       } catch (error) {
         console.error('Error handling saveQuestions:', error);
       }
     });
   }
+
   async handleConnection(client: Socket) {
     client.on(
       'setUserId',
@@ -70,6 +72,7 @@ export class RetroGateway implements OnGatewayConnection, OnGatewayDisconnect {
       },
     );
   }
+
   async handleUserConnection(
     client: Socket,
     user_id?: string,
@@ -79,24 +82,12 @@ export class RetroGateway implements OnGatewayConnection, OnGatewayDisconnect {
     console.log(scrum_id);
     console.log(user_id);
     const clients = await this.retroService.getClients();
+
     console.log(clients);
-    // const entries = Array.from(clients.entries());
-
-    // console.log(entries);
-
-    // const idsArray = entries.map(([key, value]) => value);
-
-    // // Verificar si el user_id o scrum_id está repetido en el array
-    // if (idsArray.includes(user_id) || idsArray.includes(scrum_id)) {
-    //   console.log(`Disconnecting client with id: ${user_id || scrum_id}`);
-    //   client.disconnect(true);
-    //   return;
-    // }
-    // if (Object.values(clients) === (user_id || scrum_id)) {
-    //   client.disconnect();
-    // }
 
     const userLength = this.retroService.getConnectedClients();
+    console.log(userLength);
+
     if (user_id) {
       await this.retroService.registerClient(client, user_id);
       console.log(
@@ -116,53 +107,18 @@ export class RetroGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     if (team_id) {
       if (this.retroService.isRetroStarted(team_id)) {
-        client.join(team_id);
+        client.join(team_id); // Unir al cliente a la sala con el team_id
         console.log(`Client joined room: ${team_id}`);
+
+        // Resto del código...
 
         const allStickyNotes =
           await this.retroService.getAllStickyNotes(team_id);
-        this.wss.emit('stickyNotes', allStickyNotes);
         const allQuestions = await this.retroService.getAllQuestions(team_id);
-        this.wss.emit('questions', allQuestions);
-        console.log(allQuestions);
+        this.emitUpdates(team_id, 'stickyNotes', allStickyNotes);
+        this.emitUpdates(team_id, 'questions', allQuestions);
 
-        // for (const [key, value] of entries) {
-        //   console.log(`Property: ${key}, Value: ${value}`);
-
-        //   // Verificar si la identificación del usuario o scrum coincide con el objetivo
-        //   if (value === user_id || value === scrum_id) {
-        //     console.log(`Disconnecting client with id: ${value}`);
-
-        //     // Desconectar al cliente con un mensaje de error
-        //     client.disconnect(true); // true indica que la desconexión es voluntaria
-        //     return; // Salir de la función después de desconectar al cliente
-        //   }
-        // }
-        const user = await this.retroService.getUserById(user_id);
-
-        if (user) {
-          console.log(user);
-          const teamId = await this.retroService.getTeamIdByUserId(user_id);
-        } else {
-          console.log(`User not found for user_id: ${user_id}`);
-        }
-        this.wss.emit('userLength', this.retroService.getConnectedClients());
-        const teamLength = await this.retroService.getTeamLength(team_id);
-        console.log(teamLength);
-
-        for (const clientId in clients) {
-          if (clients.hasOwnProperty(clientId)) {
-            // Obtener el valor de la propiedad actual (client) en el objeto clients
-            const currentClient = clients[clientId];
-            console.log(currentClient);
-
-            // Verificar si la identificación del usuario o scrum coincide con el objetivo
-            if (currentClient === user_id || currentClient === scrum_id) {
-              console.log(true);
-            }
-          }
-        }
-        this.wss.emit('teamLength', teamLength);
+        // Resto del código...
       } else {
         console.log(`Retro not started for team_id: ${team_id}`);
         // Desconectar al cliente con un mensaje de error
@@ -184,7 +140,8 @@ export class RetroGateway implements OnGatewayConnection, OnGatewayDisconnect {
       console.log("Sticky note saved. Emitting 'stickyNotesSaved' event.");
       console.log('Timestamp:', new Date().toISOString());
 
-      this.wss.emit('stickyNotesSaved', {
+      // Emitir el evento solo a la sala correspondiente al team_ids
+      this.emitUpdates(team_id, 'stickyNotesSaved', {
         user_id,
         team_id,
         column,
@@ -197,6 +154,11 @@ export class RetroGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
+  private emitUpdates(room: string, event: string, data: any) {
+    if (this.wss) {
+      this.wss.to(room).emit(event, data);
+    }
+  }
   @SubscribeMessage('rateStickyNote')
   async handleRateStickyNote(
     @MessageBody() { user_id, team_id, column, vote, value }: any,
@@ -253,6 +215,7 @@ export class RetroGateway implements OnGatewayConnection, OnGatewayDisconnect {
     console.log(team_id);
 
     try {
+      this.wss.to(team_id).emit('retro_triggered');
       await this.retroService.completeRetroAndSendStickyNotes(team_id);
 
       this.retroService.clearTeamIdForRetro(team_id);
@@ -291,12 +254,6 @@ export class RetroGateway implements OnGatewayConnection, OnGatewayDisconnect {
       }
     } catch (error) {
       console.error('Error handling disconnect:', error);
-    }
-  }
-
-  private emitUpdates(room: string, event: string, data: any) {
-    if (this.wss) {
-      this.wss.to(room).emit(event, data);
     }
   }
 

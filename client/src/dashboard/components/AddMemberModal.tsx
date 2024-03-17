@@ -36,7 +36,9 @@ export const AddMemberModal: React.FC<{
     <Modal key={modalKey}>
       <form className={`flex flex-col w-4/6 mx-auto font-poppins text-xl ${theme === "dark" && "text-tertiary"}`}>
         <div className='my-6 flex flex-col mx-auto'>
-          <label htmlFor='name'>Name</label>
+          <label htmlFor='name' className='mb-2'>
+            Nombre:
+          </label>
 
           <input
             className={`
@@ -45,7 +47,7 @@ export const AddMemberModal: React.FC<{
  ${theme === "dark" ? "bg-transparent border-b-gray-300 rounded-none text-white placeholder-white" : "border-2  focus:border-secondary/80 focus:font-bold"}
 `}
             type='text'
-            placeholder='Name'
+            placeholder='John Doe'
             {...register("first_name", {
               required: true,
               maxLength: 20,
@@ -53,7 +55,9 @@ export const AddMemberModal: React.FC<{
           />
         </div>
         <div className='my-6 flex flex-col mx-auto'>
-          <label htmlFor='email'>Email:</label>
+          <label htmlFor='email' className='mb-2'>
+            Email:
+          </label>
           <input
             className={`
             h-12 w-64 rounded-md p-2 text-sm font-normal border-b-2
@@ -65,7 +69,7 @@ export const AddMemberModal: React.FC<{
             }
            `}
             type='email'
-            placeholder='Email'
+            placeholder='johndoe@mail.com'
             {...register("email", {
               required: true,
             })}
@@ -74,11 +78,11 @@ export const AddMemberModal: React.FC<{
       </form>
       <div className='flex space-x-6 mx-auto justify-center '>
         <button onClick={closeAddMember} className='btn-secondary rounded-md p-2 font-poppins duration-700 hover:bg-tertiary hover:text-primary '>
-          Cancel
+          Cancelar
         </button>
 
         <button onClick={handleSubmit(onSubmit)} className='btn-primary rounded-md p-2 font-poppins duration-700 hover:bg-tertiary hover:text-primary '>
-          Save
+          Guardar
         </button>
       </div>
     </Modal>

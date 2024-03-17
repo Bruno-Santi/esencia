@@ -6,8 +6,6 @@ export const sendRetroMail = (
   memberId,
   teamName,
 ) => {
-  console.log(token, teamId, memberName, memberEmail);
-
   const emailRetro = {
     to: `${memberEmail}`,
     subject: `${memberName} fuiste a invitado a la retro del equipo ${teamName} `,

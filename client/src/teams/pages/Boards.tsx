@@ -8,8 +8,11 @@ import { MembersList } from "../components/MembersList";
 import { NoSelectedBoard } from "../components/NoSelectedBoard";
 import { ActiveBoardHeader } from "../components/ActiveBoardHeader";
 import { useAuthSlice } from "../../hooks/useAuthSlice";
+import { useDocumentTitle } from "../../hooks";
 
 export const Boards = () => {
+  useDocumentTitle("Tableros | Esencia.app");
+
   const { startGettingTeamBoards, boards, activeTeam, activeBoard, membersActiveTeam, moveCardAndUpdateStatus, startDeletingBoard } = useBoards();
   const { user } = useAuthSlice();
   useEffect(() => {

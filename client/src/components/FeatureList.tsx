@@ -2,16 +2,16 @@ export const FeatureList = ({ feature }) => {
   const isOdd = feature.id % 2 !== 0;
   return (
     <div
-      className={`min-w-screen lg:mb-2 md:mb-2 sm:mb-2 -space-y-10 flex md:items-center ${
-        isOdd ? "lg:flex-row-reverse md:flex-row-reverse sm:flex-col" : "lg:flex-row md:flex-row sm:flex-col"
+      className={`min-w-screen lg:mb-2 md:mb-20 sm:mb-2 -space-y-10  flex md:items-center ${
+        isOdd ? "lg:flex-row-reverse md:flex-row-reverse sm:flex-col sm:items-center" : "lg:flex-row md:flex-row sm:flex-col sm:items-center"
       }`}
     >
-      <div className='md:w-2/6 md:order-2 items-center md:ml-40 md:mr-40 sm:mx-8 sm:text-left md:mb-0'>
+      <div className='md:w-4/6 md:order-2 lg:w-1/3 items-center md:ml-20 md:mr-20 sm:mx-6 sm:ml-8 sm:text-left md:mb-0'>
         <span className='lg:text-2xl md:text-2xl sm:text-xl font-bold text-secondary'>{feature.title}</span>
-        <p className='sm:text-normal lg:text-lg md:text-lg sm:text-left'>{feature.description}</p>
+        <p className='sm:text-normal lg:text-lg md:text-normal sm:text-left'>{feature.description}</p>
       </div>
-      <div className={`md:w-3/6 md:order-1 sm:w-[380px]   ${isOdd ? "lg:mr-40 md:mr-40" : "lg:ml-40 md:ml-40"}`}>
-        <img src={feature.image} alt={feature.title} />
+      <div className={`md:w-3/6 md:order-1 sm:w-[360px]   ${isOdd ? "lg:mr-20 md:mr-20 sm:mr-0" : "lg:ml-20 md:ml-20 sm:ml-0"}`}>
+        <img src={feature.image} alt={feature.title} className='lg:scale-110 md:scale-110 sm:scale-110 sm:ml-0 sm:mt-6' />
       </div>
     </div>
   );

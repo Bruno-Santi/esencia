@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Pagination } from "@mui/material";
-
+import { useAuthSlice } from "../../hooks/useAuthSlice";
+import { FiTrash2 } from "react-icons/fi";
+import { useBoards } from "../hooks/useBoards";
 const useStyles = makeStyles((theme) => ({
   root: {
     "& > *": {
@@ -10,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CommentsPagination = ({ comments }) => {
+const CommentsPagination = ({ comments, cardId }) => {
   const classes = useStyles();
   const [page, setPage] = useState(1);
   const commentsPerPage = 4;
@@ -18,7 +20,8 @@ const CommentsPagination = ({ comments }) => {
   const handleChange = (event, value) => {
     setPage(value);
   };
-
+  const { toastDeleteComment } = useBoards();
+  const { user } = useAuthSlice();
   const startIndex = (page - 1) * commentsPerPage;
   const endIndex = startIndex + commentsPerPage;
   const commentsToShow = reverseComments.slice(startIndex, endIndex);
@@ -34,6 +37,14 @@ const CommentsPagination = ({ comments }) => {
                   <span className='text-tertiary my-auto'>{comment.member.name[0]}</span>{" "}
                 </div>
                 <h3 className='font-normal'>{comment.member.name}</h3>
+                <p className='text-gray-600 mt-1 w-[350px] break-words'>{new Date(comment.date).toLocaleDateString("es-AR")}</p>
+                {comment.member.memberId === user.id ? (
+                  <div className='cursor-pointer'>
+                    <FiTrash2 onClick={() => toastDeleteComment(comment._id, cardId)} className='h-6 w-6 text-secondary duration-300 hover:text-primary' />
+                  </div>
+                ) : (
+                  ""
+                )}
               </div>
               <p className='text-gray-600 mt-2 w-[350px] break-words'>{comment.comment}</p>
             </div>

@@ -20,20 +20,20 @@ export const LoginForm = () => {
     const { email, password } = data;
     startLoginUser({ email, password });
   };
-  console.log(errorMessage);
+  console.log(errors);
   const handleVisibility = () => setPasswordVisible(!passwordVisible);
 
   return (
     <>
       <form className='flex flex-col space-y-6 pt-6' onSubmit={handleSubmit(onSubmit)}>
-        <div className='flex flex-col'>
+        <div className='flex flex-col '>
           <label className=' text-tertiary md:text-md font-poppins  lg:text-lg font-normal' htmlFor='email'>
             Email
           </label>
           <input
             autoComplete='off'
             type='email'
-            className='md:h-10 lg:h-12 w-23 rounded-md p-2 text-sm font-normal font-poppins  border-2 duration-500 text-primary focus:outline-none focus:border-2 focus:border-secondary/80 '
+            className='md:h-12 lg:h-12 sm:h-12 w-23 rounded-md p-2 text-sm font-normal font-poppins  border-2 duration-500 text-primary focus:outline-none focus:border-2 focus:border-secondary/80 '
             placeholder='Email'
             {...register("email", {
               required: "This field is required",
@@ -41,16 +41,16 @@ export const LoginForm = () => {
               maxLength: 30,
             })}
           />
-          {errors.Email && <span className='text-lg m-auto text-red-500 font-normal'>{renderErrorMessage(errors.Email)}</span>}{" "}
+          {errors.email && <span className='text-lg m-auto text-red-500 font-normal'>{errors.email.message}</span>}{" "}
         </div>
         <div className='flex flex-col relative'>
           <label className=' text-tertiary font-poppins  text-lg font-normal' htmlFor='password'>
-            Password
+            Contraseña
           </label>
           <input
             type={passwordVisible ? "text" : "password"}
             autoComplete='off'
-            className='h-12 w-64 rounded-md p-2 text-sm font-normal font-poppins  border-2 duration-500 text-primary focus:outline-none focus:border-2 focus:border-secondary/80'
+            className='h-12 w-68 rounded-md p-2 text-sm font-normal font-poppins  border-2 duration-500 text-primary focus:outline-none focus:border-2 focus:border-secondary/80'
             placeholder='Password'
             {...register("password", {
               required: "This field is required",
@@ -74,26 +74,31 @@ export const LoginForm = () => {
           disabled={loading}
           className={
             loading
-              ? "btn-disabled  w-3/4 justify-center items-center text-center mx-auto mt-10 p-2 rounded-lg font-poppins text-lg"
-              : "btn-primary  w-3/4 justify-center items-center text-center mx-auto mt-10 p-2 rounded-lg font-poppins text-lg duration-700 hover:bg-tertiary hover:text-primary"
+              ? "btn-disabled  w-3/4 sm:w-full justify-center items-center text-center mx-auto mt-10 p-2 rounded-lg font-poppins text-lg"
+              : "btn-primary  w-3/4  sm:w-full justify-center items-center text-center mx-auto mt-10 p-2 rounded-lg font-poppins text-lg duration-700 hover:bg-tertiary hover:text-primary"
           }
         >
-          Log In
+          Ingresar
         </button>
         {errorMessage && <p className='font-poppins text-red-500 m-auto'>{errorMessage}</p>}
       </form>
-      <span className='text-tertiary font-normal mt-6 font-poppins cursor-pointer text-lg m-auto  duration-500 hover:text-secondary '>Forgot password?</span>
+      <span className='text-tertiary sm:w-[200px] font-normal mt-6 font-poppins cursor-pointer text-lg m-auto  duration-500 hover:text-secondary '>
+        Olvidé mi contraseña.
+      </span>
       <div className='pt-10'>
         <Divider width={"w-[400px]"} />
       </div>
-      <span
-        onClick={() => {
-          cleanErrorMessage();
-          handleNavigate("/auth/register");
-        }}
-        className='text-tertiary font-normal mt-10 font-poppins cursor-pointer text-lg m-auto  duration-500 hover:text-secondary '
-      >
-        New at esencia? <span>Register</span>
+      <span className='text-tertiary font-normal mt-10 font-poppins  text-lg m-auto  duration-500 '>
+        ¿Nuevo en Esencia?{" "}
+        <span
+          onClick={() => {
+            cleanErrorMessage();
+            handleNavigate("/auth/register");
+          }}
+          className='text-secondary duration-300 cursor-pointer hover:text-tertiary'
+        >
+          Registrate
+        </span>
       </span>
     </>
   );

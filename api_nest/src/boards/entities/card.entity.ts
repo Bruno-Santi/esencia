@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
+import moment from 'moment-timezone';
 
 export class Member {
   @Prop({ required: true })
@@ -44,15 +45,25 @@ export class CheckList {
 }
 
 @Schema()
-export class Comment {
+export class Comment extends Document {
   @Prop({ type: Member, required: true })
   member: Member;
 
   @Prop({ required: true })
   comment: string;
 
-  @Prop({ default: Date.now })
+  @Prop({
+    required: true,
+    default: () => moment.tz('America/Argentina/Buenos_Aires').format(),
+  })
   date: Date;
+
+  constructor(member: Member, comment: string, date: Date) {
+    super();
+    this.member = member;
+    this.comment = comment;
+    this.date = date;
+  }
 }
 
 @Schema({ collection: 'Cards' })

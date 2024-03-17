@@ -8,6 +8,7 @@ import {
 import { Server, Socket } from 'socket.io';
 import { BoardgatewayService } from './boardgateway.service';
 import { Types } from 'mongoose';
+import { BadGatewayException } from '@nestjs/common';
 
 @WebSocketGateway({ cors: { origin: '*' }, namespace: '/boardgateway' })
 export class BoardgatewayGateway implements OnGatewayConnection {
@@ -18,19 +19,13 @@ export class BoardgatewayGateway implements OnGatewayConnection {
   @SubscribeMessage('boardIdAvailable')
   async handleConnection(client: Socket) {
     const boardId = client.handshake.query.boardId;
-    console.log(boardId);
 
-    console.log(client.handshake.query);
     client.join(boardId);
-    console.log('Cliente conectado con ID:', client.id, 'y boardId:', boardId);
 
-    // Aquí puedes cargar los datos del tablero y las tarjetas desde el servicio y enviarlos al cliente
     const boardData = await this.boardgatewayService.getBoardData(boardId);
-    console.log(boardData);
-    client.emit('initialBoardData', [boardData]);
-    console.log(boardData);
 
-    // Almacenar boardData como propiedad del cliente para que esté disponible en otros métodos
+    client.emit('initialBoardData', [boardData]);
+
     client['boardData'] = boardData;
   }
 
@@ -38,34 +33,24 @@ export class BoardgatewayGateway implements OnGatewayConnection {
   async handleNewCardAdded(client: Socket, payload: any) {
     const { newCard } = payload;
     const boardId = newCard.boardId;
-    console.log(newCard);
 
-    // Obtener los datos del tablero desde el servicio
     const boardData = await this.boardgatewayService.getBoardData(boardId);
 
-    // Encontrar la columna correspondiente
     const columnToUpdate = boardData.columns.find(
       (column) => column._id === newCard.status,
     );
 
-    // Agregar la nueva tarjeta a la columna correspondiente
     if (columnToUpdate) {
       columnToUpdate.cards.push(newCard);
     }
 
-    // Guardar los cambios en el servicio
     await this.boardgatewayService.saveBoardData(boardId, boardData);
-    console.log(boardId);
 
-    // Emitir el evento 'boardDataUpdated' a todos los clientes suscritos al tablero
     this.server.to(boardId).emit('boardDataUpdated', [boardData]);
-    console.log(boardData);
   }
 
   @SubscribeMessage('newAssignee')
   async handleNewAssigneeAdded(client: Socket, payload: any) {
-    console.log(payload);
-
     try {
       const { newAssignee, status } = payload;
       const { cardId } = newAssignee[0];
@@ -73,8 +58,6 @@ export class BoardgatewayGateway implements OnGatewayConnection {
       const boardData = await this.boardgatewayService.getBoardData(
         newAssignee[0].boardId,
       );
-      console.log(boardData);
-      console.log(status);
 
       const newBoardData =
         await this.boardgatewayService.updateCardAssigneesInBoard(
@@ -88,7 +71,6 @@ export class BoardgatewayGateway implements OnGatewayConnection {
         newAssignee[0].boardId,
         boardData,
       );
-      console.log(boardId);
 
       this.server.to(boardId).emit('boardDataUpdated', [newBoardData]);
     } catch (error) {
@@ -98,14 +80,9 @@ export class BoardgatewayGateway implements OnGatewayConnection {
 
   @SubscribeMessage('removeAssignee')
   async handleRemoveAssignee(client: Socket, payload: any) {
-    console.log(payload);
-
     try {
       const { cardId, assigneeId } = payload;
-      console.log(payload);
 
-      // Lógica para eliminar el asignado de la tarjeta
-      // Suponiendo que tienes un servicio llamado boardgatewayService que maneja la lógica del tablero
       const newBoardData =
         await this.boardgatewayService.removeAssigneeFromCard(
           payload.dataToRemove.boardId,
@@ -127,7 +104,6 @@ export class BoardgatewayGateway implements OnGatewayConnection {
     try {
       const { cardId, boardId, status } = payload.deletedCard;
 
-      // Obtener datos de la tarjeta eliminada (opcional)
       const newBoardData = await this.boardgatewayService.deleteCard(
         boardId,
         cardId,
@@ -136,9 +112,6 @@ export class BoardgatewayGateway implements OnGatewayConnection {
       await this.boardgatewayService.saveBoardData(boardId, newBoardData);
 
       this.server.to(boardId).emit('boardDataUpdated', [newBoardData]);
-      console.log(newBoardData);
-
-      console.log(`Tarjeta con ID ${cardId} eliminada exitosamente.`);
     } catch (error) {
       console.error('Error al manejar el evento deletedCard:', error);
     }
@@ -146,13 +119,11 @@ export class BoardgatewayGateway implements OnGatewayConnection {
   @SubscribeMessage('updateCardStatus')
   async handleUpdateCardStatus(client: Socket, payload: any) {
     const { cardId, newStatus, boardId } = payload;
-    console.log(payload);
+
     const convertedCardId = new Types.ObjectId(cardId);
-    console.log('Converted Card Id:', convertedCardId);
 
     try {
       const boardData = await this.boardgatewayService.getBoardData(boardId);
-      console.log('Board Data:', boardData);
 
       for (const column of boardData.columns) {
         const cardIndex = column.cards.findIndex(
@@ -181,7 +152,7 @@ export class BoardgatewayGateway implements OnGatewayConnection {
       await this.boardgatewayService.saveBoardData(boardId, boardData);
 
       this.server.to(boardId).emit('boardDataUpdated', [boardData]);
-      console.log(boardData.columns);
+
       await this.boardgatewayService.updateCardStatus(cardId, newStatus);
     } catch (error) {
       console.error(
@@ -204,7 +175,6 @@ export class BoardgatewayGateway implements OnGatewayConnection {
       const boardData = await this.boardgatewayService.getBoardData(boardId);
 
       this.server.to(boardId).emit('boardDataUpdated', [boardData]);
-      console.log(boardData);
     } catch (error) {
       console.error('Error updating title and description:', error);
     }
@@ -221,20 +191,16 @@ export class BoardgatewayGateway implements OnGatewayConnection {
         payload.comment,
       );
       this.server.to(payload.boardId).emit('boardDataUpdated', [newBoardData]);
-      console.log(newBoardData);
     } catch (error) {
-      console.log(error);
+      throw new BadGatewayException(error.message);
     }
-    console.log(payload);
   }
 
   @SubscribeMessage('addNewCheckList')
   async handleNewCheckList(client: Socket, payload: any) {
     try {
       const { boardId, cardId, checkListTitle } = payload;
-      console.log(boardId, cardId, checkListTitle);
 
-      // Guardar el nuevo checklist usando el servicio correspondiente
       const newCheckList = await this.boardgatewayService.addNewCheckList(
         boardId,
         cardId,
@@ -242,9 +208,8 @@ export class BoardgatewayGateway implements OnGatewayConnection {
       );
 
       this.server.to(boardId).emit('boardDataUpdated', [newCheckList]);
-      console.log('New checklist added:', newCheckList);
     } catch (error) {
-      console.error('Error adding new checklist:', error);
+      throw new BadGatewayException(error.message);
     }
   }
 
@@ -252,9 +217,7 @@ export class BoardgatewayGateway implements OnGatewayConnection {
   async handleAddNewItem(client: Socket, payload: any) {
     try {
       const { boardId, cardId, checkListId, newItemContent } = payload;
-      console.log(boardId, cardId, checkListId, newItemContent);
 
-      // Guardar el nuevo ítem en el checklist usando el servicio correspondiente
       const newItem = await this.boardgatewayService.addNewItem(
         boardId,
         cardId,
@@ -263,19 +226,46 @@ export class BoardgatewayGateway implements OnGatewayConnection {
       );
 
       this.server.to(boardId).emit('boardDataUpdated', [newItem]);
-      console.log('New item added:', newItem);
     } catch (error) {
-      console.error('Error adding new item:', error);
+      throw new BadGatewayException('Error adding new item');
+    }
+  }
+  @SubscribeMessage('deleteCheckItem')
+  async handleDeleteCheckItem(client: Socket, payload: any) {
+    const { itemId, cardId, boardId } = payload;
+
+    try {
+      const newBoard = await this.boardgatewayService.deleteItem(
+        itemId,
+        cardId,
+        boardId,
+      );
+      this.server.to(boardId).emit('boardDataUpdated', [newBoard]);
+    } catch (error) {
+      throw new BadGatewayException('Error deleting check item');
     }
   }
 
+  @SubscribeMessage('deleteComment')
+  async handleDeleteComment(client: Socket, payload: any) {
+    const { commentId, cardId, boardId } = payload;
+
+    try {
+      const newBoard = await this.boardgatewayService.deleteComment(
+        commentId,
+        cardId,
+        boardId,
+      );
+      this.server.to(boardId).emit('boardDataUpdated', [newBoard]);
+    } catch (error) {
+      throw new BadGatewayException('Error deleting comment');
+    }
+  }
   @SubscribeMessage('startTogglingItem')
   async handleStartTogglingItem(client: Socket, payload: any) {
     try {
       const { boardId, cardId, checkListId, itemId } = payload;
-      console.log(boardId, cardId, checkListId, itemId);
 
-      // Toggle the item's isChecked property using the corresponding service method
       const toggledItem = await this.boardgatewayService.toggleCheckListItem(
         boardId,
         cardId,
@@ -284,9 +274,8 @@ export class BoardgatewayGateway implements OnGatewayConnection {
       );
 
       this.server.to(boardId).emit('boardDataUpdated', [toggledItem]);
-      console.log('Item toggled successfully:', toggledItem);
     } catch (error) {
-      console.error('Error toggling item:', error);
+      throw new BadGatewayException('Error toggling item');
     }
   }
 }

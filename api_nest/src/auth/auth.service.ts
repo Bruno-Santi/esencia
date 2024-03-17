@@ -38,7 +38,6 @@ export class AuthService {
     } catch (error) {
       if (error.code === 11000)
         throw new BadRequestException(`Email already in use`);
-      console.log(error);
     }
   }
 
@@ -47,7 +46,6 @@ export class AuthService {
       const { email, password } = await getUserDto;
 
       const user = await this.scrumMasterModel.findOne({ email: email });
-      console.log(user);
 
       if (!user) throw new BadRequestException(`Invalid email or password`);
       const passwordValid = await passwordCompare(password, user.password);

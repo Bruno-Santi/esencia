@@ -32,6 +32,7 @@ const socket = new Manager(`${API_URL_DEPLOY}/socket.io/socket.io.js`).socket("/
 export const useSocket = () => {
   const [serverStatus, setServerStatus] = useState("");
   const [membersConnected, setMembersConnected] = useState(0);
+  const [retroLoading, setRetroLoading] = useState(false);
   const [teamLength, setTeamLength] = useState(0);
   const { activeTeam } = useDashboard();
   const [stickyNotes, setStickyNotes] = useState([]);
@@ -65,6 +66,9 @@ export const useSocket = () => {
     socket.on(SOCKET_EVENTS.DISCONNECT_TEAM, handleDisconnectTeam);
     socket.on(SOCKET_EVENTS.CONNECT, () => {
       socket.emit("getStickyNotes", { user_id, team_id });
+    });
+    socket.on("retro_triggered", () => {
+      setRetroLoading(true);
     });
   };
   const handleStickyNoteDeleted = ({ user_id, team_id, noteContent }) => {
@@ -218,10 +222,18 @@ export const useSocket = () => {
     socket.emit("removeUserId", { user_id });
   };
 
-  const completeRetro = (team_id) => {
+  const completeRetro = async (team_id) => {
     socket.emit("completeRetro", { team_id });
     socket.emit("disconnectTeam", { team_id });
-    startSettingTeams().catch((error) => console.log(error));
+    setRetroLoading(true);
+    try {
+      await startSettingTeams;
+      setRetroLoading(false);
+    } catch (error) {
+      console.log(error);
+
+      setRetroLoading(false);
+    }
   };
 
   const sendRetroToServer = async (teamId) => {
@@ -270,5 +282,7 @@ export const useSocket = () => {
     editStickyNote,
     handleSaveQuestions,
     questions,
+    setRetroLoading,
+    retroLoading,
   };
 };

@@ -30,7 +30,7 @@ export const TeamForm: React.FC<{
   return (
     <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col mx-auto text-center space-y-12 dark:bg-black'>
       <label htmlFor='teamName' className={`text-manrope text-2xl mt-4 ${theme === "dark" && "text-tertiary"}`}>
-        Your team name <span className='text-sm'>(*)</span>{" "}
+        Nombre de tu equipo <span className='text-sm'>(*)</span>{" "}
       </label>
       <input
         className={`
@@ -43,14 +43,14 @@ export const TeamForm: React.FC<{
             }
            `}
         type='text'
-        placeholder='Team Name'
+        placeholder='Nombre de equipo'
         {...register("name", {
           required: true,
           maxLength: 20,
         })}
       />
       <label htmlFor='teamLogo' className={`text-manrope text-2xl mt-4 ${theme === "dark" && "text-tertiary"}`}>
-        Your team logo
+        Logo de tu equipo
       </label>
       <input
         type='file'
@@ -85,7 +85,7 @@ export const TeamForm: React.FC<{
         type='submit'
       >
         {" "}
-        {isLoading ? "Uploading Logo" : "Create"}
+        {isLoading ? "Subiendo logo" : "Crear equipo"}
       </button>
     </form>
   );

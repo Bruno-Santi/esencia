@@ -205,7 +205,7 @@ export const NoRetro = () => {
           }}
           className='btn-primary  duration-700 hover:bg-primary p-4 mt-16 rounded-md text-lg  '
         >
-          Send Retro
+          Comenzar
         </button>
       </div>
     </div>

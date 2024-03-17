@@ -13,7 +13,7 @@ export const BoardColumn = ({ title, items, provided, activeBoard }) => {
     console.log(activeBoard);
   }, [activeBoard]);
 
-  const { handleChangeTitle, startAddingNewCard, toggleModal: toggleModalCard, cardTitle, modalCard } = useBoards();
+  const { handleChangeTitle, startAddingNewCard, toggleModal: toggleModalCard, cardTitle, modalCard, titleError } = useBoards();
   const useStyles = makeStyles((theme) => ({
     modalContainer: {
       position: "absolute",
@@ -59,7 +59,7 @@ export const BoardColumn = ({ title, items, provided, activeBoard }) => {
                 <h2 className='font-poppins py-6 text-lg'>Nueva tarjeta </h2>
                 <p className='italic text-xs text-primary/70'>{title}</p>
               </div>
-              <TextField label='Título' variant='outlined' value={cardTitle} onChange={handleChangeTitle} fullWidth margin='normal' />
+              <TextField error={titleError} label='Título' variant='outlined' value={cardTitle} onChange={handleChangeTitle} fullWidth margin='normal' />
               {/* <TextField
                 label='Description'
                 variant='outlined'
@@ -71,11 +71,13 @@ export const BoardColumn = ({ title, items, provided, activeBoard }) => {
                 margin='normal'
               /> */}
               <button
+                disabled={!cardTitle}
                 onClick={() => startAddingNewCard(title, cardTitle)}
-                className={` bg-secondary font-poppins rounded-md p-2 text-teal-50 hover:bg-primary duration-300`}
+                className={`${!cardTitle ? "bg-gray-400" : "bg-secondary"}  font-poppins rounded-md p-2 text-teal-50 hover:bg-primary duration-300`}
               >
                 Añadir
               </button>
+              {titleError && <p className='text-red-400 mt-2'>{titleError}</p>}
             </Container>
           </div>
         </Modal>

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadGatewayException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Types } from 'mongoose';
 import { BoardsService } from 'src/boards/boards.service';
 import { CardService } from '../boards/card.service';
@@ -32,28 +36,21 @@ export class BoardgatewayService {
     }
   }
   async getBoardData(boardId) {
-    console.log(boardId);
-
     if (boardId === 'undefined') return;
     try {
-      console.log(boardId);
       const convertedBoardId = new Types.ObjectId(boardId);
       const boardData = await this.boardsService.findOne(convertedBoardId);
-      console.log(boardData);
 
       this.saveBoardData(boardId, boardData);
-      console.log(this.boards);
+
       return boardData;
     } catch (error) {
-      console.log(error);
+      throw new BadGatewayException('Error while getting board data');
     }
   }
 
   async saveNewCard(boardId: string, newCard: any): Promise<void> {
-    console.log(boardId, newCard);
-
     const boardData = this.boards.get(boardId);
-    console.log(boardData);
 
     const column = boardData.columns.find(
       (column) => column.name === newCard.status,
@@ -63,10 +60,9 @@ export class BoardgatewayService {
 
       this.saveBoardData(boardId, boardData);
     } else {
-      console.error('Columna no encontrada para la tarjeta:', newCard);
+      throw new BadGatewayException(`Column not found for the card ${newCard}`);
     }
 
-    console.log(boardData);
     return boardData;
   }
   async saveNewComment(
@@ -98,7 +94,6 @@ export class BoardgatewayService {
           `Card with ID ${cardId} not found in board with ID ${boardId}`,
         );
       }
-      console.log(targetCard);
 
       if (!targetCard.comments) {
         targetCard.comments = [];
@@ -106,7 +101,6 @@ export class BoardgatewayService {
 
       targetCard.comments.push(newComment);
 
-      // Guardar los cambios en el tablero
       await this.saveBoardData(boardId, boardData);
       return boardData;
     } catch (error) {
@@ -115,18 +109,11 @@ export class BoardgatewayService {
     }
   }
   async updateCardStatus(cardId: string, newStatus: string): Promise<void> {
-    console.log(cardId, newStatus);
     const updateCardDto: UpdateCardDto = { status: newStatus };
-    console.log(updateCardDto);
 
     try {
-      console.log('holas');
-
       await this.cardService.updateStatus(cardId, updateCardDto);
-      console.log(newStatus);
     } catch (error) {
-      console.log(error);
-
       throw new Error(
         'Error al actualizar el estado de la tarjeta en la base de datos.',
       );
@@ -154,13 +141,75 @@ export class BoardgatewayService {
       throw new Error(`Error deleting card: ${error.message}`);
     }
   }
+  async deleteComment(
+    commentId: string,
+    cardId: string,
+    boardId: string,
+  ): Promise<any> {
+    try {
+      const boardData = await this.getBoardData(boardId);
+      await this.cardService.deleteComment(commentId, cardId, boardId);
+      for (const column of boardData.columns) {
+        const cardIndex = column.cards.findIndex(
+          (card) => card._id.toString() === cardId,
+        );
+        if (cardIndex !== -1) {
+          const commentIndex = column.cards[cardIndex].comments.findIndex(
+            (comment) => comment._id.toString() === commentId,
+          );
+          if (commentIndex !== -1) {
+            column.cards[cardIndex].comments.splice(commentIndex, 1);
+            break;
+          }
+        }
+      }
+
+      await this.saveBoardData(boardId, boardData);
+      return boardData;
+    } catch (error) {
+      throw new Error(`Error deleting comment from board: ${error.message}`);
+    }
+  }
+  async deleteItem(
+    itemId: string,
+    cardId: string,
+    boardId: string,
+  ): Promise<any> {
+    try {
+      const boardData = await this.getBoardData(boardId);
+      await this.cardService.deleteCheckItem(itemId, cardId, boardId);
+      for (const column of boardData.columns) {
+        const cardIndex = column.cards.findIndex(
+          (card) => card._id.toString() === cardId,
+        );
+        if (cardIndex !== -1) {
+          const itemIndex = column.cards[
+            cardIndex
+          ].checkList[0].checkItems.findIndex(
+            (item) => item._id.toString() === itemId,
+          );
+          if (itemIndex !== -1) {
+            column.cards[cardIndex].checkList[0].checkItems.splice(
+              itemIndex,
+              1,
+            );
+            break;
+          }
+        }
+      }
+
+      await this.saveBoardData(boardId, boardData);
+      return boardData;
+    } catch (error) {
+      throw new Error(`Error removing item from board: ${error.message}`);
+    }
+  }
+
   async updateCardTitleAndDescription(
     cardId: string,
     boardId: string,
     newData: any,
   ): Promise<void> {
-    console.log(newData);
-
     try {
       const convertedCardId = new Types.ObjectId(cardId);
 

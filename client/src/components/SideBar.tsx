@@ -80,7 +80,7 @@ export const SideBar = () => {
               <ListItemIcon>
                 <ContentPasteIcon />
               </ListItemIcon>
-              <ListItemText primary='Board' />
+              <ListItemText primary='Tablero' />
             </AccordionSummary>
             <AccordionDetails>
               <List>
@@ -91,7 +91,7 @@ export const SideBar = () => {
                   <ListItemIcon>
                     <AddIcon />
                   </ListItemIcon>
-                  <ListItemText primary='Add Board' />
+                  <ListItemText primary='Agregar tablero' />
                 </ListItem>
               </List>
             </AccordionDetails>

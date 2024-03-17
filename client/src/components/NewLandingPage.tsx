@@ -3,7 +3,7 @@ import { Footer } from "./Footer";
 
 export const NewLandingPage = () => {
   return (
-    <div className='min-w-screen animate__animated animate__fadeIn animate__slower'>
+    <div className='lg:min-w-screen md:min-w-screen sm:min-w-screen animate__animated animate__fadeIn animate__slower'>
       <NavLanding />
 
       <Home />

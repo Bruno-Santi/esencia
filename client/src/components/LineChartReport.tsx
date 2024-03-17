@@ -9,7 +9,11 @@ export const LineChartReport = ({ data, height = "8em" }) => {
   useEffect(() => {
     if (chartContainer.current && data && data.length > 0) {
       const formattedData = {
-        labels: data.map((entry) => format(new Date(entry.date.$date), "yyyy-MM-dd")),
+        labels: data.map((entry) => {
+          const date = new Date(entry.date.$date);
+          date.setDate(date.getDate() + 1);
+          return format(date, "yyyy-MM-dd");
+        }),
         datasets: [
           {
             label: "Daily General Satisfaction",
@@ -17,7 +21,6 @@ export const LineChartReport = ({ data, height = "8em" }) => {
             borderColor: "rgba(255, 99, 132, 0.5)",
             borderDash: [10, 6],
             borderWidth: 5,
-
             backgroundColor: "rgba(255, 99, 132, 0.2)",
           },
           {

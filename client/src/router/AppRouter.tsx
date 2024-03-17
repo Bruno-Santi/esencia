@@ -96,6 +96,7 @@ export const AppRouter = () => {
               <Route element={<OnBoardingRoutes />} path={`/onboarding/*`} />
               <Route element={<DashboardRoutes />} path={`/dashboard/*`} />
               <Route element={<TeamsRoutes />} path={`/teams/*`} />
+              <Route element={<Navigate to='/dashboard' />} path={`/teams/login`} />
               {firstLogging === "0" ? (
                 <Route element={<Navigate to={"/onboarding"} />} path={`/auth/*`} />
               ) : (

@@ -8,13 +8,16 @@ import { Button, Popper, ClickAwayListener } from "@mui/base";
 import * as React from "react";
 import { Grow, MenuList } from "@mui/material";
 import { useAuthSlice } from "../hooks/useAuthSlice";
+import { IoMenu, IoCloseOutline } from "react-icons/io5";
+import { Divider } from "./Divider";
 
 export const NavLanding = () => {
   const { startLogingOut } = useAuthSlice();
   const { user } = useDashboard();
   const { handleNavigate } = useNavigateTo();
-
+  const [navBar, setNavBar] = React.useState(false);
   const [open, setOpen] = React.useState(false);
+
   const anchorRef = React.useRef<HTMLButtonElement>(null);
 
   const handleToggle = () => {
@@ -28,26 +31,36 @@ export const NavLanding = () => {
 
     setOpen(false);
   };
-
+  const handleNavBar = () => setNavBar(!navBar);
   return (
     <div>
-      <nav className='min-w-full bg-primary text-lg h-[90px] text-tertiary font-poppins flex items-center justify-between'>
-        <div className='ml-20 object-contain flex items-center'>
-          <img src={logo} className='w-16 h-16' alt='Logo' />
-          <span className='ml-4 select-none'>ESENCIA.APP</span>
+      <nav className='min-w-full  bg-primary text-lg h-[90px] text-tertiary font-poppins flex items-center justify-between'>
+        <div className='lg:ml-20 md:ml-20 sm:ml-8 object-contain flex lg:items-center'>
+          <img src={logo} className='lg:w-16 lg:h-16 md:h-12 md:w-12 sm:w-12' alt='Logo' />
+          <span className='ml-4 select-none lg:flex lg:items-center md:flex md:items-center md:text-[16px]  sm:hidden'>ESENCIA.APP</span>
+          <div onClick={handleNavBar} className='text-tertiary absolute right-6 md:hidden lg:hidden sm:block sm:cursor-pointer'>
+            {!navBar ? <IoMenu className='w-10 h-10' /> : <IoCloseOutline className='w-12 h-12 right-4 text-green-500' />}
+          </div>
         </div>
-        <div className='ml-20 space-x-10 md:block lg:block sm:hidden'>
-          <span className='duration-300 hover:text-secondary cursor-pointer'>Nosotros</span>
+        <div
+          className={`space-x-10  md:flex md:text-[16px] md:items-center md:justify-center md:ml-48 sm:hidden lg:flex lg:items-center lg:justify-center ${
+            user ? "lg:ml-16 md:mr-48" : "lg:ml-48 md:mr-10"
+          } `}
+        >
           <span className='duration-300 hover:text-secondary cursor-pointer'>Features</span>
+          <span className='duration-300 hover:text-secondary cursor-pointer'>Nosotros</span>
           <span className='duration-300 hover:text-secondary cursor-pointer'>Precios</span>
         </div>
         <div className='space-x-5 mr-20  md:block lg:block sm:hidden'>
           {!user ? (
             <>
-              <span onClick={() => handleNavigate("/auth/login")} className='duration-300 hover:text-secondary cursor-pointer'>
+              <span onClick={() => handleNavigate("/auth/login")} className='duration-300 md:text-[16px]  hover:text-secondary cursor-pointer'>
                 Ingresa
               </span>
-              <span onClick={() => handleNavigate("/auth/register")} className='duration-300 hover:text-secondary md:w-[10px] font-bold cursor-pointer'>
+              <span
+                onClick={() => handleNavigate("/auth/register")}
+                className='duration-300 md:text-[16px]  hover:text-secondary md:w-[10px] font-bold cursor-pointer'
+              >
                 Comienza la prueba gratuita
               </span>
             </>
@@ -102,6 +115,35 @@ export const NavLanding = () => {
             </>
           )}
         </div>
+        <section
+          className={`lg:hidden md:hidden sm:${navBar ? "block" : "hidden"} sm:min-w-full sm:top-20 sm:flex sm:items-center sm:z-auto sm:absolute bg-primary`}
+        >
+          <ul className='text-tertiary space-y-4 font-inter ml-8 mt-6 mb-6 w-full'>
+            <li className='cursor-pointer duration-300 hover:text-green-400'>Features</li>
+            <li className='cursor-pointer duration-300 hover:text-green-400'>Nosotros</li>
+            <li className='cursor-pointer duration-300 hover:text-green-400'>Precios</li>
+            {user ? (
+              <>
+                <hr className='w-1/3 text-green-400 border-green-400'></hr>
+
+                <li className='cursor-pointer duration-300 hover:text-green-400'>Dashboard</li>
+                <li onClick={startLogingOut} className=' text-red-400 cursor-pointer duration-300 hover:text-tertiary'>
+                  Salir
+                </li>
+              </>
+            ) : (
+              <>
+                <hr className='w-1/3 text-green-400 border-green-400'></hr>
+                <li onClick={() => handleNavigate("/auth/login")} className='cursor-pointer duration-300 hover:text-green-400'>
+                  Ingresar
+                </li>
+                <li onClick={() => handleNavigate("/auth/register")} className='cursor-pointer duration-300 hover:text-green-400 font-bold'>
+                  Comenzar prueba gratuita
+                </li>
+              </>
+            )}
+          </ul>
+        </section>
       </nav>
     </div>
   );

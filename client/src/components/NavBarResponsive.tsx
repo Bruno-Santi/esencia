@@ -37,7 +37,7 @@ export const NavBarResponsive = () => {
             }}
             className='btn-primary rounded-lg p-1 h-fit text-sm font-poppins duration-700 hover:bg-tertiary hover:text-primary'
           >
-            Members
+            Miembros
           </span>{" "}
         </>
       ) : (
@@ -66,10 +66,10 @@ export const NavBarResponsive = () => {
 
         <div class='p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white'>
           <i class='bi bi-house-door-fill'></i>
-          <span class='text-[15px] ml-4 text-gray-200 font-bold'>Create Team</span>
+          <span class='text-[15px] ml-4 text-gray-200 font-bold'>Crear equipo</span>
         </div>
         <div class='p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-secondary hover:text-primary text-white'>
-          <span class='text-[15px] ml-4 text-gray-200 font-bold'>My teams</span>
+          <span class='text-[15px] ml-4 text-gray-200 font-bold'>Mis equipos</span>
           <i onClick={dropdown} class='text-tertiary text-3xl arrow -rotate-90 '>
             <IoMdArrowDropdown id='arrow' />
           </i>
@@ -81,7 +81,7 @@ export const NavBarResponsive = () => {
 
         <div class='p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white'>
           <i class='bi bi-box-arrow-in-right'></i>
-          <span class='text-[15px] ml-4 text-gray-200 font-bold'>Logout</span>
+          <span class='text-[15px] ml-4 text-gray-200 font-bold'>Salir</span>
         </div>
       </div>
     </div>

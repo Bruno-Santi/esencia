@@ -55,7 +55,58 @@ export class CardService {
   findOne(id: number) {
     return `This action returns a #${id} card`;
   }
+  async deleteComment(commentId, cardId, boardId) {
+    console.log(commentId, cardId, boardId);
+    const convertedCardId = new Types.ObjectId(cardId);
+    const convertedCommentId = new Types.ObjectId(commentId);
+    try {
+      const card = await this.cardModel.findById(convertedCardId);
+      if (!card) {
+        throw new BadRequestException(
+          `La tarjeta con id: ${cardId} no existe.`,
+        );
+      }
 
+      card.comments = card.comments.filter(
+        (comment) => !comment._id.equals(convertedCommentId),
+      );
+
+      await card.save();
+      console.log(card);
+
+      return { card };
+    } catch (error) {
+      console.error(error);
+      throw new Error('Ocurrió un error al intentar eliminar el comentario');
+    }
+  }
+  async deleteCheckItem(checkItemId, cardId, boardId) {
+    console.log(checkItemId, cardId, boardId);
+    const convertedCardId = new Types.ObjectId(cardId);
+    const convertedCheckItemId = new Types.ObjectId(checkItemId);
+    try {
+      const card = await this.cardModel.findById(convertedCardId);
+      if (!card) {
+        throw new BadRequestException(
+          `La tarjeta con id: ${cardId} no existe.`,
+        );
+      }
+
+      card.checkList.forEach((checklist) => {
+        checklist.checkItems = checklist.checkItems.filter(
+          (item) => !item._id.equals(convertedCheckItemId),
+        );
+      });
+
+      await card.save();
+      console.log(card);
+
+      return { card };
+    } catch (error) {
+      console.error(error);
+      throw new Error('Ocurrió un error al intentar eliminar el checkItem');
+    }
+  }
   async updateStatus(cardId: string, updateCardDto: UpdateCardDto) {
     console.log(updateCardDto);
 
@@ -70,7 +121,7 @@ export class CardService {
     }
     if (assignees && assignees.length > 0) {
       assignees.forEach((assignee) => {
-        card.assignees.push(assignee); // Asumiendo que `assignees` es un array de objetos
+        card.assignees.push(assignee);
       });
     }
     const board = await this.boardModel.findOne({ 'columns.cards': card._id });
@@ -159,6 +210,7 @@ export class CardService {
     const convertedId = new Types.ObjectId(cardId);
     const card = await this.cardModel.findOne(convertedId);
     console.log(card);
+    console.log(newComment);
     console.log(newComment);
 
     if (!card) {

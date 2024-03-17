@@ -6,8 +6,6 @@ export const sendMail = (
   memberId,
   teamName,
 ) => {
-  console.log(token, teamId, memberName, memberEmail);
-
   const emailData = {
     to: `${memberEmail}`,
     subject: `${memberName} queremos saber tu opinión sobre el trabajo en ${teamName}`,

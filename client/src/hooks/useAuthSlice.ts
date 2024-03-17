@@ -72,14 +72,16 @@ export const useAuthSlice = () => {
         handleNavigate("/dashboard");
       }
     } catch (error) {
-      console.log(error);
+      console.log(error.response.data);
 
       let errorMessage = error.response?.data?.message || error.message;
       if (
-        error.response.data.message[0] === "password must be longer than or equal to 8 characters" ||
-        error.response.data.message[0] === "Invalid email or password"
-      )
-        errorMessage = "Invalid email or password";
+        error.response.data.message === "password must be longer than or equal to 8 characters" ||
+        error.response.data.message === "Invalid email or password"
+      ) {
+        errorMessage = "Credenciales invalidas.";
+      }
+
       dispatch(onLogOut(errorMessage));
     }
   };
@@ -108,6 +110,7 @@ export const useAuthSlice = () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("userTeams");
     localStorage.removeItem("surveyData");
+    localStorage.removeItem("token");
     dispatch(onLogOut(""));
     dispatch(onLogOutUser());
     handleNavigate("/");

@@ -35,11 +35,12 @@ export const CheckList = ({ checkList, cardId }) => {
   return (
     <div className='flex flex-col space-x-4 justify-start font-poppins w-full text-primary mt-2'>
       <div>
-        <span>
-          Checklist - <span>{title}</span>
-        </span>
+        <span>Checklist</span>
       </div>
-      <div>{checkList[0].checkItems && checkList[0].checkItems.map((item, index) => <CheckItem key={index} item={item} onToggle={handleToggleItem} />)}</div>
+      <div className='overflow-y-scroll h-[280px] '>
+        {checkList[0].checkItems &&
+          checkList[0].checkItems.map((item, index) => <CheckItem key={index} item={item} onToggle={handleToggleItem} cardId={cardId} />)}
+      </div>
 
       <form onSubmit={handleSubmit}>
         <input

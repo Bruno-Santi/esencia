@@ -27,7 +27,7 @@ export const BoardAccordionList = ({ boards }) => {
       </AccordionDetails>
       {user.role ? (
         <AccordionDetails onClick={toggleModalBoard} className='cursor-pointer btn-primary hover:bg-gray-500 hover:text-tertiary duration-300'>
-          + Nuevo tablero
+          <span className='flex items-center justify-center mt-2'>+ Nuevo tablero</span>
         </AccordionDetails>
       ) : (
         ""

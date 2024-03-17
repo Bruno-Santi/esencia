@@ -2,6 +2,8 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { IoIosArrowDropdown } from "react-icons/io";
 import { MenuItem, Menu, IconButton, Avatar } from "@mui/material";
 import { SideBar, SideBarContext, SideBarItem } from "../dashboard/components/ui/SideBar";
+import { MdOutlineStickyNote2 } from "react-icons/md";
+
 import { useAuthSlice } from "../hooks/useAuthSlice";
 import { useDashboard } from "../hooks/useDashboard";
 import { useModal, useNavigateTo } from "../hooks";
@@ -66,32 +68,31 @@ export const NavBar = () => {
         <NavBarResponsive />
       </div>
       <nav className='sm:hidden md:block lg:block flex w-full  relative bg-primary h-20 py-6 justify-around dark:border-b-2 dark:border-gray-600'>
-        <div className='absolute top-0 min-h-screen'>
+        <div className='absolute top-20 min-h-full  '>
           {" "}
           {/* <SideBar /> */}
-          <SideBar ref={sideBarRef}>
+          <SideBar className='min-h-screen' ref={sideBarRef}>
             <SideBarItem icon={<GrGroup />} text='Teams' />
             <span onClick={() => handleNavigate("/dashboard")}>
               <SideBarItem icon={<MdOutlineDashboard />} text='Dashboard' />
             </span>
-
-            {!Object.entries(longRecommendation) || longRecommendation === "There is no enough data" ? (
-              <>
-                <span onClick={() => toastWarning("There is no enough data to show the feedback page")}>
-                  <SideBarItem icon={<MdOutlineInsertChart />} text='Reports' />
-                </span>
-              </>
-            ) : (
-              <span onClick={() => handleNavigate("/dashboard/reports")}>
-                <SideBarItem icon={<MdOutlineInsertChart />} text='Reports' />
-              </span>
-            )}
             <span onClick={() => handleNavigate("/teams/boards")}>
-              <SideBarItem icon={<PiDeviceTabletSpeakerBold />} text='Boards' />
+              <SideBarItem icon={<PiDeviceTabletSpeakerBold />} text='Tableros' />
             </span>
+            <span
+              onClick={() => {
+                handleNavigate("/dashboard/retro");
+              }}
+            >
+              <SideBarItem icon={<MdOutlineStickyNote2 />} text='Retroespectivas' />
+            </span>
+            <span onClick={() => handleNavigate("/dashboard/reports")}>
+              <SideBarItem icon={<MdOutlineInsertChart />} text='Reportes' />
+            </span>
+
             <hr />
-            <SideBarItem icon={<IoSettingsOutline />} text='Settings' />
-            <SideBarItem icon={<CiCircleQuestion />} text='Faq' />
+            <SideBarItem icon={<IoSettingsOutline />} text='Ajustes' />
+            <SideBarItem icon={<CiCircleQuestion />} text="Faq's" />
           </SideBar>
           <SideBarContext.Provider />
         </div>
@@ -107,7 +108,7 @@ export const NavBar = () => {
                 }}
                 className='btn-primary rounded-lg p-2 text-lg font-poppins duration-700 hover:bg-tertiary hover:text-primary'
               >
-                Members
+                Miembros
               </span>
             </div>
           )}
@@ -149,7 +150,7 @@ export const NavBar = () => {
                 }}
               >
                 <IoPersonOutline className='mr-2 text-primary dark:text-tertiary' />
-                <span className=' w-full p-2 font-poppins dark:text-tertiary'>Profile</span>
+                <span className=' w-full p-2 font-poppins dark:text-tertiary'>Perfil</span>
               </MenuItem>
               <MenuItem
                 onClick={handleClose}
@@ -160,7 +161,7 @@ export const NavBar = () => {
                 }}
               >
                 <IoClipboardOutline className='mr-2 text-primary dark:text-tertiary' />
-                <span className=' w-full p-2 font-poppins dark:text-tertiary'>Board</span>
+                <span className=' w-full p-2 font-poppins dark:text-tertiary'>Tableros</span>
               </MenuItem>
               <MenuItem
                 onClick={handleChangeTheme}
@@ -171,27 +172,16 @@ export const NavBar = () => {
                 }}
               >
                 <IoMoonOutline className='mr-2 text-primary dark:text-tertiary' />
-                <span className='  p-2 font-poppins dark:text-tertiary'>Theme:</span>
+                <span className='  p-2 font-poppins dark:text-tertiary'>Tema:</span>
                 {theme === "light" ? (
                   <span className=' dark:text-tertiary' onClick={handleChangeTheme}>
-                    Light
+                    Claro
                   </span>
                 ) : (
                   <span onClick={handleChangeTheme} className=' dark:text-tertiary'>
-                    Dark
+                    Oscuro
                   </span>
                 )}
-              </MenuItem>
-              <MenuItem
-                sx={{
-                  "&:hover": {
-                    backgroundColor: "rgba(0, 0, 0, 0.10)",
-                  },
-                }}
-              >
-                <MdOutlineLanguage className='mr-2 text-primary dark:text-tertiary' />
-                <span className=' w-fit p-2 font-poppins dark:text-tertiary'>Language:</span>
-                <span className=' w-fit p-2 font-poppins dark:text-tertiary'>EN</span>
               </MenuItem>
 
               <MenuItem

@@ -7,14 +7,28 @@ import { NoServer } from "../components/NoServer";
 import { useStickyNote } from "../hooks/useStickyNote";
 import { StickyModal } from "../components/StickyModal";
 import { useAuthSlice } from "../../hooks/useAuthSlice";
+import { CircularProgress } from "@mui/material";
 
 export const Retro = ({ token, team_id, user_id, scrum_id }) => {
-  const { addListeners, serverStatus, questions, handleDeleteNote, membersConnected, handleConnect, teamLength, stickyNotes, completeRetro, handleVote } =
-    useSocket();
+  const {
+    retroLoading,
+    setRetroLoading,
+    addListeners,
+    serverStatus,
+    questions,
+    handleDeleteNote,
+    membersConnected,
+    handleConnect,
+    teamLength,
+    stickyNotes,
+    completeRetro,
+    handleVote,
+  } = useSocket();
 
   const { toggleModal, stickyModal, notes } = useStickyNote();
 
   const { user } = useAuthSlice();
+  console.log(user);
 
   const [userVotes, setUserVotes] = useState({});
   const [noteValue, setNoteValue] = useState();
@@ -36,16 +50,31 @@ export const Retro = ({ token, team_id, user_id, scrum_id }) => {
   useEffect(() => {
     handleConnect();
   }, []);
-
+  const handleCompleted = () => {
+    setRetroLoading(true);
+  };
   if (serverStatus === "Disconnected") return <NoServer />;
   return (
     <RetroLayout>
       {stickyModal && <StickyModal handleClick={handleClick} selectedNote={selectedNote} />}
 
-      {user && (
-        <button onClick={() => completeRetro(team_id)} className='btn-primary flex p-2 my-4 rounded-md justify-center m-auto'>
+      {user?.role === "admin" && !retroLoading ? (
+        <button
+          disabled={retroLoading}
+          onClick={() => {
+            completeRetro(team_id);
+            handleCompleted();
+          }}
+          className={`btn-${retroLoading ? "secondary disabled" : "primary"} flex p-2 my-4 rounded-md justify-center m-auto`}
+        >
           Complete Retro
         </button>
+      ) : (
+        user?.role === "admin" && (
+          <div className=' flex p-2 my-4 rounded-md justify-center m-auto'>
+            <CircularProgress color='success' />
+          </div>
+        )
       )}
       <div className='flex justify-center text-center mb-4 font-po'>
         <div className='flex space-x-6'>

@@ -8,6 +8,8 @@ import { toastSuccess, toastWarning } from "../../helpers";
 import { useAuthSlice } from "../../hooks/useAuthSlice";
 import { Socket, io } from "socket.io-client";
 import { previousDay } from "date-fns";
+import moment from "moment-timezone";
+import { Button } from "@mui/base";
 
 export const useBoards = () => {
   const dispatch = useDispatch();
@@ -223,7 +225,7 @@ export const useBoards = () => {
       assignees: [],
       title: cardTitle,
     };
-
+    if (cardTitle.length < 5) return setTitleError("El título debe contener más de 5 caracteres.");
     try {
       const newCardResponse = await api.post(`/api/boards/cards`, {
         ...createdCard,
@@ -322,10 +324,14 @@ export const useBoards = () => {
     console.log(data);
     const boardId = activeBoard[0]._id;
     console.log(boardId);
+    const dateInBuenosAires = moment.tz(new Date(), "America/Argentina/Buenos_Aires");
+
+    const formattedDate = dateInBuenosAires.format("YYYY-MM-DD HH:mm:ss");
 
     const { cardId } = data;
     const comment = {
       comment: data.comment,
+      date: formattedDate,
       member: {
         memberId: data.member.memberId,
         name: data.member.name,
@@ -344,8 +350,9 @@ export const useBoards = () => {
     }
   };
 
-  const startAddingNewCheckList = async (cardId: string, checkListTitle: string) => {
+  const startAddingNewCheckList = async (cardId: string) => {
     const boardId = activeBoard[0]._id;
+    const checkListTitle = "    ";
     try {
       if (socketRef.current) {
         socketRef.current.emit("addNewCheckList", { boardId, cardId, checkListTitle });
@@ -375,7 +382,67 @@ export const useBoards = () => {
       console.log(error);
     }
   };
+  const toastDelete = (checkItemId, cardId) => {
+    toast.info(
+      <div className='flex flex-col'>
+        <p className='font-poppins mb-2'>¿Estás seguro de eliminar este item?</p>
+        <div className='flex space-x-2'>
+          <Button onClick={handleCancel} variant='contained' color='secondary'>
+            ❌
+          </Button>
+          <Button onClick={() => startDeletingCheckItem(checkItemId, cardId)} variant='contained' color='primary'>
+            ✅
+          </Button>
+        </div>
+      </div>
+    );
+  };
 
+  const toastDeleteComment = (commentId, cardId) => {
+    toast.info(
+      <div className='flex flex-col'>
+        <p className='font-poppins mb-2'>¿Estás seguro de eliminar este comentario?</p>
+        <div className='flex space-x-2'>
+          <Button onClick={handleCancel} variant='contained' color='secondary'>
+            ❌
+          </Button>
+          <Button onClick={() => startDeletingComment(commentId, cardId)} variant='contained' color='primary'>
+            ✅
+          </Button>
+        </div>
+      </div>
+    );
+  };
+  const startDeletingComment = async (commentId, cardId) => {
+    const boardId = activeBoard[0]._id;
+    try {
+      if (socketRef.current) {
+        socketRef.current.emit("deleteComment", { commentId, cardId, boardId });
+      } else {
+        const socket = io(`${URL_DEPLOY}${NAMESPACE}`, {
+          query: { boardId: boardId },
+        });
+        socket.emit("deleteComment", { commentId, cardId, boardId });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const startDeletingCheckItem = async (itemId, cardId) => {
+    const boardId = activeBoard[0]._id;
+    try {
+      if (socketRef.current) {
+        socketRef.current.emit("deleteCheckItem", { itemId, cardId, boardId });
+      } else {
+        const socket = io(`${URL_DEPLOY}${NAMESPACE}`, {
+          query: { boardId: boardId },
+        });
+        socket.emit("deleteCheckItem", { itemId, cardId, boardId });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const startTogglingItem = async (cardId, checkListId, itemId) => {
     const boardId = activeBoard[0]._id;
     console.log(cardId, checkListId, itemId);
@@ -416,5 +483,8 @@ export const useBoards = () => {
     startAddingNewCheckList,
     startAddingNewItemCheckList,
     startTogglingItem,
+    toastDelete,
+    toastDeleteComment,
+    titleError,
   };
 };

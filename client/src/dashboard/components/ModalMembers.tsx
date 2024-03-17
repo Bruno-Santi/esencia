@@ -33,7 +33,7 @@ export const ModalMembers: React.FC<{
             <IoMdClose className='dark:text-teal-50' />
           </IconButton>
         </Box>
-        <div className={theme === "dark" ? "text-lg font-poppins text-tertiary" : "text-lg font-poppins text-primary"}>{activeTeam.name} Members</div>
+        <div className={theme === "dark" ? "text-lg font-poppins text-tertiary" : "text-lg font-poppins text-primary"}>Miembros de {activeTeam.name}</div>
       </DialogTitle>
       <DialogContent className='dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800  dark:text-tertiary'>
         <div className='flex flex-col'>
@@ -42,9 +42,9 @@ export const ModalMembers: React.FC<{
               onClick={toggleAddMember}
               className={`${
                 creatingLoading ? "btn-secondary" : "btn-primary"
-              } flex w-fit text-xl  mt-4 p-2 rounded-md cursor-pointer duration-700 font-poppins hover:bg-tertiary hover:text-primary`}
+              } flex w-fit text-normal items-center mt-4 p-2 rounded-md cursor-pointer duration-700 font-poppins hover:bg-tertiary hover:text-primary`}
             >
-              Add{" "}
+              Agregar miembro{" "}
               <i className='text-3xl ml-2 my-auto '>
                 <CiCirclePlus />
               </i>

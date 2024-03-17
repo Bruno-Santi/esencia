@@ -33,8 +33,8 @@ export const SideBar = ({ children }) => {
   };
 
   return (
-    <aside className='h-screen absolute' style={{ zIndex: 99999 }}>
-      <nav className={`h-full inline-flex flex-col ${theme === "dark" ? `bg-black` : `bg-white`} border-r shadow-sm`}>
+    <aside className='min-h-screen absolute' style={{ zIndex: 99999 }}>
+      <nav className={`min-h-screen inline-flex flex-col ${theme === "dark" ? `bg-black` : `bg-white`} border-r shadow-sm`}>
         <div className='p-4 pb-2 flex justify-between items-center'>
           <button
             onClick={() => setExpanded((curr) => !curr)}
@@ -104,7 +104,7 @@ export const SideBarItem = ({ icon, text, active, alert }) => {
               }}
             >
               {/* Texto de "Teams" */}
-              <Typography>Teams</Typography>
+              <Typography>Equipos</Typography>
             </AccordionSummary>
             <AccordionDetails>
               <Typography>
@@ -112,7 +112,7 @@ export const SideBarItem = ({ icon, text, active, alert }) => {
                 {user?.role ? (
                   <ListItemIcon onClick={openModal}>
                     <span className='font-poppins justify-center text-center m-auto'>
-                      <AddIcon /> New Team
+                      <AddIcon /> Nuevo equipo
                     </span>
                   </ListItemIcon>
                 ) : (
@@ -134,7 +134,7 @@ export const SideBarItem = ({ icon, text, active, alert }) => {
           <span
             className={`overflow-hidden transition-all ${expanded ? "w-52 ml-3" : "w-0"} ${theme === "dark" ? `text-tertiary group-hover:text-primary` : ``}`}
           >
-            {text}
+            {text === "Teams" ? "Equipos" : text}
           </span>{" "}
           {!expanded && (
             <div
@@ -145,7 +145,7 @@ export const SideBarItem = ({ icon, text, active, alert }) => {
           group-hover:visible group-hover:opacity-100 group-hover:translate-x-0
       `}
             >
-              {text}
+              {text === "Teams" ? "Equipos" : text}
             </div>
           )}
         </>
