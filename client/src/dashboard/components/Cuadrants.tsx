@@ -3,7 +3,7 @@ export const Cuadrants = ({ icon, label, value, color }) => {
   console.log(Math.round(value).toString());
   const formattedValue = Math.round(value).toString();
   return (
-    <div className={`flex flex-col min-h-36 min-w-36 my-auto items-center justify-center  mx-1 text-primary dark:text-tertiary rounded-lg space-y-2 ${color}`}>
+    <div className={`flex flex-col h-36 min-w-36 my-auto items-center justify-center  mx-1 text-primary dark:text-tertiary rounded-lg space-y-2 ${color}`}>
       <i className={`${label === "Self Satisfaction" ? `text-tertiary w-40  justify-center text-center flex text-3xl pt-3` : `text-tertiary text-2xl pt-3`}`}>
         {icon}
       </i>

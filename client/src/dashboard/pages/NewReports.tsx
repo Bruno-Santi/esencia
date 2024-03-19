@@ -65,11 +65,13 @@ export const NewReports = () => {
           <div className='mt-64'>
             <h1 className='font-poppins text-4xl text-primary/60'>Select a report</h1>
           </div>
+          <button>Actualizar datos</button>
         </div>
       ) : (
         <>
           <div className='font-poppins flex justify-center mt-4 items-center '>
             <ReportAccordion reports={longRecommendation} />
+            <button className='ml-6 btn-primary p-2 rounded-md'>Actualizar datos</button>
           </div>
           <Grid
             container
@@ -79,7 +81,7 @@ export const NewReports = () => {
             ml={{ xs: 0, lg: 0 }}
             className='mb-20 gap-4 items-center lg:space-x-10 md:space-x-10 pt-6'
           >
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={12} lg={5}>
               <div className='flex space-x-0 lg:ml-10 md:ml-10 gap-6  font-poppins text-primary '>
                 <BoardReport title='Objetivos planificados' value={backlogValue} />
                 <BoardReport title='Objetivos en proceso' value={inProgressValue} />
@@ -88,7 +90,7 @@ export const NewReports = () => {
               </div>
             </Grid>
             <Grid item xs={12} lg={6}>
-              <div className='flex text-center sm:flex sm:flex-col md:flex-row lg:flex-row '>
+              <div className='flex ml-64  text-center sm:flex sm:flex-col md:flex-row lg:flex-row '>
                 <Cuadrants
                   icon={<FaSmile />}
                   label='General Satisfaction'
@@ -135,7 +137,7 @@ export const NewReports = () => {
               <div className='bg-gray-200/60 rounded-md shadow-md shadow-primary/20 text-primary font-poppins p-2 h-[250px] overflow-hidden relative'>
                 <div className=' h-full'>
                   <div className='flex flex-col'>
-                    <span className='p-2'>Preguntas realizadas en este sprint.</span>
+                    <span className='p-2 text-lg'>Preguntas realizadas en este sprint.</span>
                     <span className='italic text-sm font-light px-2 font-poppins'>Pregunta / Resultado</span>
                   </div>
                   <Divider className='py-2' />
@@ -160,7 +162,7 @@ export const NewReports = () => {
             <Grid item xs={12} lg={5}>
               <div className='bg-gray-200/60 rounded-md shadow-md shadow-primary/20 text-primary h-[250px] font-poppins p-2 overflow-hidden relative'>
                 <div className=' h-full '>
-                  <div className='p-2'>Análisis de conocimiento.</div>
+                  <div className='p-2 text-lg'>Análisis de conocimiento.</div>
                   <Divider className='py-2 ' />
 
                   <div className='mt-6 px-4  pb-4 overflow-y-scroll absolute top-14 left-0 right-0 bottom-0'>{activeReport[0].analysis}</div>
@@ -170,7 +172,7 @@ export const NewReports = () => {
             <Grid item xs={12} lg={6}>
               <div className='bg-gray-200/60 rounded-md shadow-md shadow-primary/20 text-primary h-[250px] font-poppins p-2 overflow-hidden relative'>
                 <div className=' h-full '>
-                  <div className='p-2'>Recomendaciones.</div>
+                  <div className='p-2 text-lg'>Recomendaciones.</div>
                   <Divider className='py-2 ' />
 
                   <div className='mt-6 px-4  pb-4 overflow-y-scroll absolute top-14 left-0 right-0 bottom-0'>{activeReport[0].recommendation}</div>
@@ -181,7 +183,7 @@ export const NewReports = () => {
               <div className='bg-gray-200/60 rounded-md shadow-md shadow-primary/20 text-primary font-poppins p-2 h-[250px] overflow-hidden relative'>
                 <div className=' h-full'>
                   <div className='flex flex-col'>
-                    <span className='p-2'>Resumen de retro.</span>
+                    <span className='p-2 text-lg'>Resumen de retro.</span>
                     <span className='italic text-sm font-light px-2 font-poppins'>Pregunta / Idea / Votos</span>
                   </div>
                   <Divider className='py-2' />
