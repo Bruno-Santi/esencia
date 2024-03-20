@@ -8,14 +8,14 @@ export const TaskTable = ({ tasks }) => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>
+              <TableCell className='sticky top-0 bg-gray-200 z-10'>
                 {" "}
                 <span className='font-poppins text-primary text-lg'>Estado</span>
               </TableCell>
-              <TableCell>
+              <TableCell className='sticky top-0 bg-gray-200 z-10'>
                 <span className='font-poppins text-primary text-lg'>Título</span>
               </TableCell>
-              <TableCell>
+              <TableCell className='sticky top-0 bg-gray-200 z-10'>
                 {" "}
                 <span className='font-poppins text-primary text-lg'>Avance</span>
               </TableCell>

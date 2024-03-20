@@ -47,6 +47,8 @@ export const useDashboard = () => {
     dataLoading,
     longRecommendation,
     activeReport,
+    cards,
+    task,
   } = useSelector(({ dashboard }) => dashboard);
 
   const startSettingTeams = async () => {
@@ -121,6 +123,8 @@ export const useDashboard = () => {
             dataAmount: [],
             shortRecomendation: {},
             topics: [],
+            cards: [],
+            task: [],
           })
         );
       } else {
@@ -132,6 +136,8 @@ export const useDashboard = () => {
               dataAmount: surveyData.data.data_amount || [],
               shortRecomendation: surveyData.data.short_recommendation?.content || {},
               topics: surveyData.data.topics || [],
+              cards: surveyData.data.cards || [],
+              task: surveyData.data.task || [],
             })
           );
         }
@@ -142,6 +148,8 @@ export const useDashboard = () => {
             dataAmount: surveyData.data.data_amount || [],
             shortRecomendation: surveyData.data.short_recommendation?.content || {},
             topics: surveyData.data.topics || [],
+            cards: surveyData.data.cards || [],
+            task: surveyData.data.task || [],
           })
         );
       }
@@ -152,6 +160,8 @@ export const useDashboard = () => {
         dataAmount: surveyData.data_amount || [],
         shortRecomendation: surveyData.short_recommendation?.content || "",
         topics: surveyData.topics || [],
+        cards: surveyData.data.cards || [],
+        task: surveyData.data.task || [],
       };
 
       localStorage.setItem("surveyData", JSON.stringify(dataToSave));
@@ -192,6 +202,8 @@ export const useDashboard = () => {
     setLoadingReports(true);
     try {
       const { data } = await api.get(`/api/data/get_reports/${team_id}/${sprint}`);
+      console.log(data);
+
       setLoadingReports(false);
       dispatch(onSetLongRecommendation(data));
     } catch (error) {
@@ -383,5 +395,7 @@ export const useDashboard = () => {
     loadingReports,
     setActiveReport,
     activeReport,
+    cards,
+    task,
   };
 };

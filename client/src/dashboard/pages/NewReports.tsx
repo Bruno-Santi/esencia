@@ -3,7 +3,7 @@ import { DashboardLayout } from "../../layaout/DashboardLayout";
 import { Cuadrants } from "../components/Cuadrants";
 import { FaHome, FaSmile, FaTools, FaUsers } from "react-icons/fa";
 import { MdOutlineSelfImprovement } from "react-icons/md";
-import { AccordionDetails, Divider, Grid } from "@mui/material";
+import { AccordionDetails, CircularProgress, Divider, Grid } from "@mui/material";
 import { BoardReport, RetroResume } from "../components";
 import { LineChart } from "@mui/x-charts";
 import { LineCharts } from "../components/LineCharts";
@@ -11,25 +11,36 @@ import { useDashboard } from "../../hooks/useDashboard";
 import { ReportAccordion } from "../../components/ReportAccordion";
 import { LineChartReport } from "../../components/LineChartReport";
 import { TaskTable } from "../components/TaskTable";
+import { useDocumentTitle } from "../../hooks";
+import { formatDate } from "../../helpers";
 
 export const NewReports = () => {
-  const { longRecommendation, loadingReports, activeReport } = useDashboard();
+  useDocumentTitle("Reportes | Esencia.app");
+  const { longRecommendation, loadingReports, activeReport, startGettingReports, activeTeam } = useDashboard();
   console.log(longRecommendation);
-  console.log(activeReport);
-  // Variables para almacenar los valores de las tarjetas
+
   const [backlogValue, setBacklogValue] = useState(0);
   const [inProgressValue, setInProgressValue] = useState(0);
   const [inReviewValue, setInReviewValue] = useState(0);
   const [finishedValue, setFinishedValue] = useState(0);
   const [analysisLines, setAnalysisLines] = useState("");
+  const [selectedTab, setSelectedTab] = useState("worst");
+
+  const handleTabChange = (tab) => {
+    setSelectedTab(tab);
+  };
   // useEffect(() => {
   //   assignValues();
   // }, [longRecommendation]);
   useEffect(() => {
-    console.log(activeReport);
     assignValues();
   }, [activeReport]);
 
+  const handleGetReports = async (e) => {
+    e.preventDefault();
+    await startGettingReports(activeTeam._id, activeTeam.sprint);
+    console.log("cl");
+  };
   const assignValues = () => {
     if (longRecommendation) {
       const analysisLines = activeReport[0]?.analysis.split("\n");
@@ -63,15 +74,28 @@ export const NewReports = () => {
           {" "}
           <ReportAccordion reports={longRecommendation} />{" "}
           <div className='mt-64'>
-            <h1 className='font-poppins text-4xl text-primary/60'>Select a report</h1>
+            <h1 className='font-poppins text-4xl text-primary/60'>Selecciona un reporte</h1>
           </div>
-          <button>Actualizar datos</button>
         </div>
       ) : (
         <>
           <div className='font-poppins flex justify-center mt-4 items-center '>
             <ReportAccordion reports={longRecommendation} />
-            <button className='ml-6 btn-primary p-2 rounded-md'>Actualizar datos</button>
+
+            <button className={`btn-primary p-2 rounded-md ml-2`} disabled={loadingReports} onClick={(e) => handleGetReports(e)}>
+              {loadingReports ? (
+                <span className='w-4 h-4 flex items-center justify-center'>
+                  {" "}
+                  {/* Contenedor */}
+                  <CircularProgress color='success' style={{ width: "1em", height: "1em" }} /> {/* CircularProgress con tamaño relativo */}
+                </span>
+              ) : (
+                "Actualizar datos"
+              )}
+            </button>
+          </div>
+          <div className='flex items-center justify-center font-poppins mt-6 mr-32 '>
+            {formatDate(activeReport[0].BeginDate)} - {formatDate(activeReport[0].EndDate)}
           </div>
           <Grid
             container
@@ -140,20 +164,55 @@ export const NewReports = () => {
                     <span className='p-2 text-lg'>Preguntas realizadas en este sprint.</span>
                     <span className='italic text-sm font-light px-2 font-poppins'>Pregunta / Resultado</span>
                   </div>
+
                   <Divider className='py-2' />
                   <div className='mt-8 px-2 overflow-y-scroll absolute top-14 left-0 right-0 bottom-0'>
-                    <ul className='text-sm space-y-4 py-4 px-2'>
-                      {activeReport[0]?.answers.map((answer) => {
-                        return (
-                          <div>
-                            <li className='text-secondary font-bold'>
-                              <span className='text-primary font-bold'>•</span> {answer._id}{" "}
-                              <span className='text-primary font-normal'> / {Math.round(answer.average_value * 100)}%</span>{" "}
-                            </li>
-                          </div>
-                        );
-                      })}{" "}
-                    </ul>
+                    {activeReport[0].answers.length !== undefined ? (
+                      <div>
+                        <div className='mt-2'>
+                          <button
+                            className={`px-4 py-2 rounded-l ${selectedTab === "worst" ? "bg-secondary text-white" : "bg-gray-200"}`}
+                            onClick={() => handleTabChange("worst")}
+                          >
+                            Peores
+                          </button>
+                          <button
+                            className={`px-4 py-2 rounded-r ${selectedTab === "best" ? "bg-secondary text-white" : "bg-gray-200"}`}
+                            onClick={() => handleTabChange("best")}
+                          >
+                            Mejores
+                          </button>
+                        </div>
+                        <ul className='text-sm space-y-4 py-4 px-2'>
+                          {selectedTab === "worst" &&
+                            activeReport[0]?.answers[0]?.worst_questions?.map((answer) => (
+                              <div key={answer._id}>
+                                <li className='text-secondary font-bold'>
+                                  <span className='text-primary font-bold'>•</span> {answer._id}{" "}
+                                  <span>
+                                    /<span className='text-red-600 font-bold'>{Math.round(answer.average_value * 100)}%🔻</span>{" "}
+                                  </span>{" "}
+                                </li>
+                              </div>
+                            ))}
+
+                          {selectedTab === "best" &&
+                            activeReport[0]?.answers[0]?.best_questions?.map((answer) => (
+                              <div key={answer._id}>
+                                <li className='text-secondary font-bold'>
+                                  <span className='text-primary font-bold'>•</span> {answer._id}{" "}
+                                  <span className='text-green-600 text-bold'>
+                                    {" "}
+                                    / <span className='text-red-600 font-bold'>{Math.round(answer.average_value * 100)}%🔺</span>
+                                  </span>{" "}
+                                </li>
+                              </div>
+                            ))}
+                        </ul>
+                      </div>
+                    ) : (
+                      <div className='flex items-center justify-center mt-16 '> Sin datos</div>
+                    )}
                   </div>
                 </div>
               </div>

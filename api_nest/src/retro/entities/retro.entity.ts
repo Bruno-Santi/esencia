@@ -50,6 +50,9 @@ export class Retro extends Document {
     },
   })
   c4: { content: string; responses: Response[] };
+
+  @Prop({ default: Date.now })
+  date: Date;
 }
 
 export const RetroSchema = SchemaFactory.createForClass(Retro);

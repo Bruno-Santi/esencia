@@ -2,5 +2,5 @@ import moment from "moment";
 
 export const formatDate = (dateString) => {
   const newDate = moment(dateString).add(1, "day");
-  return newDate.format("MM/DD/YYYY");
+  return newDate.format("DD/MM/YYYY");
 };

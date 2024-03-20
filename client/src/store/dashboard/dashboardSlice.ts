@@ -17,6 +17,8 @@ const initialState: DashBoardState = {
   isLoading: false,
   modalOpen: false,
   dataLoading: false,
+  cards: [],
+  task: [],
 };
 
 export const dashboardSlice = createSlice({
@@ -38,6 +40,8 @@ export const dashboardSlice = createSlice({
       state.membersActiveTeam = [];
       state.longRecommendation = {};
       state.topics = [];
+      state.cards = [];
+      state.task = [];
       state.activeReport = [];
     },
     onLoadingTeam: (state) => {
@@ -52,6 +56,8 @@ export const dashboardSlice = createSlice({
       state.shortRecomendation = {};
       state.longRecommendation = {};
       state.topics = [];
+      state.cards = [];
+      state.task = [];
       state.activeReport = [];
     },
     onSetUserTeams: (
@@ -94,6 +100,8 @@ export const dashboardSlice = createSlice({
       state.dataAmount = payload.dataAmount;
       state.shortRecomendation = payload.shortRecomendation;
       state.topics = payload.topics;
+      state.cards = payload.cards;
+      state.task = payload.task;
       state.isLoading = false;
     },
 

@@ -306,8 +306,15 @@ export class RetroService {
     }
   }
   async postRetro(data) {
+    // const currentDate = new Date();
+    // console.log(currentDate);
+
+    // const formattedDate = currentDate.toISOString();
     try {
-      const resp = await axios.post(`${process.env.API_DATA}/retro`, data);
+      const newData = { ...data };
+      console.log(newData);
+
+      const resp = await axios.post(`${process.env.API_DATA}/retro`, newData);
       console.log(data);
       console.log(resp);
 

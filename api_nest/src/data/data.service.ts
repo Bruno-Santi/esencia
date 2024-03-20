@@ -14,11 +14,13 @@ export class DataService {
   async getReports(teamId, sprint) {
     try {
       await this.checkTeam(teamId);
-      const reports = await axios.get(
+      const { data } = await axios.get(
         `${process.env.API_DATA}/get_reports?team_id=${teamId}`,
       );
-      const { data } = reports;
 
+      // const topics = await axios.get(
+      //   `${process.env.API_DATA}/trending_topics?sprint=${sprint}&team_id${teamId}`,
+      // );
       const modifiedData = data.map((report) => {
         const { $oid: id } = report._id;
 
@@ -29,10 +31,11 @@ export class DataService {
         };
       });
 
-      console.log(data);
+      console.log(modifiedData);
 
       return {
         data: modifiedData,
+        // topics: topics,
       };
     } catch (error) {
       console.log(error);
@@ -50,9 +53,12 @@ export class DataService {
       const short = await axios.post(
         `${process.env.API_DATA}/short_recommendation?team_id=${teamId}&sprint=${sprint}&members=${members}`,
       );
+      console.log(short);
+
       const data2 = await axios.post(
         `${process.env.API_DATA}/get_topics?sprint=${sprint}&team_id=${teamId}`,
       );
+      console.log(data2);
       const dashboardData = await axios.get(
         `${process.env.API_DATA}/dashboard_data?sprint=${sprint}&team_id=${teamId}`,
       );

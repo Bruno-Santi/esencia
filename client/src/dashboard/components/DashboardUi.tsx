@@ -8,10 +8,11 @@ import { IoRefreshCircleOutline } from "react-icons/io5";
 
 import { useEffect, useRef } from "react";
 import { UsePagination } from "../../helpers/UsePagination";
-import { TrendingTopics } from ".";
+import { BoardReport, TrendingTopics } from ".";
 import { toastSuccess } from "../../helpers/toastSuccess";
 import { ClipLoader } from "react-spinners";
 import { useAuthSlice } from "../../hooks/useAuthSlice";
+import { TaskTable } from "./TaskTable";
 
 export const DashboardUi = () => {
   const { user } = useAuthSlice();
@@ -27,10 +28,19 @@ export const DashboardUi = () => {
     buttonGetData,
     dataLoading,
     longRecommendation,
+    cards,
+    task,
   } = useDashboard();
 
   const { handleNavigate } = useNavigateTo();
   const containerRef = useRef();
+  console.log(task);
+  const englishToSpanish = {
+    "In Progress": "En Progreso",
+    "In Review": "En Revisión",
+    Backlog: "Pendientes",
+    Finished: "Finalizados",
+  };
 
   const handleNavigateToFeedBack = () => {
     if (Object.entries(longRecommendation).length > 0 === false) return;
@@ -68,7 +78,6 @@ export const DashboardUi = () => {
             </span>
           </div>
         </div>
-
         <div className='bg-quaternary  dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800   shadow-lg shadow-primary/50 h-[400px] w-full lg:col-span-4 md:col-span-4 rounded-md '>
           <div className='flex  '>
             <span className='font-poppins text-tertiary w-fit my-auto place-items-center text-2xl ml-4 mt-4 font-bold'>Actionable Insights</span>
@@ -116,7 +125,6 @@ export const DashboardUi = () => {
             </button>
           </div>
         </div>
-
         <div
           className='bg-tertiary shadow-lg
          shadow-primary/50  lg:h-fit md:h-[360px]
@@ -151,14 +159,12 @@ export const DashboardUi = () => {
           )}
           <DataCollectionReport />
         </div>
-
         <div
           className=' h-[400px] 
       w-full lg:col-span-4 md:col-span-2 mt-2 row-span-2 rounded-md justify-center m-auto place-content-center'
         >
           <TrendingTopics />
         </div>
-
         <div
           className='bg-tertiary shadow-lg
          shadow-primary/50  h-[360px]
@@ -176,6 +182,14 @@ export const DashboardUi = () => {
             </span>
           </div>
         </div>
+        <div className='flex justify-center lg:col-span-6 md:col-span-6 h-[360px] flex-col -mt-16 mb-20'>
+          <div className='flex mb-4'>
+            {cards && cards.map((card, index) => <BoardReport key={index} title={englishToSpanish[Object.keys(card)[0]]} value={Object.values(card)[0]} />)}
+          </div>
+          <div>{task && <TaskTable tasks={task} />}</div>
+        </div>
+
+        <div className='flex justify-center   lg:col-span-6 md:col-span-6  h-[360px]'></div>
       </div>
     </>
   );
