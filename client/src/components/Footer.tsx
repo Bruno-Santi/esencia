@@ -8,6 +8,12 @@ export const Footer = () => {
   const handleEmailClick = () => {
     window.open("mailto:contacto@esencia.com");
   };
+  const scrollToSection = (sectionId: string) => {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth" });
+    }
+  };
   const { handleNavigate } = useNavigateTo();
   return (
     <footer className='min-w-screen bg-primary h-fit mt-10 p-6 text-tertiary font-inter'>
@@ -20,10 +26,16 @@ export const Footer = () => {
           <div className=''>
             <span className='font-bold'>Links</span>
             <ul className='space-y-3 lg:mt-4 md:mt-4 sm:space-y-4 sm:mt-6'>
-              <li className='cursor-pointer duration-300 hover:text-secondary'>Features</li>
-              <li className='cursor-pointer duration-300 hover:text-secondary'>Nosotros</li>
+              <li className='cursor-pointer duration-300 hover:text-secondary' onClick={() => scrollToSection("features")}>
+                Features
+              </li>
+              <li className='cursor-pointer duration-300 hover:text-secondary' onClick={() => scrollToSection("about")}>
+                Nosotros
+              </li>
 
-              <li className='cursor-pointer duration-300 hover:text-secondary'>Precios</li>
+              <li className='cursor-pointer duration-300 hover:text-secondary' onClick={() => scrollToSection("pricing")}>
+                Precios
+              </li>
             </ul>
           </div>
           <div className=''>

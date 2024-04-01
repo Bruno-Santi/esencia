@@ -11,7 +11,7 @@ export const Retrospectives = () => {
     <DashboardLayout>
       {/* <BackButton /> */}
       <div className='flex justify-center m-auto mt-6  '>
-        <h1 className='font-manrope text-2xl text-primary pb-20 dark:text-tertiary'>Retroespectiva de equipo</h1>
+        <h1 className='font-manrope text-2xl text-primary pb-20 dark:text-tertiary'>Retrospectiva de equipo</h1>
       </div>
       <div className='flex h-full  mx-12 ml-26 justify-center my-0 px-20'>
         {!activeTeam ? (

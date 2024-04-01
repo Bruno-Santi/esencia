@@ -13,7 +13,10 @@ export const TeamList: React.FC<TeamListProps> = ({ id, name, logo, sprint }) =>
       <ListItemIcon>
         <Avatar src={logo} alt={name} />
       </ListItemIcon>
-      <ListItemText primary={name} />
+      <span className='dark:text-tertiary'>
+        {" "}
+        <ListItemText primary={name} />
+      </span>
     </ListItem>
   );
 };

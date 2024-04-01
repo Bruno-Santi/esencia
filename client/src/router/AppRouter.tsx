@@ -10,6 +10,7 @@ import { TeamsRoutes } from "../teams/routes/TeamsRoutes";
 import { Login } from "../teams/pages/Login";
 import ReactGA from "react-ga";
 import { NewLandingPage } from "../components/NewLandingPage";
+import Profile from "../auth/pages/Profile";
 
 export const AppRouter = () => {
   const [searchParams1] = useSearchParams();
@@ -97,6 +98,7 @@ export const AppRouter = () => {
               <Route element={<DashboardRoutes />} path={`/dashboard/*`} />
               <Route element={<TeamsRoutes />} path={`/teams/*`} />
               <Route element={<Navigate to='/dashboard' />} path={`/teams/login`} />
+              <Route path='/profile' element={<Profile />} />
               {firstLogging === "0" ? (
                 <Route element={<Navigate to={"/onboarding"} />} path={`/auth/*`} />
               ) : (

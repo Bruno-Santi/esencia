@@ -87,7 +87,7 @@ export const sendRetroMail = (
                   </div>
               
                   <h2 class='title'>Bienvenido ${memberName} a la retro de ${teamName}</h2>
-                  <p class='subtitle'>Fuiste invitado a participar junto a tu equipo, completando una retroespectiva en tiempo real!</p>
+                  <p class='subtitle'>Fuiste invitado a participar junto a tu equipo, completando una retrospectiva en tiempo real!</p>
                   <div class='button-container'>
                      <a class='access-button' href='https://esencia.app/members/retro?token=${token}&team_id=${teamId}&user_id=${memberId}' target='_blank'>Acceso a la retro</a>
                   </div>

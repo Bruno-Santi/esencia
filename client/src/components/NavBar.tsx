@@ -84,7 +84,7 @@ export const NavBar = () => {
                 handleNavigate("/dashboard/retro");
               }}
             >
-              <SideBarItem icon={<MdOutlineStickyNote2 />} text='Retroespectivas' />
+              <SideBarItem icon={<MdOutlineStickyNote2 />} text='Retrospectivas' />
             </span>
             <span onClick={() => handleNavigate("/dashboard/reports")}>
               <SideBarItem icon={<MdOutlineInsertChart />} text='Reportes' />
@@ -150,19 +150,11 @@ export const NavBar = () => {
                 }}
               >
                 <IoPersonOutline className='mr-2 text-primary dark:text-tertiary' />
-                <span className=' w-full p-2 font-poppins dark:text-tertiary'>Perfil</span>
+                <span className=' w-full p-2 font-poppins dark:text-tertiary' onClick={() => handleNavigate("/profile")}>
+                  Perfil
+                </span>
               </MenuItem>
-              <MenuItem
-                onClick={handleClose}
-                sx={{
-                  "&:hover": {
-                    backgroundColor: "rgba(0, 0, 0, 0.10)",
-                  },
-                }}
-              >
-                <IoClipboardOutline className='mr-2 text-primary dark:text-tertiary' />
-                <span className=' w-full p-2 font-poppins dark:text-tertiary'>Tableros</span>
-              </MenuItem>
+
               <MenuItem
                 onClick={handleChangeTheme}
                 sx={{
@@ -201,7 +193,7 @@ export const NavBar = () => {
                   }}
                   className='p-2 font-poppins text-secondary dark:text-red-700 duration-700 hover:text-primary cursor-pointer'
                 >
-                  Log Out
+                  Salir
                 </span>
               </MenuItem>
             </Menu>

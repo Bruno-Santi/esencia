@@ -82,15 +82,16 @@ export const SideBarItem = ({ icon, text, active, alert }) => {
         relative flex items-center py-4 px-4 my-1
         font-medium rounded-md cursor-pointer
         transition-colors group
+        ${theme === "dark" ? "dark:bg-black" : ""}
         ${active ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800" : "hover:bg-indigo-50 text-gray-600"}
     `}
       onClick={handleTeamsClick}
     >
       {/* Si el texto es "Teams" y expanded es true, mostrar el Accordion */}
       {text === "Teams" && expanded && (
-        <div className='flex relative w-full'>
-          <GrGroup className={`absolute top-3 left-1 my-auto ${theme === "dark" ? "text-secondary" : ""}`} size={24} />
-          <Accordion sx={{ border: "0px solid #ccc", marginLeft: "40px" }}>
+        <div className={`flex relative w-full ${theme === "dark" ? "dark:bg-black" : ""}`}>
+          <GrGroup className={`absolute top-3 left-1 my-auto ${theme === "dark" ? "text-secondary" : "text-blue"}`} size={24} />
+          <Accordion sx={{ border: "0px solid #ccc", marginLeft: "40px", ...(theme === "dark" ? { background: "#333" } : {}) }}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               sx={{
@@ -104,14 +105,16 @@ export const SideBarItem = ({ icon, text, active, alert }) => {
               }}
             >
               {/* Texto de "Teams" */}
-              <Typography>Equipos</Typography>
+              <Typography>
+                <span className='dark:text-tertiary'>Equipos</span>
+              </Typography>
             </AccordionSummary>
             <AccordionDetails>
               <Typography>
                 <Teams />
                 {user?.role ? (
                   <ListItemIcon onClick={openModal}>
-                    <span className='font-poppins justify-center text-center m-auto'>
+                    <span className='font-poppins justify-center text-center m-auto dark:text-tertiary'>
                       <AddIcon /> Nuevo equipo
                     </span>
                   </ListItemIcon>
@@ -128,22 +131,17 @@ export const SideBarItem = ({ icon, text, active, alert }) => {
       {/* Si el texto no es "Teams" o expanded es false, mostrar el icono y el texto */}
       {(text !== "Teams" || !expanded) && (
         <>
-          <span className={`${theme === "dark" ? ` text-secondary group-hover:text-primary` : ``}`}>
-            {React.cloneElement(icon, { size: expanded ? 24 : 24 })}
-          </span>{" "}
-          <span
-            className={`overflow-hidden transition-all ${expanded ? "w-52 ml-3" : "w-0"} ${theme === "dark" ? `text-tertiary group-hover:text-primary` : ``}`}
-          >
-            {text === "Teams" ? "Equipos" : text}
-          </span>{" "}
+          <span className={`dark:text-secondary`}>{React.cloneElement(icon, { size: expanded ? 24 : 24 })}</span>{" "}
+          <span className={`overflow-hidden transition-all dark:text-tertiary ${expanded ? "w-52 ml-3" : "w-0"}`}>{text === "Teams" ? "Equipos" : text}</span>{" "}
           {!expanded && (
             <div
               className={`
-          absolute left-full rounded-md px-2 py-1 ml-6
-          bg-indigo-100 text-indigo-800 text-sm
-          invisible opacity-20 -translate-x-3 transition-all
-          group-hover:visible group-hover:opacity-100 group-hover:translate-x-0
-      `}
+            absolute left-full rounded-md px-2 py-1 ml-6
+            bg-indigo-100 dark:text-tertiary text-primary text-sm
+            invisible opacity-20 -translate-x-3 transition-all
+            group-hover:visible group-hover:opacity-100 group-hover:translate-x-0
+            ${theme === "dark" ? "dark:bg-black" : ""}
+        `}
             >
               {text === "Teams" ? "Equipos" : text}
             </div>

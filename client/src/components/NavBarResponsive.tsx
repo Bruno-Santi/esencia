@@ -5,6 +5,7 @@ import { useDashboard } from "../hooks/useDashboard";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { useState } from "react";
 import { useModal } from "../hooks";
+import { useAuthSlice } from "../hooks/useAuthSlice";
 
 export const NavBarResponsive = () => {
   const { user, activeTeam, startGettingMembers, startToggleModal } = useDashboard();
@@ -27,8 +28,8 @@ export const NavBarResponsive = () => {
         </i>
       </span>
       {activeTeam ? (
-        <>
-          <span className='text-tertiary font-poppins mr-4 my-auto text-xs'>{activeTeam.name}</span>
+        <div className='flex-row items-center w-full justify-center text-center'>
+          <span className='text-tertiary font-poppins mr-4 my-auto text-sm '>{activeTeam.name}</span>
           <span
             onClick={() => {
               openModal();
@@ -39,7 +40,7 @@ export const NavBarResponsive = () => {
           >
             Miembros
           </span>{" "}
-        </>
+        </div>
       ) : (
         <></>
       )}
@@ -47,15 +48,16 @@ export const NavBarResponsive = () => {
       <div
         className={
           !toggleSideBar
-            ? " fixed top-0 bottom-0 lg:left-0 p-2 w-[300px] overflow-y-auto text-center bg-gray-900 animate__animated animate__fadeOutLeft animate__faster "
-            : " fixed top-0 bottom-0 lg:left-0 p-2 w-[300px] overflow-y-auto text-center bg-gray-900 animate__animated animate__fadeInLeft animate__fast "
+            ? "z-50 fixed top-0 bottom-0 lg:left-0 p-2 w-[300px] overflow-y-auto text-center bg-gray-900 animate__animated animate__fadeOutLeft animate__faster "
+            : "z-50 fixed top-0 bottom-0 lg:left-0 p-2 w-[300px] overflow-y-auto text-center bg-gray-900 animate__animated animate__fadeInLeft animate__fast "
         }
       >
         <div class='text-gray-100 text-xl'>
           <div class='p-2.5 mt-1 flex items-center'>
-            <i class=''>
-              <FaRegCircleUser />
-            </i>
+            <div className={`${user.avtColor} rounded-full h-8 w-8 flex items-center justify-center`}>
+              <span className='text-tertiary'>{user.name[0]}</span>
+            </div>
+            <span className='ml-2'>{user.name}</span>
             <h1 class='font-bold text-gray-200 text-lg ml-3'>{user?.first_name}</h1>
             <i class='cursor-pointer text-3xl ml-28 lg:hidden' onClick={handleToggle}>
               <IoMdClose />
@@ -63,7 +65,18 @@ export const NavBarResponsive = () => {
           </div>
           <div class='my-2 bg-gray-600 h-[1px]'></div>
         </div>
-
+        <div class='p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white'>
+          <i class='bi bi-box-arrow-in-right'></i>
+          <span class='text-[15px] ml-4 text-gray-200 font-bold'>Dashboard</span>
+        </div>
+        <div class='p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white'>
+          <i class='bi bi-box-arrow-in-right'></i>
+          <span class='text-[15px] ml-4 text-gray-200 font-bold'>Retrospectivas</span>
+        </div>
+        <div class='p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white'>
+          <i class='bi bi-box-arrow-in-right'></i>
+          <span class='text-[15px] ml-4 text-gray-200 font-bold'>Tableros</span>
+        </div>
         <div class='p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white'>
           <i class='bi bi-house-door-fill'></i>
           <span class='text-[15px] ml-4 text-gray-200 font-bold'>Crear equipo</span>
@@ -74,14 +87,17 @@ export const NavBarResponsive = () => {
             <IoMdArrowDropdown id='arrow' />
           </i>
         </div>
-        <div class='text-left text-sm mt-2 w-4/5 mx-auto text-gray-200 font-bold' id='submenu'>
+        <div
+          className='text-left text-sm mt-2 w-4/5 mx-auto text-gray-200 font-bold hidden' // Añade la clase 'hidden'
+          id='submenu'
+        >
           <Teams />
         </div>
         <div class='my-4 bg-gray-600 h-[1px]'></div>
 
         <div class='p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white'>
           <i class='bi bi-box-arrow-in-right'></i>
-          <span class='text-[15px] ml-4 text-gray-200 font-bold'>Salir</span>
+          <span class='text-[15px] ml-4 text-gray-200 font-bold text-secondary'>Salir</span>
         </div>
       </div>
     </div>

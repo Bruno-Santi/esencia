@@ -43,15 +43,29 @@ export const MembersTable = () => {
       <Table className='font-poppins'>
         <TableHead>
           <TableRow>
-            <TableCell>Avatar</TableCell>
-            <TableCell>Nombre</TableCell>
+            <TableCell>
+              <span className='dark:text-tertiary'>Avatar</span>
+            </TableCell>
+            <TableCell>
+              {" "}
+              <span className='dark:text-tertiary'>Nombre</span>
+            </TableCell>
 
             {user.role ? (
               <>
                 {" "}
-                <TableCell>Email</TableCell>
-                <TableCell>Estado</TableCell>
-                <TableCell>Eliminar</TableCell>
+                <TableCell>
+                  {" "}
+                  <span className='dark:text-tertiary'>Email</span>
+                </TableCell>
+                <TableCell>
+                  {" "}
+                  <span className='dark:text-tertiary'>Estado</span>
+                </TableCell>
+                <TableCell>
+                  {" "}
+                  <span className='dark:text-secondary dark:font-bold'>Eliminar</span>
+                </TableCell>
               </>
             ) : (
               ""
@@ -64,24 +78,29 @@ export const MembersTable = () => {
               <TableCell>
                 <div className='flex items-center'>
                   <div className={`rounded-full h-8 w-8 flex items-center justify-center mr-2 ${member.avtColor}`}>
-                    <span className='text-tertiary font-bold'> {member.name[0]}</span>
+                    <span className='cursor-pointer text-tertiary'> {member.name[0]}</span>
                   </div>
                 </div>
               </TableCell>
 
-              <TableCell>{member.name}</TableCell>
+              <TableCell>
+                {" "}
+                <span className='dark:text-tertiary'>{member.name}</span>
+              </TableCell>
 
               {user.role ? (
                 <>
                   {" "}
-                  <TableCell>{member.email}</TableCell>
+                  <TableCell>
+                    <span className='dark:text-tertiary'>{member.email}</span>
+                  </TableCell>
                   <TableCell>
                     {!member.isRegistered ? (
                       <Button onClick={() => handleInvite(member._id, member.name)} variant='contained' color='primary'>
                         Invitar
                       </Button>
                     ) : (
-                      "Registrado"
+                      <span className='dark:text-tertiary'>Registrado</span>
                     )}
                   </TableCell>
                   <TableCell>

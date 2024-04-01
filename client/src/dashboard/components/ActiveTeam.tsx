@@ -10,7 +10,7 @@ export const ActiveTeam = () => {
   }, []);
 
   return (
-    <div className='flex mx-auto justify-center my-auto min-h-screen '>
+    <div className='flex mx-auto justify-center my-auto min-h-screen  '>
       {!activeTeam ? (
         <div className='flex flex-col justify-center mx-auto my-0 pb-20 space-y-2 duration-700 '>
           <div className='text-4xl   font-poppins text-primary/80'>

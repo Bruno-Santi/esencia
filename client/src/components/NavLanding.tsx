@@ -31,6 +31,13 @@ export const NavLanding = () => {
 
     setOpen(false);
   };
+
+  const scrollToSection = (sectionId: string) => {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth" });
+    }
+  };
   const handleNavBar = () => setNavBar(!navBar);
   return (
     <div>
@@ -47,9 +54,15 @@ export const NavLanding = () => {
             user ? "lg:ml-16 md:mr-48" : "lg:ml-48 md:mr-10"
           } `}
         >
-          <span className='duration-300 hover:text-secondary cursor-pointer'>Features</span>
-          <span className='duration-300 hover:text-secondary cursor-pointer'>Nosotros</span>
-          <span className='duration-300 hover:text-secondary cursor-pointer'>Precios</span>
+          <span className='duration-300 hover:text-secondary cursor-pointer' onClick={() => scrollToSection("features")}>
+            Features
+          </span>
+          <span className='duration-300 hover:text-secondary cursor-pointer' onClick={() => scrollToSection("about")}>
+            Nosotros
+          </span>
+          <span className='duration-300 hover:text-secondary cursor-pointer' onClick={() => scrollToSection("pricing")}>
+            Precios
+          </span>
         </div>
         <div className='space-x-5 mr-20  md:block lg:block sm:hidden'>
           {!user ? (
@@ -119,9 +132,33 @@ export const NavLanding = () => {
           className={`lg:hidden md:hidden sm:${navBar ? "block" : "hidden"} sm:min-w-full sm:top-20 sm:flex sm:items-center sm:z-auto sm:absolute bg-primary`}
         >
           <ul className='text-tertiary space-y-4 font-inter ml-8 mt-6 mb-6 w-full'>
-            <li className='cursor-pointer duration-300 hover:text-green-400'>Features</li>
-            <li className='cursor-pointer duration-300 hover:text-green-400'>Nosotros</li>
-            <li className='cursor-pointer duration-300 hover:text-green-400'>Precios</li>
+            <li
+              className='cursor-pointer duration-300 hover:text-green-400'
+              onClick={() => {
+                scrollToSection("features");
+                handleNavBar();
+              }}
+            >
+              Features
+            </li>
+            <li
+              className='cursor-pointer duration-300 hover:text-green-400'
+              onClick={() => {
+                scrollToSection("about");
+                handleNavBar();
+              }}
+            >
+              Nosotros
+            </li>
+            <li
+              className='cursor-pointer duration-300 hover:text-green-400'
+              onClick={() => {
+                scrollToSection("pricing");
+                handleNavBar();
+              }}
+            >
+              Precios
+            </li>
             {user ? (
               <>
                 <hr className='w-1/3 text-green-400 border-green-400'></hr>

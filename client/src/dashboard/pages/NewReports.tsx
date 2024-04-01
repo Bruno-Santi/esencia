@@ -12,12 +12,12 @@ import { ReportAccordion } from "../../components/ReportAccordion";
 import { LineChartReport } from "../../components/LineChartReport";
 import { TaskTable } from "../components/TaskTable";
 import { useDocumentTitle } from "../../hooks";
-import { formatDate } from "../../helpers";
+
+import moment from "moment";
 
 export const NewReports = () => {
   useDocumentTitle("Reportes | Esencia.app");
   const { longRecommendation, loadingReports, activeReport, startGettingReports, activeTeam } = useDashboard();
-  console.log(longRecommendation);
 
   const [backlogValue, setBacklogValue] = useState(0);
   const [inProgressValue, setInProgressValue] = useState(0);
@@ -25,6 +25,17 @@ export const NewReports = () => {
   const [finishedValue, setFinishedValue] = useState(0);
   const [analysisLines, setAnalysisLines] = useState("");
   const [selectedTab, setSelectedTab] = useState("worst");
+  console.log(activeReport[0]);
+
+  const formatDate = (date) => {
+    console.log(date);
+
+    const newDate = moment(date);
+    const formattedDate = newDate.format("DD/MM/YYYY");
+    console.log(formattedDate);
+
+    return formattedDate;
+  };
 
   const handleTabChange = (tab) => {
     setSelectedTab(tab);
@@ -39,7 +50,6 @@ export const NewReports = () => {
   const handleGetReports = async (e) => {
     e.preventDefault();
     await startGettingReports(activeTeam._id, activeTeam.sprint);
-    console.log("cl");
   };
   const assignValues = () => {
     if (longRecommendation) {
@@ -95,7 +105,9 @@ export const NewReports = () => {
             </button>
           </div>
           <div className='flex items-center justify-center font-poppins mt-6 mr-32 '>
-            {formatDate(activeReport[0].BeginDate)} - {formatDate(activeReport[0].EndDate)}
+            {!activeReport[0].dates || !Object.values(activeReport[0].dates).length
+              ? ""
+              : `${formatDate(activeReport[0].dates.BeginDate["$date"])} - ${formatDate(activeReport[0].dates.EndDate["$date"])}`}
           </div>
           <Grid
             container
@@ -167,7 +179,7 @@ export const NewReports = () => {
 
                   <Divider className='py-2' />
                   <div className='mt-8 px-2 overflow-y-scroll absolute top-14 left-0 right-0 bottom-0'>
-                    {activeReport[0].answers.length !== undefined ? (
+                    {activeReport[0].answers.length > 0 ? (
                       <div>
                         <div className='mt-2'>
                           <button
@@ -185,7 +197,7 @@ export const NewReports = () => {
                         </div>
                         <ul className='text-sm space-y-4 py-4 px-2'>
                           {selectedTab === "worst" &&
-                            activeReport[0]?.answers[0]?.worst_questions?.map((answer) => (
+                            (activeReport[0]?.answers[0]?.worst_questions?.map((answer) => (
                               <div key={answer._id}>
                                 <li className='text-secondary font-bold'>
                                   <span className='text-primary font-bold'>•</span> {answer._id}{" "}
@@ -194,10 +206,10 @@ export const NewReports = () => {
                                   </span>{" "}
                                 </li>
                               </div>
-                            ))}
+                            )) || <div>Sin datos</div>)}
 
                           {selectedTab === "best" &&
-                            activeReport[0]?.answers[0]?.best_questions?.map((answer) => (
+                            (activeReport[0]?.answers[0].best_questions?.map((answer) => (
                               <div key={answer._id}>
                                 <li className='text-secondary font-bold'>
                                   <span className='text-primary font-bold'>•</span> {answer._id}{" "}
@@ -207,11 +219,11 @@ export const NewReports = () => {
                                   </span>{" "}
                                 </li>
                               </div>
-                            ))}
+                            )) || <div>Sin datos</div>)}
                         </ul>
                       </div>
                     ) : (
-                      <div className='flex items-center justify-center mt-16 '> Sin datos</div>
+                      <div>Sin datos</div>
                     )}
                   </div>
                 </div>

@@ -2,7 +2,7 @@ import { illustration2 } from "../assets";
 
 export const About = () => {
   return (
-    <section className=' lg:mt-40 md:mt-40 sm:mt-12 lg:h-[1000px] md:h-[1000px] sm:h-[880px] bg-primary min-w-full   flex relative'>
+    <section className=' lg:mt-40 md:mt-40 sm:mt-12 lg:h-screen md:h-screen sm:h-screen bg-primary min-w-full   flex relative'>
       <div className='lg:flex-row md:flex-row sm:flex sm:flex-col-reverse sm:mt-12 sm:p-2 items-center lg:justify-between md:justify-between sm:justify-center'>
         <div className='lg:ml-40 md:ml-40 sm:justify-center sm:mb-10 sm:mt-6'>
           <img src={illustration2} className='lg:w-5/6 md:w-5/6 sm:w-5/6 sm:justify-center sm:mx-auto' />

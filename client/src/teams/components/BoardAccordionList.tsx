@@ -34,8 +34,8 @@ export const BoardAccordionList = ({ boards }) => {
       )}
       {modalBoard && (
         <Modal open={modalBoard} onClose={toggleModalBoard} onClick={handleClick} className='flex justify-center items-center'>
-          <div className='bg-white p-20 flex flex-col space-y-6 rounded-md'>
-            <label htmlFor='outlined-basic' className='font-poppins'>
+          <div className='bg-white p-20 flex flex-col space-y-6 rounded-md dark:bg-quaternary'>
+            <label htmlFor='outlined-basic' className='font-poppins dark:text-tertiary'>
               Crear un nuevo tablero
             </label>
             <TextField id='outlined-basic' label='Título' variant='outlined' onChange={handleTitleChange} value={boardTitle} />
