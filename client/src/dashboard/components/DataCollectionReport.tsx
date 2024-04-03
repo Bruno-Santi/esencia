@@ -18,11 +18,11 @@ export const DataCollectionReport = () => {
 
   return (
     <div
-      className='md:mt-2 lg:mt-12 shadow-lg
-    shadow-primary/50 border-primary border rounded-md flex justify-center p-3 bg-quaternary'
+      className='md:mt-2 lg:-mt-6 shadow-lg w-full
+    shadow-primary/50 border-primary border rounded-md flex justify-center p-2 bg-quaternary'
     >
       {Object.entries(dataAmount).map(([key, value]) => (
-        <span key={key} className='px-2 text-center text-tertiary flex flex-col '>
+        <span key={key} className='p-2 text-center text-tertiary flex flex-col '>
           <span className='font-poppins lg:text-sm md:text-xs'> {key.replace(/_/g, " ").replace(/\b\w/g, (match) => match.toUpperCase())}:</span>{" "}
           <span className='font-poppins   lg:text-sm md:text-xs'>{renderValue(value)}</span>
         </span>

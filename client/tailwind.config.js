@@ -17,8 +17,9 @@ export default {
       },
       screens: {
         sm: "360px",
-        md: "768px",
-        lg: "1800px",
+        tablet: "600px",
+        md: "1200px",
+        lg: "1890px",
       },
     },
   },

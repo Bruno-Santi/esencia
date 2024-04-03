@@ -56,16 +56,16 @@ export const DashboardUi = () => {
     toastSuccess("Thanks for your feedback! 🤗");
   };
   return (
-    <section className='lg:-mt-20 md:-mt-6'>
-      <div className=' w-full  sm:max-w-screen sm:p-6 md:grid lg:grid lg:px-6 md:px-6 sm:px-0 sm:my-6 lg:ml-2 md:ml-2 sm:ml-0 sm:flex sm:flex-col sm:items-center sm:justify-center lg:py-6 md:py-2 lg:grid-cols-12 md:grid-cols-12 lg:grid-rows-2 md:grid-rows-2 lg:gap-y-0 md:gap-4'>
+    <section className='lg:-mt-20 md:-mt-2'>
+      <div className=' w-full  sm:max-w-screen sm:p-6 md:grid lg:grid lg:px-6 md:px-6 sm:px-0 sm:my-6 lg:ml-2 md:ml-2 sm:ml-0 sm:flex sm:flex-col sm:items-center sm:justify-center lg:py-6 md:py-2 lg:grid-cols-12 md:grid-cols-12 md:grid-rows-3 lg:grid-rows-2 lg:gap-y-0 md:gap-2 md:gap-y-0 '>
         <div
           className='bg-tertiary shadow-lg 
-         shadow-primary/50  lg:h-[400px] md:h-[400px] sm:h-[350px] sm:w-[360px]  sm:mb-6 md:w-full lg:w-full
-         dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800 
-   lg:col-span-5 md:col-span-6   rounded-md'
+         shadow-primary/50  lg:min-h-[400px] md:h-[320px] sm:h-[350px] sm:w-[360px]  sm:mb-6 md:w-full lg:w-full
+         dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800  lg:row-span-1
+   lg:col-span-6 md:col-span-6   rounded-md'
         >
           <div className='flex justify-between'>
-            <span className='font-poppins text-primary dark:text-tertiary flex mt-4 ml-4 lg:text-2xl md:text-2xl sm:text-lg font-bold'>
+            <span className='font-poppins text-primary dark:text-tertiary flex mt-4 ml-4 lg:text-2xl md:text-xl sm:text-lg font-bold'>
               Indicador clave de equipo
               <div className=''>
                 <Tooltip
@@ -93,9 +93,9 @@ export const DashboardUi = () => {
             </span>
           </div>
         </div>
-        <div className='bg-quaternary  dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800   shadow-lg shadow-primary/50 lg:h-[400px] md:h-[400px] sm:h-[350px] sm:w-[360px]  sm:mb-6 md:w-full lg:w-full w-full lg:col-span-4 md:col-span-3 rounded-md '>
+        <div className='bg-quaternary  lg:min-h-[400px] dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800   shadow-lg shadow-primary/50 lg:h-[400px] md:h-[320px] sm:h-[350px] sm:w-[360px]  sm:mb-6 md:w-full lg:w-full w-full lg:row-span-1 lg:col-span-3 md:col-span-4 rounded-md '>
           <div className='flex'>
-            <span className='flex font-poppins text-tertiary w-fit my-auto place-items-center md:text-2xl lg:text-2xl sm:text-lg ml-4 mt-4 font-bold'>
+            <span className='flex font-poppins text-tertiary w-fit my-auto place-items-center md:text-lg lg:text-2xl  sm:text-lg ml-4 mt-4 font-bold'>
               Perspectivas Accionables
               <div className='flex'>
                 <Tooltip
@@ -134,7 +134,7 @@ export const DashboardUi = () => {
           </div>
           <div
             ref={containerRef}
-            className='bg-tertiary  dark:bg-gray-900 w-5/6 mt-4  place-items-center align-middle lg:h-4/6 md:h-[15em] mx-auto rounded-lg overflow-y-scroll'
+            className='bg-tertiary  dark:bg-gray-900 w-5/6 mt-4  place-items-center align-middle lg:h-4/6 md:h-[13em] mx-auto rounded-lg overflow-y-scroll'
           >
             <div ref={containerRef} className='font-poppin p-3 w-6/6 scroll-p-12 overflow-x-hidden my-auto   bg-tertiary  dark:bg-gray-900 m-auto'>
               {Object.keys(shortRecomendation).length > 0 ? (
@@ -147,41 +147,20 @@ export const DashboardUi = () => {
             </div>
           </div>
         </div>
-        <div
-          className='bg-tertiary shadow-lg
-         shadow-primary/50 lg:h-[400px] md:h-[400px] md:mt-12 sm:h-[150px] sm:w-[360px] sm:mb-20 
-         dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800
-      w-full lg:col-span-3 md:col-span-1 md:row-span-1 lg:row-span-1 rounded-md'
-        >
-          {user.role ? (
-            <div className='flex flex-col lg:space-y-8 md:space-y-8 sm:space-y-4 p-2 m-auto md:col-span-4 '>
-              <span className='font-poppins text-primary flex  sm:text-lg mt-4 lg:ml-4 md:ml-4 sm:ml-4 lg:text-2xl dark:text-tertiary font-bold'>
-                Acciones Disponibles
-              </span>
-              <span
-                disabled={surveyLoading}
-                onClick={() => startCreatingSurvey(activeTeam.name, activeTeam._id)}
-                className={
-                  !surveyLoading
-                    ? "btn-primary sm:w-2/3 sm:flex sm:items-center p-2 sm:justify-center font-poppins dark:hover:border-white dark:hover:border-1 dark:hover:duration-500 md:text-base md:p-1 lg:text-xl rounded-md lg:p-2 duration-700 hover:bg-amber-100 hover:text-primary"
-                    : "btn-secondary font-poppins text-xl rounded-md p-2 duration-700  sm:flex sm:items-center sm:justify-center"
-                }
-              >
-                <span className='sm:flex sm:items-center sm:justify-center'> Encuesta de pulso</span>
-              </span>
-            </div>
-          ) : (
-            ""
-          )}
-          <DataCollectionReport />
+        <div className='flex justify-center  md:space-y-2 lg:-mt-0 lg:row-span-1 md:col-start-1 md:mr-24 md:-mt-56 lg:col-span-3 md:col-span-6 lg:h-[400px] lg:space-y-5 items-center sm:mt-0 flex-col -mt-16 mb-20'>
+          <div className='flex mb-2'>
+            {cards && cards.map((card, index) => <BoardReport key={index} title={englishToSpanish[Object.keys(card)[0]]} value={Object.values(card)[0]} />)}
+          </div>
+          <div>{task && <TaskTable tasks={task} />}</div>
         </div>
+
         <div
           className='bg-tertiary shadow-lg
-         shadow-primary/50  lg:h-[400px] md:h-[400px] md:-mt-48 sm:h-[350px] sm:w-[360px]  sm:mb-6 md:w-full lg:w-full lg:-mt-56
+         shadow-primary/50  lg:h-[400px] md:h-[400px] md:-mt-48 sm:h-[350px] sm:w-[360px]  sm:mb-6 md:w-full lg:w-full 
          dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800 
-      w-full lg:col-span-5 md:col-span-6 row-span-2  rounded-md '
+      w-full lg:col-span-6 md:col-span-8 lg:row-span-2 md:row-start-2 md:row-span-2  rounded-md '
         >
-          <span className='font-poppins text-primary flex mt-4 ml-4 text-2xl dark:text-tertiary font-bold'>
+          <span className='font-poppins text-primary flex mt-4 ml-4 lg:text-2xl md:text-xl dark:text-tertiary font-bold'>
             Reporte Global del Equipo{" "}
             <div className=''>
               <Tooltip
@@ -189,13 +168,13 @@ export const DashboardUi = () => {
                   El "Reporte Global del Equipo" resume datos recolectados de encuestas diarias de pulso, ofreciendo insights sobre la satisfacción, colaboración, compromiso y bienestar laboral del equipo. Esto permite a líderes y miembros del equipo tener una visión general del desempeño y áreas de mejora para impulsar el éxito colectivo.'
                 className='ml-2 mb-4 text-2xl'
               >
-                <IconButton sx={{ marginBottom: 4, fontSize: 28 }}>
+                <IconButton sx={{ marginBottom: 0, fontSize: 28 }}>
                   <CiCircleQuestion className='dark:text-tertiary' />
                 </IconButton>
               </Tooltip>
             </div>
           </span>
-          <div className='flex items-center m-auto justify-center h-2/6'>
+          <div className='flex items-center m-auto justify-center h-3/6'>
             <span className='text-center mt-28 font-poppins w-full text-primary/50 font-bold text-4xl'>
               {Object.keys(linesMetrics).length > 0 ? (
                 <LineCharts />
@@ -205,21 +184,71 @@ export const DashboardUi = () => {
             </span>
           </div>
         </div>
-        <div
-          className=' h-[400px] lg:-mt-56 md:-mt-48 sm:h-[350px] sm:w-[360px]   lg:h-[400px] md:h-[360px]
-      w-full lg:col-span-3 md:col-span-2  row-span-2 sm:my-16 rounded-md justify-center m-auto place-content-center'
-        >
+        <div className='lg:h-[400px] lg:w-[420px] lg:space-y-32 md:space-y-32  sm:h-[350px] sm:w-[360px] md:h-[360px]  lg:col-start-7 lg:row-start-2 lg:col-span-2  md:col-span-4 md:row-start-2 md:row-span-2 sm:my-16 rounded-md justify-center my-auto gap-y-4'>
           <TrendingTopics />
-        </div>
 
-        <div className='flex justify-center  lg:-mt-36  md:-mt-36 lg:col-span-4 md:col-span-4 h-[360px] items-center sm:mt-0 flex-col -mt-16 mb-20'>
-          <div className='flex mb-4'>
-            {cards && cards.map((card, index) => <BoardReport key={index} title={englishToSpanish[Object.keys(card)[0]]} value={Object.values(card)[0]} />)}
-          </div>
-          <div>{task && <TaskTable tasks={task} />}</div>
+          <DataCollectionReport />
         </div>
-
-        <div className='flex justify-center   lg:col-span-6 md:col-span-6  h-[360px]'></div>
+        <div
+          className='bg-tertiary shadow-lg
+         shadow-primary/50  lg:h-[400px] md:h-[320px]  sm:h-[350px] sm:w-[360px]  sm:mb-6 md:w-full lg:w-full 
+         dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800 
+     lg:col-span-3 md:row-start-1 md:col-start-11 md:col-span-2 lg:row-start-2 lg:row-span-2 lg:col-start-10  rounded-md lg:place-content-start lg:self-start lg:items-start lg:justify-start lg:-my-12'
+        >
+          {" "}
+          {user.role ? (
+            <span className=''>
+              <span className='font-poppins text-primary flex sm:text-lg mt-4 lg:ml-4 md:ml-4 sm:ml-4 lg:text-2xl dark:text-tertiary font-bold'>
+                Acciones Disponibles
+              </span>
+              <div className='md:flex md:flex-col md:justify-center md:items-center md:mt-4'>
+                <span
+                  disabled={surveyLoading}
+                  onClick={() => startCreatingSurvey(activeTeam.name, activeTeam._id)}
+                  className={
+                    !surveyLoading
+                      ? "btn-primary sm:w-2/3 sm:flex md:w-5/6 sm:items-center p-2 sm:justify-center font-poppins dark:hover:border-white dark:hover:border-1 dark:hover:duration-500 md:text-base md:p-1 lg:text-xl rounded-md lg:p-2 duration-700 hover:bg-amber-100 hover:text-primary mt-4"
+                      : "btn-secondary font-poppins  md:w-5/6 text-xl rounded-md p-2 duration-700 sm:flex sm:items-center sm:justify-center mt-4"
+                  }
+                >
+                  <span className='sm:flex sm:items-center sm:justify-center'> Encuesta de pulso</span>
+                </span>
+                <span
+                  disabled={surveyLoading}
+                  className={
+                    !surveyLoading
+                      ? "btn-primary sm:w-2/3 sm:flex md:w-5/6 sm:items-center p-2 sm:justify-center font-poppins dark:hover:border-white dark:hover:border-1 dark:hover:duration-500 md:text-base md:p-1 lg:text-xl rounded-md lg:p-2 duration-700 hover:bg-amber-100 hover:text-primary mt-4"
+                      : "btn-secondary font-poppins md:w-5/6 text-xl rounded-md p-2 duration-700 sm:flex sm:items-center sm:justify-center mt-4"
+                  }
+                >
+                  <span className='sm:flex sm:items-center sm:justify-center'> Retrospectivas</span>
+                </span>
+                <span
+                  disabled={surveyLoading}
+                  className={
+                    !surveyLoading
+                      ? "btn-primary sm:w-2/3 sm:flex  md:w-5/6 sm:items-center p-2 sm:justify-center font-poppins dark:hover:border-white dark:hover:border-1 dark:hover:duration-500 md:text-base md:p-1 lg:text-xl rounded-md lg:p-2 duration-700 hover:bg-amber-100 hover:text-primary mt-4"
+                      : "btn-secondary font-poppins text-xl md:w-5/6 rounded-md p-2 duration-700 sm:flex sm:items-center sm:justify-center mt-4"
+                  }
+                >
+                  <span className='sm:flex sm:items-center sm:justify-center'>Miembros</span>
+                </span>
+                <span
+                  disabled={surveyLoading}
+                  className={
+                    !surveyLoading
+                      ? "btn-primary sm:w-2/3 sm:flex md:w-5/6 sm:items-center p-2 sm:justify-center font-poppins dark:hover:border-white dark:hover:border-1 dark:hover:duration-500 md:text-base md:p-1 lg:text-xl rounded-md lg:p-2 duration-700 hover:bg-amber-100 hover:text-primary mt-4"
+                      : "btn-secondary font-poppins text-xl  md:w-5/6 rounded-md p-2 duration-700 sm:flex sm:items-center sm:justify-center mt-4"
+                  }
+                >
+                  <span className='sm:flex sm:items-center sm:justify-center'> Eliminar equipo</span>
+                </span>
+              </div>
+            </span>
+          ) : (
+            ""
+          )}
+        </div>
       </div>
     </section>
   );

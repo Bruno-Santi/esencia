@@ -3,7 +3,7 @@ import { Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
 
 export const TaskTable = ({ tasks }) => {
   return (
-    <div className='bg-gray-200/60 rounded-md  lg:w-full md:w-full sm:w-5/6 sm:m-auto   dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800  shadow-md shadow-primary/20 overflow-y-scroll text-primary font-poppins p-2 h-[250px] overflow-hidden relative'>
+    <div className='bg-gray-200/60 rounded-md  lg:w-full md:w-full sm:w-5/6 sm:m-auto   dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800  shadow-md shadow-primary/20 overflow-y-scroll text-primary font-poppins p-2 max-h-[260px] overflow-hidden relative'>
       <TableContainer>
         <Table>
           <TableHead>
