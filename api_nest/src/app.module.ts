@@ -11,6 +11,7 @@ import { DataModule } from './data/data.module';
 import { RetroModule } from './retro/retro.module';
 import { BoardsModule } from './boards/boards.module';
 import { BoardgatewayModule } from './boardgateway/boardgateway.module';
+import { PruebaModule } from './prueba/prueba.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { BoardgatewayModule } from './boardgateway/boardgateway.module';
     RetroModule,
     BoardsModule,
     BoardgatewayModule,
+    PruebaModule,
   ],
   exports: [],
   controllers: [],

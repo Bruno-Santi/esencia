@@ -91,7 +91,11 @@ export const NavBar = () => {
             </span>
 
             <hr />
-            <SideBarItem icon={<IoSettingsOutline />} text='Ajustes' />
+            <span onClick={() => handleNavigate("/profile")}>
+              {" "}
+              <SideBarItem icon={<IoSettingsOutline />} text='Ajustes' />
+            </span>
+
             <SideBarItem icon={<CiCircleQuestion />} text="Faq's" />
           </SideBar>
           <SideBarContext.Provider />

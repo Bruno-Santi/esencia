@@ -29,11 +29,11 @@ export const ReportAccordion = ({ reports }) => {
     <Accordion
       expanded={expanded}
       onClick={() => setExpanded(!expanded)}
-      className='md:w-1/6 lg:w-1/6 sm:w-2/3 relative z-50'
-      style={{ backgroundColor: "white" }} // Aquí establecemos el color de fondo blanco
+      className='md:w-1/6 lg:w-1/6 sm:w-2/3 relative z-50 '
+      style={{ backgroundColor: "white" }}
     >
       <AccordionSummary expandIcon={<FaChevronDown className='w-7 p-1 h-7 text-gray-500 rounded-full ml-3 shadow-sm cursor-pointer' />}>
-        {activeReport.length !== 0 ? `Sprint ${activeReport[0].sprint} report` : "Reports"}
+        {activeReport.length !== 0 ? `Sprint ${activeReport[0].sprint} report` : "Reportes"}
       </AccordionSummary>
       <div className='w-full'>{reports && <ReportsList reports={reportsInfo} />}</div>
     </Accordion>

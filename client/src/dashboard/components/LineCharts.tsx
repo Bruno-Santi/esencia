@@ -22,11 +22,11 @@ export const LineCharts = ({ height = "8em" }) => {
 
     const formattedData = linesMetrics.map((metric) => ({
       date: formatDate(metric.date),
-      daily_general_satisfaction: metric.daily_general_satisfaction * 100,
-      daily_self_satisfaction: metric.daily_self_satisfaction * 100,
-      daily_team_collaboration: metric.daily_team_collaboration * 100,
-      daily_work_engagement: metric.daily_work_engagement * 100,
-      daily_workspace_wellbeing: metric.daily_workspace_wellbeing * 100,
+      daily_general_satisfaction: Math.round(metric.daily_general_satisfaction * 100),
+      daily_self_satisfaction: Math.round(metric.daily_self_satisfaction * 100),
+      daily_team_collaboration: Math.round(metric.daily_team_collaboration * 100),
+      daily_work_engagement: Math.round(metric.daily_work_engagement * 100),
+      daily_workspace_wellbeing: Math.round(metric.daily_workspace_wellbeing * 100),
     }));
 
     const labels = formattedData.map((data) => data.date);
@@ -35,25 +35,25 @@ export const LineCharts = ({ height = "8em" }) => {
       labels: labels,
       datasets: [
         {
-          label: "Self Satisfaction",
+          label: "Satisfacción Personal",
           data: formattedData.map((data) => data.daily_self_satisfaction),
           borderColor: "rgba(255, 99, 132, 0.5)",
           backgroundColor: "rgba(255, 99, 132, 0.2)",
         },
         {
-          label: "Team Collaboration",
+          label: "Colaboración en equipo",
           data: formattedData.map((data) => data.daily_team_collaboration),
           borderColor: "rgba(54, 162, 235, 0.5)",
           backgroundColor: "rgba(54, 162, 235, 0.2)",
         },
         {
-          label: "Work Engagement",
+          label: "Compromiso laboral",
           data: formattedData.map((data) => data.daily_work_engagement),
           borderColor: "rgba(255, 206, 86, 0.5)",
           backgroundColor: "rgba(255, 206, 86, 0.2)",
         },
         {
-          label: "Workspace Wellbeing",
+          label: "Bienestar en el espacio de trabajo",
           data: formattedData.map((data) => data.daily_workspace_wellbeing),
           borderColor: "#2f8032",
           backgroundColor: "rgba(75, 192, 192, 0.2)",

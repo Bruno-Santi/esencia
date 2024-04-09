@@ -5,5 +5,7 @@ export const getTeamData = async (teamId: string, members) => {
   console.log(members);
 
   const response = await api.get(`/api/data/dashboard-data/${teamId}/${team.data.sprint}/${members}`);
+  console.log(response);
+
   return response.data;
 };

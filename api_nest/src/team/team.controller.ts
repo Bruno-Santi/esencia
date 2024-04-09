@@ -6,6 +6,7 @@ import {
   Param,
   UseGuards,
   Query,
+  Delete,
 } from '@nestjs/common';
 import { TeamService } from './team.service';
 import { CreateTeamDto } from './dto/create-team.dto';
@@ -33,7 +34,10 @@ export class TeamController {
   GetTeams(@Param('scrumId', ParseMongoIdPipe) scrumId: Types.ObjectId) {
     return this.teamService.findAllTeams(scrumId);
   }
-
+  @Delete(':teamId')
+  deleteTeam(@Param('teamId') teamId: string) {
+    return this.teamService.deleteOne(teamId);
+  }
   @Get()
   findOne(@Query('team_id') team_id: string) {
     console.log(team_id);

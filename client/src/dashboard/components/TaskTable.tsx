@@ -2,8 +2,10 @@ import React from "react";
 import { Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
 
 export const TaskTable = ({ tasks }) => {
+  console.log(tasks);
+
   return (
-    <div className='bg-gray-200/60 rounded-md  lg:w-full md:w-full sm:w-5/6 sm:m-auto   dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800  shadow-md shadow-primary/20 overflow-y-scroll text-primary font-poppins p-2 max-h-[260px] overflow-hidden relative'>
+    <div className='bg-gray-200/60 rounded-md md:h-[350px] lg:h-[400px] lg:w-[430px] md:w-[400px] sm:w-5/6 sm:m-auto   dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800  shadow-md shadow-primary/20 overflow-y-scroll text-primary font-poppins p-1 max-h-[300px] overflow-hidden relative'>
       <TableContainer>
         <Table>
           <TableHead>
@@ -25,14 +27,25 @@ export const TaskTable = ({ tasks }) => {
             {tasks.length > 0 &&
               tasks.map((task, index) => (
                 <TableRow key={index}>
-                  <TableCell>
-                    <span className='dark:text-tertiary'>{task.status}</span>
+                  <TableCell className=''>
+                    <span className='dark:text-tertiary font-bold font-poppins'>
+                      {" "}
+                      {task.status === "Backlog"
+                        ? "Pendientes"
+                        : task.status === "In Progress"
+                          ? "En Progreso"
+                          : task.status === "Finished"
+                            ? "Finalizados"
+                            : task.status === "In Review"
+                              ? "En Revisión"
+                              : task.status}
+                    </span>
                   </TableCell>
                   <TableCell>
-                    <span className='dark:text-tertiary'>{task.title}</span>
+                    <span className='dark:text-tertiary font-poppins'>{task.title}</span>
                   </TableCell>
                   <TableCell>
-                    <span className='dark:text-tertiary'>
+                    <span className='dark:text-tertiary font-poppins'>
                       {typeof task.percentage_true === "number" ? `${Math.round(task.percentage_true)}%` : task.percentage_true}
                     </span>
                   </TableCell>
@@ -40,7 +53,11 @@ export const TaskTable = ({ tasks }) => {
               ))}
           </TableBody>
         </Table>
-        {!tasks.length && <div className='flex items-center justify-center mt-16 font-poppins text-lg'>Sin datos</div>}
+        {!tasks.length && (
+          <div className='flex items-center justify-center mt-16 font-poppins text-lg text-center text-primary/70  '>
+            Sin datos, intenta crear un tablero e ir completando objetivos.
+          </div>
+        )}
       </TableContainer>
     </div>
   );

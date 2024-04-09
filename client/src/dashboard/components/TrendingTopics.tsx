@@ -11,16 +11,16 @@ export const TrendingTopics = () => {
     return (
       <div
         className='bg-tertiary shadow-lg rounded-md
-      shadow-primary/50 dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800 font-poppins text-xl justify-center flex h-4/6 items-center'
+      shadow-primary/50 dark:bg-gradient-to-br md:h-[300px] lg:h-[400px] lg:-my-[108px] dark:from-zinc-900 dark:to-gray-800 font-poppins text-xl justify-center flex h-4/6 items-center'
       >
         <span className='text-primary/60 dark:text-tertiary'>Sin tópicos aún.</span>
       </div>
     );
   return (
-    <li className='list-none lg:-my-28 md:-my-32'>
+    <li className='list-none lg:-my-28 md:-my-32 md:overflow-y-scroll md:h-[300px]'>
       <div className='flex items-center justify-between p-2 rounded-t-md shadow-xs bg-quaternary  dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800   '>
         <div className='flex items-center'>
-          <span className='flex mx-2 font-semibold text-tertiary dark:text-tertiary lg:text-2xl lg:font-bold text-xl'>
+          <span className='flex mx-2 font-semibold relative text-tertiary dark:text-tertiary lg:text-2xl lg:font-bold text-xl'>
             Tendencias{" "}
             <div className=''>
               <Tooltip
@@ -29,7 +29,7 @@ Las Tendencias resumen los temas destacados en los comentarios durante las retro
                 className='ml-2 mb-4 text-2xl'
               >
                 <IconButton sx={{ marginBottom: 0, fontSize: 28 }}>
-                  <CiCircleQuestion className='text-tertiary' />
+                  <CiCircleQuestion className='text-tertiary relative -top-1' />
                 </IconButton>
               </Tooltip>
             </div>

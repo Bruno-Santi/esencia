@@ -13,8 +13,17 @@ export const StepOne = () => {
         <span className='w-4/6 font-light text-center font-manrope sm:text-2xl md:text-2xl lg:text-4xl text-tertiary mx-auto'>
           Mira este breve video para entender la magia de <span className='font-bold text-secondary'>Esencia.app</span>:
         </span>
-        <div className='m-auto flex md:mt-10 mt-20 sm:mt-10 bg-gray-400 lg:w-3/6 md:w-3/6 sm:w-5/6 h-60 rounded-xl'>
-          <img src={video} className='m-auto ' alt='esencia onboarding video' />
+        <div className='m-auto  flex md:mt-10 mt-20 sm:mt-10 items-center justify-center  lg:w-3/6 md:w-3/6 sm:w-5/6 h-2/3 rounded-xl'>
+          <iframe
+            width='800'
+            height='450'
+            src='https://www.youtube.com/embed/QWx0c2iI2Xs'
+            title='YouTube video player'
+            frameborder='0'
+            allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+            allowfullscreen
+            className='py-1'
+          ></iframe>
         </div>
         <button
           onClick={() => handleNavigate("/onboarding/steptwo")}

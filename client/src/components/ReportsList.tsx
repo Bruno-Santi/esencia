@@ -7,7 +7,7 @@ export const ReportsList = ({ reports }) => {
   const { setActiveReport } = useDashboard();
   const reportSorted = reports?.sort((a, b) => a.sprint - b.sprint);
   return (
-    <div className='absolute bg-white z-50'>
+    <div className='absolute bg-white z-50  overflow-y-scroll h-[500px]'>
       <AccordionDetails
         style={{ backgroundColor: "white", width: "300px" }}
         className='space-y-4 cursor-pointer shadow-lg shadow-primary/40  flex-col relative z-50'
@@ -15,7 +15,7 @@ export const ReportsList = ({ reports }) => {
         {reportSorted?.length > 0 ? (
           reportSorted.map(({ id, sprint }) => (
             <div onClick={() => setActiveReport(id)} className='hover:bg-gray-500   hover:text-tertiary p-2' key={id}>
-              {`Sprint ${sprint} report`}
+              {`Reporte Sprint ${sprint} `}
             </div>
           ))
         ) : (

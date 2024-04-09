@@ -18,7 +18,7 @@ export const DataCollectionReport = () => {
 
   return (
     <div
-      className='md:mt-2 lg:-mt-6 shadow-lg w-full
+      className='md:mt-2 lg:-mt-6 shadow-lg w-[350px]
     shadow-primary/50 border-primary border rounded-md flex justify-center p-2 bg-quaternary'
     >
       {Object.entries(dataAmount).map(([key, value]) => (

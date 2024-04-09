@@ -24,6 +24,7 @@ import { getRandomColor, toastSuccess, toastWarning } from "../helpers";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { finalRandomizedQuestions, generateRandomQuestions } from "../members/data/questions";
+import { Toast } from "react-toastify/dist/components";
 
 export const useDashboard = () => {
   const [surveyLoading, setSurveyLoading] = useState(false);
@@ -94,9 +95,9 @@ export const useDashboard = () => {
     console.log(id, sprint);
 
     toast.promise(startGettingDataFunc(id, sprint, triggered), {
-      pending: "Seeking for new data... 🕐",
-      success: "Data received successfully! 🎉",
-      error: "Error while getting data 😢",
+      pending: "Buscando nueva información 🕐",
+      success: "Información recibida correctamente! 🎉",
+      error: "Hubo un problema al recibir la información. 😢",
     });
   };
   const startGettingDataFunc = async (id, sprint, triggered) => {
@@ -170,6 +171,9 @@ export const useDashboard = () => {
     } finally {
       dispatch(onSetDataLoading(false));
     }
+  };
+  const startCleaningActiveTeam = () => {
+    dispatch(cleanActiveTeam());
   };
   const startSettingActiveTeam = async (id: number) => {
     dispatch(cleanActiveTeam());
@@ -316,7 +320,7 @@ export const useDashboard = () => {
         console.log(response);
 
         setSurveyLoading(false);
-        return toastSuccess(`Survey sended to the team: ${teamName}`);
+        return toastSuccess(`Encuesta de pulso enviada a: ${teamName}`);
       }
     } catch (error) {
       toastWarning(`${error.message}`);
@@ -397,5 +401,6 @@ export const useDashboard = () => {
     activeReport,
     cards,
     task,
+    startCleaningActiveTeam,
   };
 };

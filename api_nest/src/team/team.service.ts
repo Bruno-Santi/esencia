@@ -44,6 +44,21 @@ export class TeamService {
       throw new BadRequestException(error.message);
     }
   }
+
+  async deleteOne(teamId) {
+    const convertedTeam = convertStringToObj(teamId);
+    try {
+      const team = await this.teamModel.findById(teamId);
+      if (!team) throw new BadRequestException('El equipo no existe');
+      await this.teamModel.deleteOne(convertedTeam);
+      return {
+        deleted: 'ok',
+      };
+    } catch (error) {
+      console.log(error);
+      throw new BadRequestException(error.message);
+    }
+  }
   async findAllTeams(scrumId) {
     try {
       await this.searchScrumMaster(scrumId);

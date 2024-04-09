@@ -96,8 +96,7 @@ export const NewReports = () => {
               {loadingReports ? (
                 <span className='w-4 h-4 flex items-center justify-center'>
                   {" "}
-                  {/* Contenedor */}
-                  <CircularProgress color='success' style={{ width: "1em", height: "1em" }} /> {/* CircularProgress con tamaño relativo */}
+                  <CircularProgress color='success' style={{ width: "1em", height: "1em" }} />
                 </span>
               ) : (
                 "Actualizar datos"
@@ -115,57 +114,59 @@ export const NewReports = () => {
             justifyContent='left'
             alignItems='center'
             ml={{ xs: 0, lg: 0 }}
-            className='mb-20 gap-4 items-center lg:space-x-10 md:space-x-10 pt-6'
+            className='mb-20 gap-y-2 items-center lg:space-x-6 md:space-x-6 lg:mt-6'
           >
-            <Grid item xs={12} lg={5}>
-              <div className='flex space-x-0 lg:ml-10 md:ml-10 gap-6  font-poppins text-primary '>
-                <BoardReport title='Objetivos planificados' value={backlogValue} />
-                <BoardReport title='Objetivos en proceso' value={inProgressValue} />
-                <BoardReport title='Objetivos en revisión' value={inReviewValue} />
-                <BoardReport title='Objetivos completados' value={finishedValue} />
+            <Grid item xs={12} lg={3}>
+              <div className='flex space-x-0 lg:ml-10 md:ml-10 gap-2 mb-20 font-poppins text-primary '>
+                <BoardReport title='Planificados' value={backlogValue} />
+                <BoardReport title='En proceso' value={inProgressValue} />
+                <BoardReport title='En revisión' value={inReviewValue} />
+                <BoardReport title='Completados' value={finishedValue} />
               </div>
             </Grid>
-            <Grid item xs={12} lg={6}>
-              <div className='flex ml-64  text-center sm:flex sm:flex-col md:flex-row lg:flex-row '>
+            <Grid item xs={12} lg={8}>
+              <div className='flex ml-48  text-center sm:flex sm:flex-col md:flex-row lg:flex-row '>
                 <Cuadrants
                   icon={<FaSmile />}
-                  label='General Satisfaction'
+                  label='Satisfacción General'
                   value={Math.round(activeReport[0]?.differences["general_satisfaction_diff"] * 100)}
                   color='bg-[#8136c2]'
                 />
                 <Cuadrants
                   icon={<MdOutlineSelfImprovement />}
-                  label='Self Satisfaction'
+                  label='Satisfacción Personal'
                   value={Math.round(activeReport[0]?.differences["self_satisfaction_diff"] * 100)}
                   color='bg-[#FF6384]'
                 />
                 <Cuadrants
                   icon={<FaUsers />}
-                  label='Team Collaboration'
+                  label='Colaboracion en Equipo'
                   value={Math.round(activeReport[0]?.differences["team_collaboration_diff"] * 100)}
                   color='bg-[#36A2EB]'
                 />
                 <Cuadrants
                   icon={<FaTools />}
-                  label='Work Engagement'
+                  label='Compromiso Laboral'
                   value={Math.round(activeReport[0]?.differences["work_engagement_diff"] * 100)}
                   color='bg-[#ebb734]'
                 />
                 <Cuadrants
                   icon={<FaHome />}
-                  label='Workspace Well-Being'
+                  label='Bienestar en el espacio de trabajo'
                   value={Math.round(activeReport[0]?.differences["workspace_wellbeing_diff"] * 100)}
                   color='bg-[#5a2f80]'
                 />
               </div>
             </Grid>
-            <Grid item xs={12} lg={4}>
-              <TaskTable tasks={activeReport[0]?.task} />
+            <Grid item xs={12} lg={3}>
+              <span className=''>
+                {" "}
+                <TaskTable tasks={activeReport[0]?.task} />
+              </span>
             </Grid>
-            <Grid item xs={12} lg={7} className='lg:pl-36 md:pl-36 pr-6'>
+            <Grid item xs={12} lg={8} className='lg:pl-36 md:pl-36 pr-6'>
               <div className=''>
                 {" "}
-                {/* Aumenta la altura para permitir dos líneas */}
                 <LineChartReport data={activeReport[0]?.lines_graph} height='20em' />
               </div>
             </Grid>

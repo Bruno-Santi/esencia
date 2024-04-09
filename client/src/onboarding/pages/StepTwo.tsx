@@ -30,10 +30,10 @@ export const StepTwo = () => {
     <OnBoardingLayout>
       <div className='flex flex-col animate__animated animate__fadeIn animate__slower'>
         <span className='sm:w-5/6 sm:text-2xl md:w-3/6 lg:w-2/6 font-light text-center font-manrope md:text-2xl lg:text-4xl text-tertiary mx-auto'>
-          Great! Now, let's set the stage for your team. What's your <span className='font-bold text-secondary'>team name</span>?
+          ¡Genial! Ahora, establezcamos el escenario para tu equipo. <span className='font-bold text-secondary'>¿Cuál es el nombre de tu equipo?</span>?
           <div className='flex flex-col mt-12'>
             <label htmlFor='teamName' className='text-manrope md:text-lg lg:text-2xl '>
-              Your team name
+              Nombre de tu equipo:
             </label>
             <input
               onChange={handleChange}
@@ -42,7 +42,7 @@ export const StepTwo = () => {
               type='text'
             ></input>
             <label htmlFor='teamLogo' className='text-manrope md:text-lg lg:text-2xl mt-4 '>
-              Your team logo
+              Logo de tu equipo:
             </label>
             <input
               type='file'
@@ -84,7 +84,7 @@ export const StepTwo = () => {
                 : "btn-secondary p-2 sm:w-3/4 sm:mt-10  sm:mx-auto md:w-[150px] w-[200px] mr-2 md:mt-10 mx-auto mt-20 rounded-lg font-poppins text-lg duration-700 hover:bg-tertiary hover:text-primary"
             }
           >
-            Skip for now
+            Omitir
           </button>
           <button
             onClick={handleSubmit}
@@ -95,7 +95,7 @@ export const StepTwo = () => {
                 : "btn-primary p-2 sm:w-3/4 sm:mt-6  sm:mx-auto md:w-[150px] w-[200px] mr-2 md:mt-10 mx-auto mt-20 rounded-lg font-poppins text-lg duration-700 hover:bg-tertiary hover:text-primary"
             }
           >
-            Continue
+            Continuar
           </button>
         </div>
       </div>

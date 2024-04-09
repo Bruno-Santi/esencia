@@ -16,7 +16,7 @@ export const LineChartReport = ({ data, height = "8em" }) => {
         }),
         datasets: [
           {
-            label: "Daily General Satisfaction",
+            label: "Satisfacción General Diaria",
             data: data.map((entry) => Math.round(entry.daily_general_satisfaction * 100)),
             borderColor: "rgba(255, 99, 132, 0.5)",
             borderDash: [10, 6],
@@ -24,25 +24,25 @@ export const LineChartReport = ({ data, height = "8em" }) => {
             backgroundColor: "rgba(255, 99, 132, 0.2)",
           },
           {
-            label: "Daily Self Satisfaction",
+            label: "Satisfacción Personal Diaria",
             data: data.map((entry) => Math.round(entry.daily_self_satisfaction * 100)),
             borderColor: "rgba(54, 162, 235, 0.5)",
             backgroundColor: "rgba(54, 162, 235, 0.2)",
           },
           {
-            label: "Daily Team Collaboration",
+            label: "Colaboración en Equipo Diaria",
             data: data.map((entry) => Math.round(entry.daily_team_collaboration * 100)),
             borderColor: "rgba(255, 206, 86, 0.5)",
             backgroundColor: "rgba(255, 206, 86, 0.2)",
           },
           {
-            label: "Daily Work Engagement",
+            label: "Compromiso Laboral Diario",
             data: data.map((entry) => Math.round(entry.daily_work_engagement * 100)),
             borderColor: "rgba(75, 192, 192, 0.5)",
             backgroundColor: "rgba(75, 192, 192, 0.2)",
           },
           {
-            label: "Daily Workspace Wellbeing",
+            label: "Bienestar en el Espacio de Trabajo Diario",
             data: data.map((entry) => Math.round(entry.daily_workspace_wellbeing * 100)),
             borderColor: "rgba(153, 102, 255, 0.5)",
             backgroundColor: "rgba(153, 102, 255, 0.2)",
@@ -71,7 +71,7 @@ export const LineChartReport = ({ data, height = "8em" }) => {
             plugins: {
               title: {
                 display: true,
-                text: "Line Chart Report",
+                text: "Gráfico de líneas",
               },
             },
           },
