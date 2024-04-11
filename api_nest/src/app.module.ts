@@ -12,6 +12,7 @@ import { RetroModule } from './retro/retro.module';
 import { BoardsModule } from './boards/boards.module';
 import { BoardgatewayModule } from './boardgateway/boardgateway.module';
 import { PruebaModule } from './prueba/prueba.module';
+import { RecommendationsModule } from './recommendations/recommendations.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { PruebaModule } from './prueba/prueba.module';
     BoardsModule,
     BoardgatewayModule,
     PruebaModule,
+    RecommendationsModule,
   ],
   exports: [],
   controllers: [],

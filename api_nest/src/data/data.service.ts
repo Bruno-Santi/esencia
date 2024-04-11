@@ -48,12 +48,13 @@ export class DataService {
       console.log(teamId, sprint);
       console.log(members);
 
-      await this.checkTeam(teamId);
+      const team = await this.checkTeam(teamId);
+      console.log(team);
 
-      const short = await axios.post(
-        `${process.env.API_DATA}/short_recommendation?team_id=${teamId}&sprint=${sprint}&members=${members}`,
-      );
-      console.log(short);
+      // const short = await axios.post(
+      //   `${process.env.API_DATA}/short_recommendation?team_id=${teamId}&sprint=${sprint}&members=${members}`,
+      // );
+      // console.log(short);
 
       const data2 = await axios.post(
         `${process.env.API_DATA}/get_topics?sprint=${sprint}&team_id=${teamId}`,
@@ -64,7 +65,7 @@ export class DataService {
       );
 
       console.log(data2);
-      console.log(short);
+      // console.log(short);
 
       const responseData = {
         data: dashboardData.data,
@@ -84,6 +85,8 @@ export class DataService {
     const convertedTeamId = new Types.ObjectId(teamId);
     try {
       const team = await this.teamModel.findById(convertedTeamId);
+      console.log(team.name);
+
       if (!team) throw new BadRequestException(`Team ${teamId} does not exist`);
     } catch (error) {
       throw new BadRequestException(error.message);

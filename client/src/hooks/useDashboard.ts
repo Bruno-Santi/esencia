@@ -113,7 +113,7 @@ export const useDashboard = () => {
       await startGettingReports(id, sprint);
       console.log(surveyData);
 
-      if (surveyData === "No existe data de este equipo") toast.warning("There's no data for this team 😢");
+      if (surveyData === "No existe data de este equipo") toast.warning("No existe data de este equipo 😢");
       const datalocal = localStorage.getItem("surveyData");
       if (datalocal) localStorage.removeItem("surveyData");
       if (surveyData.error) {

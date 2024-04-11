@@ -64,7 +64,7 @@ export const NavBar = () => {
 
   return (
     <>
-      <div className='lg:hidden md:hidden sm:block'>
+      <div className='lg:hidden md:hidden sm:block sm:z-50'>
         <NavBarResponsive />
       </div>
       <nav className='sm:hidden md:block lg:block flex w-full  relative bg-primary h-20 py-6 justify-around dark:border-b-2 dark:border-gray-600'>

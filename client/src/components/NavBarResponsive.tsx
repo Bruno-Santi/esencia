@@ -4,14 +4,14 @@ import { HiOutlineMenuAlt2 } from "react-icons/hi";
 import { useDashboard } from "../hooks/useDashboard";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { useState } from "react";
-import { useModal } from "../hooks";
+import { useModal, useNavigateTo } from "../hooks";
 import { useAuthSlice } from "../hooks/useAuthSlice";
 
 export const NavBarResponsive = () => {
   const { user, activeTeam, startGettingMembers, startToggleModal } = useDashboard();
   const { openModal, closeModal, isOpen } = useModal();
   const [toggleSideBar, setToggleSideBar] = useState(false);
-
+  const { handleNavigate } = useNavigateTo();
   function dropdown() {
     document.querySelector("#submenu").classList.toggle("hidden");
     document.querySelector(".arrow").classList.toggle("-rotate-0");
@@ -21,7 +21,7 @@ export const NavBarResponsive = () => {
     setToggleSideBar(!toggleSideBar);
   }
   return (
-    <div className='sm:flex  sm:h-16 sm:w-screen bg-primary font-poppins my-auto items-center'>
+    <div className='sm:flex  sm:h-16 sm:w-screen bg-primary font-poppins my-auto items-center z-10'>
       <span class=' text-white text-4xl ml-4 my-auto cursor-pointer' onClick={handleToggle}>
         <i class='text-secondary my-auto m-auto mb-2 '>
           <HiOutlineMenuAlt2 />
@@ -67,7 +67,9 @@ export const NavBarResponsive = () => {
         </div>
         <div class='p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white'>
           <i class='bi bi-box-arrow-in-right'></i>
-          <span class='text-[15px] ml-4 text-gray-200 font-bold'>Dashboard</span>
+          <span class='text-[15px] ml-4 text-gray-200 font-bold' onClick={() => handleNavigate("/dashboard")}>
+            Dashboard
+          </span>
         </div>
         <div class='p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white'>
           <i class='bi bi-box-arrow-in-right'></i>
@@ -75,7 +77,9 @@ export const NavBarResponsive = () => {
         </div>
         <div class='p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white'>
           <i class='bi bi-box-arrow-in-right'></i>
-          <span class='text-[15px] ml-4 text-gray-200 font-bold'>Tableros</span>
+          <span class='text-[15px] ml-4 text-gray-200 font-bold' onClick={() => handleNavigate("/teams/boards")}>
+            Tableros
+          </span>
         </div>
         <div class='p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white'>
           <i class='bi bi-house-door-fill'></i>
@@ -94,7 +98,12 @@ export const NavBarResponsive = () => {
           <Teams />
         </div>
         <div class='my-4 bg-gray-600 h-[1px]'></div>
-
+        <div class='p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white'>
+          <i class='bi bi-box-arrow-in-right'></i>
+          <span class='text-[15px] ml-4 text-gray-200 font-bold text-tertiary' onClick={() => handleNavigate("/profile")}>
+            Perfíl
+          </span>
+        </div>
         <div class='p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white'>
           <i class='bi bi-box-arrow-in-right'></i>
           <span class='text-[15px] ml-4 text-gray-200 font-bold text-secondary'>Salir</span>
