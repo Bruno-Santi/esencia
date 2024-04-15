@@ -13,6 +13,7 @@ import { BoardsModule } from './boards/boards.module';
 import { BoardgatewayModule } from './boardgateway/boardgateway.module';
 import { PruebaModule } from './prueba/prueba.module';
 import { RecommendationsModule } from './recommendations/recommendations.module';
+import { SprintreportModule } from './sprintreport/sprintreport.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { RecommendationsModule } from './recommendations/recommendations.module'
     BoardgatewayModule,
     PruebaModule,
     RecommendationsModule,
+    SprintreportModule,
   ],
   exports: [],
   controllers: [],

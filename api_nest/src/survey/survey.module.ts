@@ -35,6 +35,6 @@ import { DaySurvey, daySurveySchema } from './entities/daySurvey.entity';
     MembersModule,
     TeamModule,
   ],
-  exports: [MongooseModule],
+  exports: [MongooseModule, SurveyModule],
 })
 export class SurveyModule {}

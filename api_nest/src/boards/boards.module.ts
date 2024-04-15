@@ -27,6 +27,6 @@ import { CardService } from './card.service';
 
     TeamModule,
   ],
-  exports: [BoardsModule, BoardsService, CardService],
+  exports: [MongooseModule,BoardsModule, BoardsService, CardService],
 })
 export class BoardsModule {}

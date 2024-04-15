@@ -42,5 +42,6 @@ import { Retro, RetroSchema } from './entities/retro.entity';
     MembersModule,
     TeamModule,
   ],
+  exports: [MongooseModule,RetroModule]
 })
 export class RetroModule {}

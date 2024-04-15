@@ -1,0 +1,377 @@
+import { Injectable } from '@nestjs/common';
+import { CreateSprintreportDto } from './dto/create-sprintreport.dto';
+import { UpdateSprintreportDto } from './dto/update-sprintreport.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import * as openai from 'openai';
+
+import { Retro } from 'src/retro/entities/retro.entity';
+import { Board } from 'src/boards/entities/board.entity';
+import { Survey } from 'src/survey/entities/survey.entity';
+import { SprintReport } from 'src/sprintreport/entities/sprintreport.entity';
+
+
+@Injectable()
+export class SprintreportService {
+  readonly openaiApiKey: string; // Your OpenAI API key
+  constructor(
+    @InjectModel(Retro.name) private readonly retroModel: Model<Retro>,
+    @InjectModel(Board.name) private readonly boardModel: Model<Board>,
+    @InjectModel(Survey.name) private readonly surveyModel: Model<Survey>,
+    @InjectModel(SprintReport.name) private readonly sprintReportModel: Model<SprintReport>,
+
+  ) {
+    this.openaiApiKey = process.env.OPENAI_API_KEY; // Set your OpenAI API key here
+  }
+  async createSprintReport(teamId: string, sprint: string): Promise<any> {
+    // Retrieve sprint data for the specified team and sprint
+    try {
+      const retrospective = await this.retroModel.find({ team_id: teamId, sprint: sprint });
+      const board = await this.boardModel.find({ team_id: teamId });
+      const surveys = await this.surveyModel.find({ team_id: teamId, sprint: sprint });
+      //Create Report Data
+      const report = await generateSprintReport(this.openaiApiKey, teamId, sprint, retrospective, board, surveys);
+      const newReport = await new this.sprintReportModel(report);
+      await newReport.save();
+      console.log("Report saved");
+      return newReport;
+    } catch (error) {
+      console.log(error);
+    }
+    async function generateSprintReport(openaiApiKey, teamId: string, sprint: string, retrospective: Retro[], board: Board[], surveys: Survey[]) {
+      try {
+        // OK Calculate Weighted Averages for Quadrants
+        const weightedAverages = await getSurveyResults(surveys);
+        // OK Calculate Min and Max Date
+        const { minDate, maxDate } = await getMinMaxDate(weightedAverages);
+        // OK Get Difference Between Cuadrands start and end date.
+        const difference = await getDifferenceBetweenCuadrands(weightedAverages, minDate, maxDate);
+        //OK Get Total cards from board
+        const columnItemCount = await getCardsByColumn(board);
+        // OK Aggregate Responses for Retrospective
+        const retrospectiveResponses = await getRetroResults(retrospective);
+        // Get Worst and Best Survey Questions
+        const topworstanswers = await getSurveyAnswers(surveys);
+        // Construct Sprint Report
+        const sprintReport: { [key: string]: any } = {
+          teamId: teamId,
+          sprint: sprint,
+          startDate: minDate,
+          endDate: maxDate,
+          tasks: columnItemCount,
+          cuadrants_difference: difference,
+          retrospective: retrospectiveResponses,
+          line_graphs: weightedAverages,
+          survey_answers: topworstanswers
+        };
+        // Ask Analyss to chatgpt
+        const analysis = await generateAnalysis(sprintReport, openaiApiKey)
+        const recomendaciones = await generateRecommendations(sprintReport, analysis, openaiApiKey);
+        // Append analysis and recomendaciones to sprintReport
+        sprintReport.analysis = analysis;
+        sprintReport.recommendations = recomendaciones;
+        return sprintReport;
+      } catch (error) {
+        return console.log(error);
+      }
+    }
+    async function getSurveyResults(surveys: Survey[]): Promise<any> {
+      console.log("Procesando Resultados de Encuestas");
+      // Initialize an object to store surveys grouped by day
+      const surveysByDay: { [key: string]: Survey[] } = {};
+      // Group surveys by day
+      surveys.forEach((survey) => {
+        // Extract day part from the date
+        const day = survey.date.toISOString().split('T')[0]; // Assuming survey.date is a Date object
+        // Check if surveysByDay already has surveys for the current day
+        if (!surveysByDay[day]) {
+          // If not, initialize an array for the current day
+          surveysByDay[day] = [];
+        }
+        // Push the current survey to the array for the current day
+        surveysByDay[day].push(survey);
+      });
+
+      let weightedAveragesByDay: { [key: string]: number[] } = {};
+
+      Object.keys(surveysByDay).forEach(async (day) => {
+        const surveysForDay = surveysByDay[day];
+        const weightedAverages = await getSurveyResultsbyDay(surveysForDay);
+        //console.log(day, weightedAverages);
+        // Define weightedAveragesByDay = day,weightedAverages
+        weightedAveragesByDay[day] = weightedAverages;
+      });
+
+      return weightedAveragesByDay;
+
+    }
+    async function getSurveyResultsbyDay(surveys: Survey[]): Promise<any> {
+      // Initialize an object to store the total weighted averages for each quadrant
+      let results: number[] = [];
+      let totals: number[] = [];
+
+      // Initialize totals array with zeros for each quadrant
+      results = [0, 0, 0, 0];
+      totals = [0, 0, 0, 0];
+
+      // Iterate through each survey
+      surveys.forEach((survey) => {
+        // Iterate through each question in the survey
+        for (let i = 1; i <= 4; i++) {
+          //Get the Answer Value and Quadrant Cohef of each question
+          const value = survey[`question${i}`].value;
+          const cuadrant_cohef = survey[`question${i}`].cuadrant_cohef;
+
+          // Validate cuadrant_cohef values
+          if (Array.isArray(cuadrant_cohef) && cuadrant_cohef.every((coef) => typeof coef === 'number')) {
+            // Calculate the coef * cuadrant result
+            const quadrant: number[] = cuadrant_cohef.map((coef) => parseFloat((coef * value).toFixed(2)));
+
+            // Accumulate the product of coef * value for each quadrant for all surveys
+            for (let j = 0; j < 4; j++) {
+              results[j] += quadrant[j];
+              totals[j] += cuadrant_cohef[j];
+            }
+          } else {
+            console.error(`Invalid cuadrant_cohef for Question ${i}: ${cuadrant_cohef}`);
+            // Handle the error or skip the calculation for this question
+          }
+        }
+      });
+      //At this point, we have the sum of the results and total possible score
+      //Calculate the weighted averages
+      const weightedAverages = results.map((result, index) => (result / totals[index]).toFixed(2));
+      return weightedAverages;
+    }
+    async function getMinMaxDate(weightedAverages): Promise<any> {
+      console.log("Calculando Min y Max Date");
+      try {
+        const dates = Object.keys(weightedAverages);
+
+        const timestamps = dates.map(date => new Date(date).getTime());
+
+        const minTimestamp = Math.min(...timestamps);
+        const maxTimestamp = Math.max(...timestamps);
+
+        const minDate = new Date(minTimestamp).toISOString().split('T')[0];
+        const maxDate = new Date(maxTimestamp).toISOString().split('T')[0];
+
+        return { minDate, maxDate };
+      } catch (error) {
+        console.log("error getting min and max dates");
+      }
+    }
+    async function getDifferenceBetweenCuadrands(weightedAverages, minDate, maxDate): Promise<any> {
+      console.log("Calculando Diferencias de Cuadrantes");
+      try {
+        //Calculate the difference between de max date and min date
+        const cuadrantsDifference: number[] = [];
+        // Iterate over each quadrant
+        for (let i = 0; i < 4; i++) {
+          // Calculate the difference for the current quadrant between the maximum and minimum dates
+          const difference = weightedAverages[maxDate][i] - weightedAverages[minDate][i];
+          // Push the difference to the cuadrantsDifference array
+          cuadrantsDifference.push(parseFloat(difference.toFixed(2)));
+        }
+        return cuadrantsDifference;
+      } catch (error) {
+        console.log("error getting cuadrants difference");
+      }
+
+    }
+    async function getCardsByColumn(board): Promise<any> {
+      console.log("Calculando Status de Goals");
+      // Initialize an object to store the summary
+      const columnSummary = {};
+      // Iterate over each column in the board
+      board[0].columns.forEach(column => {
+        // Get the number of cards in the column
+        const cardCount = column.cards.length;
+        // Add the card count to the column summary object
+        columnSummary[column.name] = cardCount;
+      });
+      return columnSummary;
+    }
+    async function getRetroResults(retrospective: Retro[]): Promise<any> {
+      console.log("Procesando Retro");
+      try{
+      const flattenedResponses: string[] = [];
+      // Iterate through each question (c1, c2, c3, c4)
+      for (const question of ['c1', 'c2', 'c3', 'c4']) {
+        // Get the responses for the current question
+        const responses = retrospective[0][question]?.responses || [];
+
+        // Iterate through each response and extract the relevant information
+        for (const response of responses) {
+          // Construct the flattened response string
+          const flattenedResponse = `${retrospective[0][question].content}, ${response.note}, thumb_up: ${response.thumb_up}, thumb_down: ${response.thumb_down}`;
+          // Push the flattened response to the flattenedResponses array
+          flattenedResponses.push(flattenedResponse);
+        }
+      }
+      //Sort resonses from most thumbs up to most thumbs down
+      flattenedResponses.sort((a, b) => {
+        // Extract thumbs up and thumbs down counts from the response strings
+        const thumbsUpA = parseInt(a.match(/thumb_up: (\d+)/)[1]);
+        const thumbsDownA = parseInt(a.match(/thumb_down: (\d+)/)[1]);
+        const thumbsUpB = parseInt(b.match(/thumb_up: (\d+)/)[1]);
+        const thumbsDownB = parseInt(b.match(/thumb_down: (\d+)/)[1]);
+
+        // Calculate scores for each response based on thumbs up and thumbs down counts
+        const scoreA = thumbsUpA - thumbsDownA;
+        const scoreB = thumbsUpB - thumbsDownB;
+
+        // Sort responses based on score (highest score first)
+        return scoreB - scoreA;
+      });
+      return flattenedResponses;
+    }catch(error){
+      console.log("error getting retro results");
+    }
+    }
+    async function getSurveyAnswers(surveys: Survey[]): Promise<any> {
+      console.log("Procesando Preguntas de Encuestas");
+      try{
+        // Initialize an object to store the sum of values for each question
+      const questionSums: { [key: string]: number } = {};
+      const questionCounts: { [key: string]: number } = {};
+
+      // Iterate over each survey
+      for (const survey of surveys) {
+        // Iterate over each question in the survey
+        for (let i = 1; i <= 4; i++) {
+          const questionKey = `question${i}`;
+          const question = survey[questionKey];
+          const content = question.content;
+          const value = question.value;
+
+          // Accumulate the sum of values for each question
+          questionSums[content] = (questionSums[content] || 0) + value;
+
+          // Increment the count of surveys for each question
+          questionCounts[content] = (questionCounts[content] || 0) + 1;
+        }
+      }
+
+      // Calculate the average for each question
+      const averageAnswers: { [key: string]: number } = {};
+      for (const content in questionSums) {
+        const sum = questionSums[content];
+        const count = questionCounts[content];
+        // Calculate the average and limit the decimals to 2
+        const average = sum / count;
+        averageAnswers[content] = Number(average.toFixed(2));
+      }
+
+      return getSortedAverageAnswers(averageAnswers);
+    }
+    catch(error){
+      console.log("Error procesando preguntas");
+    }
+    }
+    async function getSortedAverageAnswers(averageAnswers: { [key: string]: number }): Promise<any> {
+      console.log("Ordenando Preguntas de Encuestas");
+      try{
+      // Convert averageAnswers object into an array of key-value pairs
+      const averageAnswersArray = Object.entries(averageAnswers);
+      // Sort the array based on the average values (in descending order)
+      averageAnswersArray.sort((a, b) => Number(b[1]) - Number(a[1]));
+
+      // Convert the sorted array back into an object
+      const sortedAverageAnswers: { [key: string]: number } = {};
+      averageAnswersArray.forEach(([content, average]) => {
+        sortedAverageAnswers[content] = average;
+      });
+
+      return sortedAverageAnswers;
+    }
+    catch(error){
+      console.log("Error ordenando preguntas")
+    }
+    }
+    async function generateAnalysis(sprintData: any, openaiApiKey): Promise<any> {
+      console.log("Generando Analisis de Sprint");
+      try {
+        const client = new openai.OpenAI({ apiKey: openaiApiKey });
+        const prompt = await constructPrompt(sprintData);
+        const response = await client.chat.completions.create({
+          messages: [{ role: 'user', content: prompt }],
+          model: 'gpt-3.5-turbo',
+        });
+
+        return response.choices[0].message.content.trim();
+      } catch (error) {
+        console.error('Error generating recommendations:', error);
+        throw new Error('Failed to generate recommendations');
+      }
+
+      async function constructPrompt(dataSummary: any): Promise<any> {
+        let prompt = `Basados en la data del siguiente sprint, genera algun análisis al respecto:\n\n`;
+        // add the datasummary to the prompt variable
+        Object.entries(dataSummary).forEach(([key, value]) => {
+          // Check if the value is an object
+          if (typeof value === 'object' && value !== null) {
+            // If it's an object, stringify it and add it to the prompt
+            prompt += `${key}: ${JSON.stringify(value)}\n`;
+          } else {
+            // If it's not an object, just add it to the prompt as-is
+            prompt += `${key}: ${value}\n`;
+          }
+        });
+        // console.log("Prompt:", prompt);
+        return prompt;
+      }
+    }
+    async function generateRecommendations(sprintData: any, sprintAnalysis: any, openaiApiKey): Promise<any> {
+      console.log("Generando Recomendaciones del Sprint");
+      try {
+        const client = new openai.OpenAI({ apiKey: openaiApiKey });
+        const prompt = await constructPrompt(sprintData, sprintAnalysis);
+        const response = await client.chat.completions.create({
+          messages: [{ role: 'user', content: prompt }],
+          model: 'gpt-3.5-turbo',
+        });
+
+        return response.choices[0].message.content.trim();
+      } catch (error) {
+        console.error('Error generating recommendations:', error);
+        throw new Error('Failed to generate recommendations');
+      }
+
+      async function constructPrompt(dataSummary: any, sprintAnalysis: any): Promise<any> {
+        let prompt = `Basados en la data y análisis del siguiente sprint, genera recomendaciones de mejora para el equipo:\n\n`;
+        // add the datasummary to the prompt variable
+        Object.entries(dataSummary).forEach(([key, value]) => {
+          // Check if the value is an object
+          if (typeof value === 'object' && value !== null) {
+            // If it's an object, stringify it and add it to the prompt
+            prompt += `${key}: ${JSON.stringify(value)}\n`;
+          } else {
+            // If it's not an object, just add it to the prompt as-is
+            prompt += `${key}: ${value}\n`;
+          }
+        });
+        prompt += `Sprint Analysis: ${sprintAnalysis}\n`;
+        //console.log("Prompt:", prompt);
+        return prompt;
+      }
+    }
+
+  }
+
+
+
+  async getAllTeamReports(teamId: string): Promise<any> {
+
+  }
+
+  remove(id: number) {
+    return `This action removes a #${id} sprintreport`;
+  }
+}
+
+//TODO:
+//Add try catch in all functions.
+//Bring card details % of progress.
+//To filter by sprint, only some questions have sprint field; sprint: sprint });
+//No founds scenarios.
