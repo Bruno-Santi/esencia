@@ -9,7 +9,6 @@ export class SprintreportController {
 
   @Get(':teamid')
   getAllTeamReports(@Param('teamid') teamId: string) {
-    console.log(teamId);
     return this.sprintreportService.getAllTeamReports(teamId);
   }
 

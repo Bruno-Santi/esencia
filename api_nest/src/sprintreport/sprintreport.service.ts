@@ -8,6 +8,7 @@ import * as openai from 'openai';
 import { Retro } from 'src/retro/entities/retro.entity';
 import { Board } from 'src/boards/entities/board.entity';
 import { Survey } from 'src/survey/entities/survey.entity';
+import { Card } from 'src/boards/entities/card.entity';
 import { SprintReport } from 'src/sprintreport/entities/sprintreport.entity';
 
 
@@ -18,6 +19,7 @@ export class SprintreportService {
     @InjectModel(Retro.name) private readonly retroModel: Model<Retro>,
     @InjectModel(Board.name) private readonly boardModel: Model<Board>,
     @InjectModel(Survey.name) private readonly surveyModel: Model<Survey>,
+    @InjectModel(Card.name) private readonly cardModel: Model<Card>,
     @InjectModel(SprintReport.name) private readonly sprintReportModel: Model<SprintReport>,
 
   ) {
@@ -28,17 +30,18 @@ export class SprintreportService {
     try {
       const retrospective = await this.retroModel.find({ team_id: teamId, sprint: sprint });
       const board = await this.boardModel.find({ team_id: teamId });
+      const cards = await this.cardModel.find({ boardId: board[0]._id.toString() });
       const surveys = await this.surveyModel.find({ team_id: teamId, sprint: sprint });
       //Create Report Data
-      const report = await generateSprintReport(this.openaiApiKey, teamId, sprint, retrospective, board, surveys);
+      const report = await generateSprintReport(this.openaiApiKey, teamId, sprint, retrospective, board, surveys, cards);
       const newReport = await new this.sprintReportModel(report);
-      await newReport.save();
+      //await newReport.save();
       console.log("Report saved");
       return newReport;
     } catch (error) {
       console.log(error);
     }
-    async function generateSprintReport(openaiApiKey, teamId: string, sprint: string, retrospective: Retro[], board: Board[], surveys: Survey[]) {
+    async function generateSprintReport(openaiApiKey, teamId: string, sprint: string, retrospective: Retro[], board: Board[], surveys: Survey[], cards: Card[]): Promise<any> {
       try {
         // OK Calculate Weighted Averages for Quadrants
         const weightedAverages = await getSurveyResults(surveys);
@@ -52,6 +55,8 @@ export class SprintreportService {
         const retrospectiveResponses = await getRetroResults(retrospective);
         // Get Worst and Best Survey Questions
         const topworstanswers = await getSurveyAnswers(surveys);
+        //Get Cards In the Boards
+        const boardCards = await getCardsForBoard(cards);
         // Construct Sprint Report
         const sprintReport: { [key: string]: any } = {
           teamId: teamId,
@@ -62,7 +67,8 @@ export class SprintreportService {
           cuadrants_difference: difference,
           retrospective: retrospectiveResponses,
           line_graphs: weightedAverages,
-          survey_answers: topworstanswers
+          survey_answers: topworstanswers,
+          GoalStatus: boardCards,
         };
         // Ask Analyss to chatgpt
         const analysis = await generateAnalysis(sprintReport, openaiApiKey)
@@ -194,100 +200,132 @@ export class SprintreportService {
     }
     async function getRetroResults(retrospective: Retro[]): Promise<any> {
       console.log("Procesando Retro");
-      try{
-      const flattenedResponses: string[] = [];
-      // Iterate through each question (c1, c2, c3, c4)
-      for (const question of ['c1', 'c2', 'c3', 'c4']) {
-        // Get the responses for the current question
-        const responses = retrospective[0][question]?.responses || [];
+      try {
+        const flattenedResponses: string[] = [];
+        // Iterate through each question (c1, c2, c3, c4)
+        for (const question of ['c1', 'c2', 'c3', 'c4']) {
+          // Get the responses for the current question
+          const responses = retrospective[0][question]?.responses || [];
 
-        // Iterate through each response and extract the relevant information
-        for (const response of responses) {
-          // Construct the flattened response string
-          const flattenedResponse = `${retrospective[0][question].content}, ${response.note}, thumb_up: ${response.thumb_up}, thumb_down: ${response.thumb_down}`;
-          // Push the flattened response to the flattenedResponses array
-          flattenedResponses.push(flattenedResponse);
+          // Iterate through each response and extract the relevant information
+          for (const response of responses) {
+            // Construct the flattened response string
+            const flattenedResponse = `${retrospective[0][question].content}, ${response.note}, thumb_up: ${response.thumb_up}, thumb_down: ${response.thumb_down}`;
+            // Push the flattened response to the flattenedResponses array
+            flattenedResponses.push(flattenedResponse);
+          }
         }
+        //Sort resonses from most thumbs up to most thumbs down
+        flattenedResponses.sort((a, b) => {
+          // Extract thumbs up and thumbs down counts from the response strings
+          const thumbsUpA = parseInt(a.match(/thumb_up: (\d+)/)[1]);
+          const thumbsDownA = parseInt(a.match(/thumb_down: (\d+)/)[1]);
+          const thumbsUpB = parseInt(b.match(/thumb_up: (\d+)/)[1]);
+          const thumbsDownB = parseInt(b.match(/thumb_down: (\d+)/)[1]);
+
+          // Calculate scores for each response based on thumbs up and thumbs down counts
+          const scoreA = thumbsUpA - thumbsDownA;
+          const scoreB = thumbsUpB - thumbsDownB;
+
+          // Sort responses based on score (highest score first)
+          return scoreB - scoreA;
+        });
+        return flattenedResponses;
+      } catch (error) {
+        console.log("error getting retro results");
       }
-      //Sort resonses from most thumbs up to most thumbs down
-      flattenedResponses.sort((a, b) => {
-        // Extract thumbs up and thumbs down counts from the response strings
-        const thumbsUpA = parseInt(a.match(/thumb_up: (\d+)/)[1]);
-        const thumbsDownA = parseInt(a.match(/thumb_down: (\d+)/)[1]);
-        const thumbsUpB = parseInt(b.match(/thumb_up: (\d+)/)[1]);
-        const thumbsDownB = parseInt(b.match(/thumb_down: (\d+)/)[1]);
-
-        // Calculate scores for each response based on thumbs up and thumbs down counts
-        const scoreA = thumbsUpA - thumbsDownA;
-        const scoreB = thumbsUpB - thumbsDownB;
-
-        // Sort responses based on score (highest score first)
-        return scoreB - scoreA;
-      });
-      return flattenedResponses;
-    }catch(error){
-      console.log("error getting retro results");
-    }
     }
     async function getSurveyAnswers(surveys: Survey[]): Promise<any> {
       console.log("Procesando Preguntas de Encuestas");
-      try{
+      try {
         // Initialize an object to store the sum of values for each question
-      const questionSums: { [key: string]: number } = {};
-      const questionCounts: { [key: string]: number } = {};
+        const questionSums: { [key: string]: number } = {};
+        const questionCounts: { [key: string]: number } = {};
 
-      // Iterate over each survey
-      for (const survey of surveys) {
-        // Iterate over each question in the survey
-        for (let i = 1; i <= 4; i++) {
-          const questionKey = `question${i}`;
-          const question = survey[questionKey];
-          const content = question.content;
-          const value = question.value;
+        // Iterate over each survey
+        for (const survey of surveys) {
+          // Iterate over each question in the survey
+          for (let i = 1; i <= 4; i++) {
+            const questionKey = `question${i}`;
+            const question = survey[questionKey];
+            const content = question.content;
+            const value = question.value;
 
-          // Accumulate the sum of values for each question
-          questionSums[content] = (questionSums[content] || 0) + value;
+            // Accumulate the sum of values for each question
+            questionSums[content] = (questionSums[content] || 0) + value;
 
-          // Increment the count of surveys for each question
-          questionCounts[content] = (questionCounts[content] || 0) + 1;
+            // Increment the count of surveys for each question
+            questionCounts[content] = (questionCounts[content] || 0) + 1;
+          }
         }
-      }
 
-      // Calculate the average for each question
-      const averageAnswers: { [key: string]: number } = {};
-      for (const content in questionSums) {
-        const sum = questionSums[content];
-        const count = questionCounts[content];
-        // Calculate the average and limit the decimals to 2
-        const average = sum / count;
-        averageAnswers[content] = Number(average.toFixed(2));
-      }
+        // Calculate the average for each question
+        const averageAnswers: { [key: string]: number } = {};
+        for (const content in questionSums) {
+          const sum = questionSums[content];
+          const count = questionCounts[content];
+          // Calculate the average and limit the decimals to 2
+          const average = sum / count;
+          averageAnswers[content] = Number(average.toFixed(2));
+        }
 
-      return getSortedAverageAnswers(averageAnswers);
-    }
-    catch(error){
-      console.log("Error procesando preguntas");
-    }
+        return getSortedAverageAnswers(averageAnswers);
+      }
+      catch (error) {
+        console.log("Error procesando preguntas");
+      }
     }
     async function getSortedAverageAnswers(averageAnswers: { [key: string]: number }): Promise<any> {
       console.log("Ordenando Preguntas de Encuestas");
+      try {
+        // Convert averageAnswers object into an array of key-value pairs
+        const averageAnswersArray = Object.entries(averageAnswers);
+        // Sort the array based on the average values (in descending order)
+        averageAnswersArray.sort((a, b) => Number(b[1]) - Number(a[1]));
+
+        // Convert the sorted array back into an object
+        const sortedAverageAnswers: { [key: string]: number } = {};
+        averageAnswersArray.forEach(([content, average]) => {
+          sortedAverageAnswers[content] = average;
+        });
+
+        return sortedAverageAnswers;
+      }
+      catch (error) {
+        console.log("Error ordenando preguntas")
+      }
+    }
+    async function getCardsForBoard(cards: Card[]): Promise<any> {
+      console.log('Calculando estado de cards');
       try{
-      // Convert averageAnswers object into an array of key-value pairs
-      const averageAnswersArray = Object.entries(averageAnswers);
-      // Sort the array based on the average values (in descending order)
-      averageAnswersArray.sort((a, b) => Number(b[1]) - Number(a[1]));
+      const cardSummaries = await cards.map(card => {
+        let totalCheckItems = 0;
+        let trueCount = 0;
 
-      // Convert the sorted array back into an object
-      const sortedAverageAnswers: { [key: string]: number } = {};
-      averageAnswersArray.forEach(([content, average]) => {
-        sortedAverageAnswers[content] = average;
+        card.checkList.forEach(checklist => {
+          totalCheckItems += checklist.checkItems.length;
+          checklist.checkItems.forEach(checkItem => {
+            if (checkItem.isChecked) {
+              trueCount++;
+            }
+          });
+        });
+        const percentageTrue = totalCheckItems > 0 ? (trueCount / totalCheckItems) * 100 : 0;
+        return {
+          total_check_items: totalCheckItems,
+          true_count: trueCount,
+          title: card.title,
+          status: card.status,
+          percentage_true: percentageTrue.toFixed(2)
+        };
       });
+      return cardSummaries;
+    } catch (error) {
+      console.log("Error calculando estado de cards");
+    }
 
-      return sortedAverageAnswers;
-    }
-    catch(error){
-      console.log("Error ordenando preguntas")
-    }
+
+
     }
     async function generateAnalysis(sprintData: any, openaiApiKey): Promise<any> {
       console.log("Generando Analisis de Sprint");
@@ -359,10 +397,13 @@ export class SprintreportService {
 
   }
 
-
-
   async getAllTeamReports(teamId: string): Promise<any> {
-
+    try {
+      const SprintReports = await this.sprintReportModel.find({ teamId: teamId });
+      return SprintReports;
+    } catch (error) {
+      console.log("Error getting team reports:", error);
+    }
   }
 
   remove(id: number) {
@@ -371,7 +412,14 @@ export class SprintreportService {
 }
 
 //TODO:
-//Add try catch in all functions.
+//Get All Reports
 //Bring card details % of progress.
+// {
+//   total_check_items: 3,
+//   true_count: 2,
+//   title: 'Hacer redes sociales',
+//   status: 'In Progress',
+//   percentage_true: 66.66666666666666
+// },
 //To filter by sprint, only some questions have sprint field; sprint: sprint });
 //No founds scenarios.

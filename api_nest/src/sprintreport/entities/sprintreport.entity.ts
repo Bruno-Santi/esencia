@@ -23,9 +23,12 @@ export class SprintReport extends Document {
     @Prop({ required: true })
     survey_answers: mongoose.Schema.Types.Mixed
     @Prop({ required: true })
+    GoalStatus: mongoose.Schema.Types.Mixed
+    @Prop({ required: true })
     analysis: String
     @Prop({ required: true })
     recommendations: String
+
 };
 
 // Optionally, you can add indexes, virtuals, methods, or statics to your schema
