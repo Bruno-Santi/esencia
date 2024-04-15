@@ -35,7 +35,7 @@ export class SprintreportService {
       //Create Report Data
       const report = await generateSprintReport(this.openaiApiKey, teamId, sprint, retrospective, board, surveys, cards);
       const newReport = await new this.sprintReportModel(report);
-      //await newReport.save();
+      await newReport.save();
       console.log("Report saved");
       return newReport;
     } catch (error) {
