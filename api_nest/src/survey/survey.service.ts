@@ -77,10 +77,10 @@ export class SurveyService {
         throw new BadRequestException(
           `The team ${createSurveyDto.team_id} does not exist`,
         );
-      const resp = await axios.post(
-        process.env.API_DATA + '/daily_survey',
-        data,
-      );
+      // const resp = await axios.post(
+      //   process.env.API_DATA + '/daily_survey',
+      //   data,
+      // );
 
       console.log(team.sprint);
 
@@ -94,7 +94,7 @@ export class SurveyService {
         date: new Date(),
         sprint: team.sprint,
       });
-      console.log(resp);
+      // console.log(resp);
 
       return {
         created: 'ok',

@@ -13,7 +13,9 @@ import { BoardsModule } from './boards/boards.module';
 import { BoardgatewayModule } from './boardgateway/boardgateway.module';
 import { PruebaModule } from './prueba/prueba.module';
 import { RecommendationsModule } from './recommendations/recommendations.module';
+
 import { SprintreportModule } from './sprintreport/sprintreport.module';
+import { DashboardDataModule } from './dashboard_data/dashboard_data.module';
 
 @Module({
   imports: [
@@ -38,6 +40,7 @@ import { SprintreportModule } from './sprintreport/sprintreport.module';
     PruebaModule,
     RecommendationsModule,
     SprintreportModule,
+    DashboardDataModule,
   ],
   exports: [],
   controllers: [],

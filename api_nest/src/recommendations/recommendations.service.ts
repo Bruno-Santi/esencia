@@ -31,6 +31,7 @@ export class RecommendationsService {
         team_id: teamId,
         date: { $gte: date15DaysAgo },
       });
+      console.log(surveys.length);
 
       // Extract question values into arrays
       const question1Values = surveys.map((survey) => survey.question1.value);

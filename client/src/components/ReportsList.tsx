@@ -6,6 +6,8 @@ export const ReportsList = ({ reports }) => {
   console.log(reports);
   const { setActiveReport } = useDashboard();
   const reportSorted = reports?.sort((a, b) => a.sprint - b.sprint);
+  console.log(reportSorted);
+
   return (
     <div className='absolute bg-white z-50  overflow-y-scroll h-[500px]'>
       <AccordionDetails

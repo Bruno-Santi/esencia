@@ -121,6 +121,8 @@ export const dashboardSlice = createSlice({
       state.dataLoading = payload;
     },
     onSetLongRecommendation: (state, { payload }) => {
+      console.log(payload);
+
       state.longRecommendation = payload;
     },
     onSetActiveReport: (state, { payload }) => {
@@ -128,7 +130,9 @@ export const dashboardSlice = createSlice({
       console.log(payload);
       console.log(state.longRecommendation);
       state.activeReport = [];
-      state.activeReport = state.longRecommendation.data.filter((recommendation) => recommendation.id === payload);
+      console.log(state.longRecommendation);
+
+      state.activeReport = state.longRecommendation.filter((recommendation) => recommendation._id === payload);
       console.log(state.activeReport[0]);
 
       console.log(payload);

@@ -18,6 +18,7 @@ import moment from "moment";
 export const NewReports = () => {
   useDocumentTitle("Reportes | Esencia.app");
   const { longRecommendation, loadingReports, activeReport, startGettingReports, activeTeam } = useDashboard();
+  console.log(longRecommendation);
 
   const [backlogValue, setBacklogValue] = useState(0);
   const [inProgressValue, setInProgressValue] = useState(0);
@@ -25,12 +26,12 @@ export const NewReports = () => {
   const [finishedValue, setFinishedValue] = useState(0);
   const [analysisLines, setAnalysisLines] = useState("");
   const [selectedTab, setSelectedTab] = useState("worst");
-  console.log(activeReport[0]);
 
   const formatDate = (date) => {
     console.log(date);
 
     const newDate = moment(date);
+    newDate.add(1, "days"); // Agregar 1 día a la fecha
     const formattedDate = newDate.format("DD/MM/YYYY");
     console.log(formattedDate);
 
@@ -46,40 +47,78 @@ export const NewReports = () => {
   useEffect(() => {
     assignValues();
   }, [activeReport]);
+  const formatSurveyAnswers = (surveyAnswers) => {
+    const formattedAnswers = Object.entries(surveyAnswers).map(([question, value]) => {
+      const numericValue = typeof value === "number" ? value : parseFloat(value);
+
+      const type = numericValue <= 0.5 ? "worst" : "best";
+
+      return {
+        _id: question,
+        average_value: numericValue,
+        type: type,
+      };
+    });
+
+    return formattedAnswers;
+  };
+  let formattedSurveyAnswers;
+  if (activeReport.length) formattedSurveyAnswers = formatSurveyAnswers(activeReport[0]?.survey_answers);
 
   const handleGetReports = async (e) => {
     e.preventDefault();
     await startGettingReports(activeTeam._id, activeTeam.sprint);
   };
+  const recommendations = activeReport[0]?.recommendations;
+
+  const formattedRecommendations = recommendations?.split(/\d+\./).filter((item) => item.trim() !== "");
+
+  const formattedRetrospective = activeReport[0]?.retrospective.map((retro) => {
+    const parts = retro.split(", ");
+
+    const question = parts[0].replace("?", "");
+    const response = parts[1];
+
+    const thumb_up = parseInt(parts[2].split(": ")[1]);
+    const thumb_down = parseInt(parts[3].split(": ")[1]);
+
+    return {
+      content: question,
+      note: response,
+      thumb_up: thumb_up,
+      thumb_down: thumb_down,
+    };
+  });
+  console.log(formattedRetrospective);
+
   const assignValues = () => {
     if (longRecommendation) {
       const analysisLines = activeReport[0]?.analysis.split("\n");
       setAnalysisLines(analysisLines);
-      const inProgressCard = activeReport[0]?.cards.find((card) => card["In Progress"] !== undefined);
-      const inProgressValue = inProgressCard ? inProgressCard["In Progress"] : 0;
+      const tasks = activeReport[0]?.tasks; // Obtener el objeto tasks directamente
+
+      const inProgressValue = tasks ? tasks["In Progress"] || 0 : 0;
       console.log("In Progress:", inProgressValue);
       setInProgressValue(inProgressValue);
 
-      const inReviewCard = activeReport[0]?.cards.find((card) => card["In Review"] !== undefined);
-      const inReviewValue = inReviewCard ? inReviewCard["In Review"] : 0;
+      const inReviewValue = tasks ? tasks["In Review"] || 0 : 0;
       console.log("In Review:", inReviewValue);
       setInReviewValue(inReviewValue);
 
-      const finishedCard = activeReport[0]?.cards.find((card) => card["Finished"] !== undefined);
-      const finishedValue = finishedCard ? finishedCard["Finished"] : 0;
+      const finishedValue = tasks ? tasks["Finished"] || 0 : 0;
       console.log("Finished:", finishedValue);
       setFinishedValue(finishedValue);
 
-      const backlogCard = activeReport[0]?.cards.find((card) => card["Backlog"] !== undefined);
-      const backlogValue = backlogCard ? backlogCard["Backlog"] : 0;
+      const backlogValue = tasks ? tasks["Backlog"] || 0 : 0;
       console.log("Backlog:", backlogValue);
       setBacklogValue(backlogValue);
     }
   };
+  console.log(activeReport.length);
 
   return (
     <DashboardLayout>
-      {activeReport.length === 0 ? (
+      {!activeReport.length ? (
         <div className='flex-col items-center flex justify-center mt-4'>
           {" "}
           <ReportAccordion reports={longRecommendation} />{" "}
@@ -104,9 +143,7 @@ export const NewReports = () => {
             </button>
           </div>
           <div className='flex items-center justify-center font-poppins mt-6 mr-32 '>
-            {!activeReport[0].dates || !Object.values(activeReport[0].dates).length
-              ? ""
-              : `${formatDate(activeReport[0].dates.BeginDate["$date"])} - ${formatDate(activeReport[0].dates.EndDate["$date"])}`}
+            {!activeReport[0].startDate.length ? "" : `${formatDate(activeReport[0].startDate)} - ${formatDate(activeReport[0].endDate)}`}
           </div>
           <Grid
             container
@@ -126,34 +163,34 @@ export const NewReports = () => {
             </Grid>
             <Grid item xs={12} lg={8}>
               <div className='flex ml-48  text-center sm:flex sm:flex-col md:flex-row lg:flex-row '>
-                <Cuadrants
+                {/* <Cuadrants
                   icon={<FaSmile />}
                   label='Satisfacción General'
-                  value={Math.round(activeReport[0]?.differences["general_satisfaction_diff"] * 100)}
+                  value={Math.round(activeReport[0]?.differences[0] * 100)}
                   color='bg-[#8136c2]'
-                />
+                />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        */}
                 <Cuadrants
                   icon={<MdOutlineSelfImprovement />}
                   label='Satisfacción Personal'
-                  value={Math.round(activeReport[0]?.differences["self_satisfaction_diff"] * 100)}
+                  value={Math.round(activeReport[0]?.cuadrants_difference[0] * 100)}
                   color='bg-[#FF6384]'
                 />
                 <Cuadrants
                   icon={<FaUsers />}
                   label='Colaboracion en Equipo'
-                  value={Math.round(activeReport[0]?.differences["team_collaboration_diff"] * 100)}
+                  value={Math.round(activeReport[0]?.cuadrants_difference[1] * 100)}
                   color='bg-[#36A2EB]'
                 />
                 <Cuadrants
                   icon={<FaTools />}
                   label='Compromiso Laboral'
-                  value={Math.round(activeReport[0]?.differences["work_engagement_diff"] * 100)}
+                  value={Math.round(activeReport[0]?.cuadrants_difference[2] * 100)}
                   color='bg-[#ebb734]'
                 />
                 <Cuadrants
                   icon={<FaHome />}
                   label='Bienestar en el espacio de trabajo'
-                  value={Math.round(activeReport[0]?.differences["workspace_wellbeing_diff"] * 100)}
+                  value={Math.round(activeReport[0]?.cuadrants_difference[3] * 100)}
                   color='bg-[#5a2f80]'
                 />
               </div>
@@ -161,13 +198,39 @@ export const NewReports = () => {
             <Grid item xs={12} lg={3}>
               <span className=''>
                 {" "}
-                <TaskTable tasks={activeReport[0]?.task} />
+                <TaskTable tasks={activeReport[0]?.GoalStatus} />
               </span>
             </Grid>
             <Grid item xs={12} lg={8} className='lg:pl-36 md:pl-36 pr-6'>
               <div className=''>
                 {" "}
-                <LineChartReport data={activeReport[0]?.lines_graph} height='20em' />
+                <LineChartReport data={activeReport[0].line_graphs} height='20em' />
+              </div>
+            </Grid>
+
+            <Grid item xs={12} lg={6}>
+              <div className='bg-gray-200/60 rounded-md shadow-md shadow-primary/20 text-primary h-[250px] font-poppins p-2 overflow-hidden relative'>
+                <div className=' h-full '>
+                  <div className='p-2 text-lg'>Recomendaciones.</div>
+                  <Divider className='py-2 ' />
+                  <div className='mt-6 px-4 pb-4 overflow-y-scroll absolute top-14 left-0 right-0 bottom-0'>
+                    <ul>
+                      {formattedRecommendations.map((recommendation, index) => (
+                        <li key={index}>{recommendation.trim()}</li>
+                      ))}
+                    </ul>
+                  </div>{" "}
+                </div>
+              </div>
+            </Grid>
+            <Grid item xs={12} lg={5}>
+              <div className='bg-gray-200/60 rounded-md shadow-md shadow-primary/20 text-primary h-[250px] font-poppins p-2 overflow-hidden relative'>
+                <div className=' h-full '>
+                  <div className='p-2 text-lg'>Análisis de conocimiento.</div>
+                  <Divider className='py-2 ' />
+
+                  <div className='mt-6 px-4  pb-4 overflow-y-scroll absolute top-14 left-0 right-0 bottom-0'>{activeReport[0].analysis}</div>
+                </div>
               </div>
             </Grid>
             <Grid item xs={12} lg={6} className=''>
@@ -180,7 +243,7 @@ export const NewReports = () => {
 
                   <Divider className='py-2' />
                   <div className='mt-8 px-2 overflow-y-scroll absolute top-14 left-0 right-0 bottom-0'>
-                    {activeReport[0].answers.length > 0 ? (
+                    {!Object.keys(activeReport[0].survey_answers).length <= 0 ? (
                       <div>
                         <div className='mt-2'>
                           <button
@@ -198,56 +261,39 @@ export const NewReports = () => {
                         </div>
                         <ul className='text-sm space-y-4 py-4 px-2'>
                           {selectedTab === "worst" &&
-                            (activeReport[0]?.answers[0]?.worst_questions?.map((answer) => (
-                              <div key={answer._id}>
-                                <li className='text-secondary font-bold'>
-                                  <span className='text-primary font-bold'>•</span> {answer._id}{" "}
-                                  <span>
-                                    /<span className='text-red-600 font-bold'>{Math.round(answer.average_value * 100)}%🔻</span>{" "}
-                                  </span>{" "}
-                                </li>
-                              </div>
-                            )) || <div>Sin datos</div>)}
+                            (formattedSurveyAnswers
+                              .filter((answer) => answer.type === "worst")
+                              .map((answer) => (
+                                <div key={answer._id}>
+                                  <li className='text-secondary font-bold'>
+                                    <span className='text-primary font-bold'>•</span> {answer._id}{" "}
+                                    <span>
+                                      /<span className='text-red-600 font-bold'>{Math.round(answer.average_value * 100)}%🔻</span>{" "}
+                                    </span>{" "}
+                                  </li>
+                                </div>
+                              )) || <div>Sin datos</div>)}
 
                           {selectedTab === "best" &&
-                            (activeReport[0]?.answers[0].best_questions?.map((answer) => (
-                              <div key={answer._id}>
-                                <li className='text-secondary font-bold'>
-                                  <span className='text-primary font-bold'>•</span> {answer._id}{" "}
-                                  <span className='text-green-600 text-bold'>
-                                    {" "}
-                                    / <span className='text-red-600 font-bold'>{Math.round(answer.average_value * 100)}%🔺</span>
-                                  </span>{" "}
-                                </li>
-                              </div>
-                            )) || <div>Sin datos</div>)}
+                            (formattedSurveyAnswers
+                              .filter((answer) => answer.type === "best")
+                              .map((answer) => (
+                                <div key={answer._id}>
+                                  <li className='text-secondary font-bold'>
+                                    <span className='text-primary font-bold'>•</span> {answer._id}{" "}
+                                    <span className='text-green-600 text-bold'>
+                                      {" "}
+                                      / <span className='text-red-600 font-bold'>{Math.round(answer.average_value * 100)}%🔺</span>
+                                    </span>{" "}
+                                  </li>
+                                </div>
+                              )) || <div>Sin datos</div>)}
                         </ul>
                       </div>
                     ) : (
                       <div>Sin datos</div>
                     )}
                   </div>
-                </div>
-              </div>
-            </Grid>
-
-            <Grid item xs={12} lg={5}>
-              <div className='bg-gray-200/60 rounded-md shadow-md shadow-primary/20 text-primary h-[250px] font-poppins p-2 overflow-hidden relative'>
-                <div className=' h-full '>
-                  <div className='p-2 text-lg'>Análisis de conocimiento.</div>
-                  <Divider className='py-2 ' />
-
-                  <div className='mt-6 px-4  pb-4 overflow-y-scroll absolute top-14 left-0 right-0 bottom-0'>{activeReport[0].analysis}</div>
-                </div>
-              </div>
-            </Grid>
-            <Grid item xs={12} lg={6}>
-              <div className='bg-gray-200/60 rounded-md shadow-md shadow-primary/20 text-primary h-[250px] font-poppins p-2 overflow-hidden relative'>
-                <div className=' h-full '>
-                  <div className='p-2 text-lg'>Recomendaciones.</div>
-                  <Divider className='py-2 ' />
-
-                  <div className='mt-6 px-4  pb-4 overflow-y-scroll absolute top-14 left-0 right-0 bottom-0'>{activeReport[0].recommendation}</div>
                 </div>
               </div>
             </Grid>
@@ -261,8 +307,8 @@ export const NewReports = () => {
                   <Divider className='py-2' />
                   <div className='mt-8 px-2 overflow-y-scroll absolute top-14 left-0 right-0 bottom-0'>
                     <ul className='text-sm space-y-4 py-4 px-2'>
-                      {activeReport[0].retro.length ? (
-                        activeReport[0].retro.map((retro) => {
+                      {formattedRetrospective.length ? (
+                        formattedRetrospective.map((retro) => {
                           return <RetroResume question={retro.content} response={retro.note} vote_up={retro.thumb_up} vote_down={retro.thumb_down} />;
                         })
                       ) : (

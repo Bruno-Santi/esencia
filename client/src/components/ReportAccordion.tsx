@@ -13,10 +13,10 @@ export const ReportAccordion = ({ reports }) => {
   let reportsInfo;
 
   if (reports) {
-    reportsInfo = reports?.data?.map((report) => {
+    reportsInfo = reports?.map((report) => {
       return {
         sprint: report.sprint,
-        id: report.id,
+        id: report._id,
       };
     });
   }
@@ -33,7 +33,7 @@ export const ReportAccordion = ({ reports }) => {
       style={{ backgroundColor: "white" }}
     >
       <AccordionSummary expandIcon={<FaChevronDown className='w-7 p-1 h-7 text-gray-500 rounded-full ml-3 shadow-sm cursor-pointer' />}>
-        {activeReport.length !== 0 ? `Sprint ${activeReport[0].sprint} report` : "Reportes"}
+        {activeReport.length !== 0 ? `Reporte del sprint ${activeReport[0].sprint}` : "Reportes"}
       </AccordionSummary>
       <div className='w-full'>{reports && <ReportsList reports={reportsInfo} />}</div>
     </Accordion>

@@ -3,7 +3,7 @@ import { useAuthSlice } from "../../hooks/useAuthSlice";
 import { OnBoardingLayout } from "../../layaout";
 
 export const Welcome = () => {
-  useDocumentTitle("Onboard | Esencia.ai");
+  useDocumentTitle("Onboard | Esencia.app");
   const { handleNavigate } = useNavigateTo();
   const { user } = useAuthSlice();
   console.log(user);

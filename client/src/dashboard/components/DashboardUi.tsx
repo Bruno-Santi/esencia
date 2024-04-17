@@ -43,6 +43,10 @@ export const DashboardUi = () => {
   const handleCancelTeam = () => {
     toast.warning(`Action cancelled`);
   };
+  console.log(cards);
+  console.log(metricsForToday);
+  console.log(shortRecomendation);
+
   const handleAcceptTeam = async (teamId) => {
     try {
       const response = await api.delete(`/api/team/${teamId}`);
@@ -178,8 +182,8 @@ export const DashboardUi = () => {
             className='bg-tertiary  dark:bg-gray-900 w-5/6 mt-1  place-items-center align-bottom lg:h-4/6 md:h-[13em] mx-auto rounded-lg overflow-y-scroll'
           >
             <div ref={containerRef} className='font-poppin p-3 w-6/6 scroll-p-12 overflow-x-hidden my-auto   bg-tertiary  dark:bg-gray-900 m-auto'>
-              {Object.keys(shortRecomendation).length > 0 ? (
-                <UsePagination shortRecomendation={shortRecomendation} containerRef={containerRef} />
+              {shortRecomendation.length > 0 ? (
+                <UsePagination shortRecommendation={shortRecomendation} containerRef={containerRef} />
               ) : (
                 <p className='text-xl  text-primary/50  inset-0 text-center font-normal font-poppins dark:text-tertiary'>
                   Sin datos, intenta primero con una encuesta de pulso.
@@ -190,9 +194,9 @@ export const DashboardUi = () => {
         </div>
         <div className='flex justify-center w-full md:-mt-40  lg:-mt-0 lg:row-span-1 md:row-start-2 md:row-span-2 md:col-start-7  md:mr-24 md:-mt-56 lg:col-span-3 md:col-span-4 lg:h-[400px] lg:space-y-2 items-center sm:mt-0 flex-col -mt-16 mb-20'>
           <div className='flex mb-2 mt-6'>
-            {Object.keys(englishToSpanish).map((key, index) => {
-              const foundCard = cards.find((card) => Object.keys(card)[0] === key);
-              const value = foundCard ? foundCard[key] : 0;
+            {cards.map((card, index) => {
+              const key = card._id;
+              const value = card.count;
               return <BoardReport key={index} title={englishToSpanish[key]} value={value} />;
             })}
           </div>
@@ -229,7 +233,7 @@ export const DashboardUi = () => {
             </span>
           </div>
         </div>
-        <div className='lg:h-[400px] lg:w-[440px] md:w-[300px] lg:space-y-28 md:space-y-32 md:-mt-12 lg:mt-20 sm:h-[350px] sm:w-[350px] md:h-[320px]  lg:col-start-7 lg:row-start-2 lg:col-span-2  md:col-span-2 md:col-start-10 md:row-span-2 md:row-start-1 sm:my-16 rounded-md justify-center my-auto gap-y-4'>
+        <div className='lg:h-[400px] lg:w-[440px] md:w-[300px] lg:space-y-28 md:space-y-32 md:-mt-52 lg:mt-16 sm:h-[350px] sm:w-[350px] md:h-[400px]  lg:col-start-7 lg:row-start-2 lg:col-span-2  md:col-span-2 md:col-start-10 md:row-span-2 md:row-start-1 sm:my-16 rounded-md justify-center my-auto gap-y-4'>
           <TrendingTopics />
         </div>
         <div

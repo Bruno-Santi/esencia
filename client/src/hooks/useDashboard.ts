@@ -132,25 +132,25 @@ export const useDashboard = () => {
         if (surveyData.short_recommendation === "there are no recommendations") {
           dispatch(
             onSaveMetricsForToday({
-              metricsForToday: surveyData.data.pie_chart || {},
-              linesMetrics: surveyData.data.lines_graph || {},
-              dataAmount: surveyData.data.data_amount || [],
-              shortRecomendation: surveyData.data.short_recommendation?.content || {},
-              topics: surveyData.data.topics || [],
-              cards: surveyData.data.cards || [],
-              task: surveyData.data.task || [],
+              metricsForToday: surveyData.pie_chart || {},
+              linesMetrics: surveyData.lines_graph || {},
+              dataAmount: surveyData.data_amount || [],
+              shortRecomendation: surveyData.short_recommendation || {},
+              topics: surveyData.topics || [],
+              cards: surveyData.cards || [],
+              task: surveyData.task || [],
             })
           );
         }
         dispatch(
           onSaveMetricsForToday({
-            metricsForToday: surveyData.data.pie_chart || {},
-            linesMetrics: surveyData.data.lines_graph || {},
-            dataAmount: surveyData.data.data_amount || [],
-            shortRecomendation: surveyData.data.short_recommendation?.content || {},
-            topics: surveyData.data.topics || [],
-            cards: surveyData.data.cards || [],
-            task: surveyData.data.task || [],
+            metricsForToday: surveyData.pie_chart || {},
+            linesMetrics: surveyData.lines_graph || {},
+            dataAmount: surveyData.data_amount || [],
+            shortRecomendation: surveyData.short_recommendation || {},
+            topics: surveyData.topics || [],
+            cards: surveyData.cards || [],
+            task: surveyData.task || [],
           })
         );
       }
@@ -159,10 +159,10 @@ export const useDashboard = () => {
         metricsForToday: surveyData.pie_chart || {},
         linesMetrics: surveyData.lines_graph || {},
         dataAmount: surveyData.data_amount || [],
-        shortRecomendation: surveyData.short_recommendation?.content || "",
+        shortRecomendation: surveyData.short_recommendation || "",
         topics: surveyData.topics || [],
-        cards: surveyData.data.cards || [],
-        task: surveyData.data.task || [],
+        cards: surveyData.cards || [],
+        task: surveyData.task || [],
       };
 
       localStorage.setItem("surveyData", JSON.stringify(dataToSave));
@@ -205,7 +205,7 @@ export const useDashboard = () => {
   const startGettingReports = async (team_id, sprint) => {
     setLoadingReports(true);
     try {
-      const { data } = await api.get(`/api/data/get_reports/${team_id}/${sprint}`);
+      const { data } = await api.get(`/api/sprintreport/${team_id}/`);
       console.log(data);
 
       setLoadingReports(false);

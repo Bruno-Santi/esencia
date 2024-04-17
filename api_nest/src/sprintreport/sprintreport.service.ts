@@ -11,7 +11,6 @@ import { Survey } from 'src/survey/entities/survey.entity';
 import { Card } from 'src/boards/entities/card.entity';
 import { SprintReport } from 'src/sprintreport/entities/sprintreport.entity';
 
-
 @Injectable()
 export class SprintreportService {
   readonly openaiApiKey: string; // Your OpenAI API key
@@ -20,35 +19,63 @@ export class SprintreportService {
     @InjectModel(Board.name) private readonly boardModel: Model<Board>,
     @InjectModel(Survey.name) private readonly surveyModel: Model<Survey>,
     @InjectModel(Card.name) private readonly cardModel: Model<Card>,
-    @InjectModel(SprintReport.name) private readonly sprintReportModel: Model<SprintReport>,
-
+    @InjectModel(SprintReport.name)
+    private readonly sprintReportModel: Model<SprintReport>,
   ) {
     this.openaiApiKey = process.env.OPENAI_API_KEY; // Set your OpenAI API key here
   }
   async createSprintReport(teamId: string, sprint: string): Promise<any> {
     // Retrieve sprint data for the specified team and sprint
     try {
-      const retrospective = await this.retroModel.find({ team_id: teamId, sprint: sprint });
+      const retrospective = await this.retroModel.find({
+        team_id: teamId,
+        sprint: sprint,
+      });
       const board = await this.boardModel.find({ team_id: teamId });
-      const cards = await this.cardModel.find({ boardId: board[0]._id.toString() });
-      const surveys = await this.surveyModel.find({ team_id: teamId, sprint: sprint });
+      const cards = await this.cardModel.find({
+        boardId: board[0]._id.toString(),
+      });
+      const surveys = await this.surveyModel.find({
+        team_id: teamId,
+        sprint: sprint,
+      });
       //Create Report Data
-      const report = await generateSprintReport(this.openaiApiKey, teamId, sprint, retrospective, board, surveys, cards);
+      const report = await generateSprintReport(
+        this.openaiApiKey,
+        teamId,
+        sprint,
+        retrospective,
+        board,
+        surveys,
+        cards,
+      );
       const newReport = await new this.sprintReportModel(report);
       await newReport.save();
-      console.log("Report saved");
+      console.log('Report saved');
       return newReport;
     } catch (error) {
       console.log(error);
     }
-    async function generateSprintReport(openaiApiKey, teamId: string, sprint: string, retrospective: Retro[], board: Board[], surveys: Survey[], cards: Card[]): Promise<any> {
+    async function generateSprintReport(
+      openaiApiKey,
+      teamId: string,
+      sprint: string,
+      retrospective: Retro[],
+      board: Board[],
+      surveys: Survey[],
+      cards: Card[],
+    ): Promise<any> {
       try {
         // OK Calculate Weighted Averages for Quadrants
         const weightedAverages = await getSurveyResults(surveys);
         // OK Calculate Min and Max Date
         const { minDate, maxDate } = await getMinMaxDate(weightedAverages);
         // OK Get Difference Between Cuadrands start and end date.
-        const difference = await getDifferenceBetweenCuadrands(weightedAverages, minDate, maxDate);
+        const difference = await getDifferenceBetweenCuadrands(
+          weightedAverages,
+          minDate,
+          maxDate,
+        );
         //OK Get Total cards from board
         const columnItemCount = await getCardsByColumn(board);
         // OK Aggregate Responses for Retrospective
@@ -71,8 +98,12 @@ export class SprintreportService {
           GoalStatus: boardCards,
         };
         // Ask Analyss to chatgpt
-        const analysis = await generateAnalysis(sprintReport, openaiApiKey)
-        const recomendaciones = await generateRecommendations(sprintReport, analysis, openaiApiKey);
+        const analysis = await generateAnalysis(sprintReport, openaiApiKey);
+        const recomendaciones = await generateRecommendations(
+          sprintReport,
+          analysis,
+          openaiApiKey,
+        );
         // Append analysis and recomendaciones to sprintReport
         sprintReport.analysis = analysis;
         sprintReport.recommendations = recomendaciones;
@@ -82,7 +113,7 @@ export class SprintreportService {
       }
     }
     async function getSurveyResults(surveys: Survey[]): Promise<any> {
-      console.log("Procesando Resultados de Encuestas");
+      console.log('Procesando Resultados de Encuestas');
       // Initialize an object to store surveys grouped by day
       const surveysByDay: { [key: string]: Survey[] } = {};
       // Group surveys by day
@@ -98,7 +129,7 @@ export class SprintreportService {
         surveysByDay[day].push(survey);
       });
 
-      let weightedAveragesByDay: { [key: string]: number[] } = {};
+      const weightedAveragesByDay: { [key: string]: number[] } = {};
 
       Object.keys(surveysByDay).forEach(async (day) => {
         const surveysForDay = surveysByDay[day];
@@ -109,7 +140,6 @@ export class SprintreportService {
       });
 
       return weightedAveragesByDay;
-
     }
     async function getSurveyResultsbyDay(surveys: Survey[]): Promise<any> {
       // Initialize an object to store the total weighted averages for each quadrant
@@ -129,9 +159,14 @@ export class SprintreportService {
           const cuadrant_cohef = survey[`question${i}`].cuadrant_cohef;
 
           // Validate cuadrant_cohef values
-          if (Array.isArray(cuadrant_cohef) && cuadrant_cohef.every((coef) => typeof coef === 'number')) {
+          if (
+            Array.isArray(cuadrant_cohef) &&
+            cuadrant_cohef.every((coef) => typeof coef === 'number')
+          ) {
             // Calculate the coef * cuadrant result
-            const quadrant: number[] = cuadrant_cohef.map((coef) => parseFloat((coef * value).toFixed(2)));
+            const quadrant: number[] = cuadrant_cohef.map((coef) =>
+              parseFloat((coef * value).toFixed(2)),
+            );
 
             // Accumulate the product of coef * value for each quadrant for all surveys
             for (let j = 0; j < 4; j++) {
@@ -139,22 +174,26 @@ export class SprintreportService {
               totals[j] += cuadrant_cohef[j];
             }
           } else {
-            console.error(`Invalid cuadrant_cohef for Question ${i}: ${cuadrant_cohef}`);
+            console.error(
+              `Invalid cuadrant_cohef for Question ${i}: ${cuadrant_cohef}`,
+            );
             // Handle the error or skip the calculation for this question
           }
         }
       });
       //At this point, we have the sum of the results and total possible score
       //Calculate the weighted averages
-      const weightedAverages = results.map((result, index) => (result / totals[index]).toFixed(2));
+      const weightedAverages = results.map((result, index) =>
+        (result / totals[index]).toFixed(2),
+      );
       return weightedAverages;
     }
     async function getMinMaxDate(weightedAverages): Promise<any> {
-      console.log("Calculando Min y Max Date");
+      console.log('Calculando Min y Max Date');
       try {
         const dates = Object.keys(weightedAverages);
 
-        const timestamps = dates.map(date => new Date(date).getTime());
+        const timestamps = dates.map((date) => new Date(date).getTime());
 
         const minTimestamp = Math.min(...timestamps);
         const maxTimestamp = Math.max(...timestamps);
@@ -164,33 +203,37 @@ export class SprintreportService {
 
         return { minDate, maxDate };
       } catch (error) {
-        console.log("error getting min and max dates");
+        console.log('error getting min and max dates');
       }
     }
-    async function getDifferenceBetweenCuadrands(weightedAverages, minDate, maxDate): Promise<any> {
-      console.log("Calculando Diferencias de Cuadrantes");
+    async function getDifferenceBetweenCuadrands(
+      weightedAverages,
+      minDate,
+      maxDate,
+    ): Promise<any> {
+      console.log('Calculando Diferencias de Cuadrantes');
       try {
         //Calculate the difference between de max date and min date
         const cuadrantsDifference: number[] = [];
         // Iterate over each quadrant
         for (let i = 0; i < 4; i++) {
           // Calculate the difference for the current quadrant between the maximum and minimum dates
-          const difference = weightedAverages[maxDate][i] - weightedAverages[minDate][i];
+          const difference =
+            weightedAverages[maxDate][i] - weightedAverages[minDate][i];
           // Push the difference to the cuadrantsDifference array
           cuadrantsDifference.push(parseFloat(difference.toFixed(2)));
         }
         return cuadrantsDifference;
       } catch (error) {
-        console.log("error getting cuadrants difference");
+        console.log('error getting cuadrants difference');
       }
-
     }
     async function getCardsByColumn(board): Promise<any> {
-      console.log("Calculando Status de Goals");
+      console.log('Calculando Status de Goals');
       // Initialize an object to store the summary
       const columnSummary = {};
       // Iterate over each column in the board
-      board[0].columns.forEach(column => {
+      board[0].columns.forEach((column) => {
         // Get the number of cards in the column
         const cardCount = column.cards.length;
         // Add the card count to the column summary object
@@ -199,7 +242,7 @@ export class SprintreportService {
       return columnSummary;
     }
     async function getRetroResults(retrospective: Retro[]): Promise<any> {
-      console.log("Procesando Retro");
+      console.log('Procesando Retro');
       try {
         const flattenedResponses: string[] = [];
         // Iterate through each question (c1, c2, c3, c4)
@@ -232,11 +275,11 @@ export class SprintreportService {
         });
         return flattenedResponses;
       } catch (error) {
-        console.log("error getting retro results");
+        console.log('error getting retro results');
       }
     }
     async function getSurveyAnswers(surveys: Survey[]): Promise<any> {
-      console.log("Procesando Preguntas de Encuestas");
+      console.log('Procesando Preguntas de Encuestas');
       try {
         // Initialize an object to store the sum of values for each question
         const questionSums: { [key: string]: number } = {};
@@ -270,13 +313,14 @@ export class SprintreportService {
         }
 
         return getSortedAverageAnswers(averageAnswers);
-      }
-      catch (error) {
-        console.log("Error procesando preguntas");
+      } catch (error) {
+        console.log('Error procesando preguntas');
       }
     }
-    async function getSortedAverageAnswers(averageAnswers: { [key: string]: number }): Promise<any> {
-      console.log("Ordenando Preguntas de Encuestas");
+    async function getSortedAverageAnswers(averageAnswers: {
+      [key: string]: number;
+    }): Promise<any> {
+      console.log('Ordenando Preguntas de Encuestas');
       try {
         // Convert averageAnswers object into an array of key-value pairs
         const averageAnswersArray = Object.entries(averageAnswers);
@@ -290,45 +334,45 @@ export class SprintreportService {
         });
 
         return sortedAverageAnswers;
-      }
-      catch (error) {
-        console.log("Error ordenando preguntas")
+      } catch (error) {
+        console.log('Error ordenando preguntas');
       }
     }
     async function getCardsForBoard(cards: Card[]): Promise<any> {
       console.log('Calculando estado de cards');
-      try{
-      const cardSummaries = await cards.map(card => {
-        let totalCheckItems = 0;
-        let trueCount = 0;
+      try {
+        const cardSummaries = await cards.map((card) => {
+          let totalCheckItems = 0;
+          let trueCount = 0;
 
-        card.checkList.forEach(checklist => {
-          totalCheckItems += checklist.checkItems.length;
-          checklist.checkItems.forEach(checkItem => {
-            if (checkItem.isChecked) {
-              trueCount++;
-            }
+          card.checkList.forEach((checklist) => {
+            totalCheckItems += checklist.checkItems.length;
+            checklist.checkItems.forEach((checkItem) => {
+              if (checkItem.isChecked) {
+                trueCount++;
+              }
+            });
           });
+          const percentageTrue =
+            totalCheckItems > 0 ? (trueCount / totalCheckItems) * 100 : 0;
+          return {
+            total_check_items: totalCheckItems,
+            true_count: trueCount,
+            title: card.title,
+            status: card.status,
+            percentage_true: percentageTrue.toFixed(2),
+          };
         });
-        const percentageTrue = totalCheckItems > 0 ? (trueCount / totalCheckItems) * 100 : 0;
-        return {
-          total_check_items: totalCheckItems,
-          true_count: trueCount,
-          title: card.title,
-          status: card.status,
-          percentage_true: percentageTrue.toFixed(2)
-        };
-      });
-      return cardSummaries;
-    } catch (error) {
-      console.log("Error calculando estado de cards");
+        return cardSummaries;
+      } catch (error) {
+        console.log('Error calculando estado de cards');
+      }
     }
-
-
-
-    }
-    async function generateAnalysis(sprintData: any, openaiApiKey): Promise<any> {
-      console.log("Generando Analisis de Sprint");
+    async function generateAnalysis(
+      sprintData: any,
+      openaiApiKey,
+    ): Promise<any> {
+      console.log('Generando Analisis de Sprint');
       try {
         const client = new openai.OpenAI({ apiKey: openaiApiKey });
         const prompt = await constructPrompt(sprintData);
@@ -360,8 +404,12 @@ export class SprintreportService {
         return prompt;
       }
     }
-    async function generateRecommendations(sprintData: any, sprintAnalysis: any, openaiApiKey): Promise<any> {
-      console.log("Generando Recomendaciones del Sprint");
+    async function generateRecommendations(
+      sprintData: any,
+      sprintAnalysis: any,
+      openaiApiKey,
+    ): Promise<any> {
+      console.log('Generando Recomendaciones del Sprint');
       try {
         const client = new openai.OpenAI({ apiKey: openaiApiKey });
         const prompt = await constructPrompt(sprintData, sprintAnalysis);
@@ -376,7 +424,10 @@ export class SprintreportService {
         throw new Error('Failed to generate recommendations');
       }
 
-      async function constructPrompt(dataSummary: any, sprintAnalysis: any): Promise<any> {
+      async function constructPrompt(
+        dataSummary: any,
+        sprintAnalysis: any,
+      ): Promise<any> {
         let prompt = `Basados en la data y análisis del siguiente sprint, genera recomendaciones de mejora para el equipo:\n\n`;
         // add the datasummary to the prompt variable
         Object.entries(dataSummary).forEach(([key, value]) => {
@@ -394,15 +445,16 @@ export class SprintreportService {
         return prompt;
       }
     }
-
   }
 
   async getAllTeamReports(teamId: string): Promise<any> {
     try {
-      const SprintReports = await this.sprintReportModel.find({ teamId: teamId });
+      const SprintReports = await this.sprintReportModel.find({
+        teamId: teamId,
+      });
       return SprintReports;
     } catch (error) {
-      console.log("Error getting team reports:", error);
+      console.log('Error getting team reports:', error);
     }
   }
 

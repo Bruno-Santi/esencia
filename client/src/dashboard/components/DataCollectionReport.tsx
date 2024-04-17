@@ -18,15 +18,18 @@ export const DataCollectionReport = () => {
 
   return (
     <div
-      className='md:mt-2 lg:-mt-6 shadow-lg w-[350px]
-    shadow-primary/50 border-primary border rounded-md flex justify-center p-2 bg-quaternary'
+      className='md:mt-2 lg:-mt-6 shadow-lg flex flex-col  w-[550px]
+    shadow-primary/50 border-primary border rounded-md  justify-center p-2 bg-quaternary'
     >
-      {Object.entries(dataAmount).map(([key, value]) => (
-        <span key={key} className='p-2 text-center text-tertiary flex flex-col '>
-          <span className='font-poppins lg:text-sm md:text-xs'> {key.replace(/_/g, " ").replace(/\b\w/g, (match) => match.toUpperCase())}:</span>{" "}
-          <span className='font-poppins   lg:text-sm md:text-xs'>{renderValue(value)}</span>
-        </span>
-      ))}
+      <span className='text-tertiary font-poppins items-center justify-center text-center'>Datos de los últimos 15 días.</span>
+      <section className='flex items-center justify-center'>
+        {Object.entries(dataAmount).map(([key, value]) => (
+          <span key={key} className='p-2 text-center text-tertiary flex flex-col '>
+            <span className='font-poppins lg:text-sm md:text-xs'> {key.replace(/_/g, " ").replace(/\b\w/g, (match) => match.toUpperCase())}:</span>{" "}
+            <span className='font-poppins font-bold   lg:text-base md:text-xs'>{renderValue(value)}</span>
+          </span>
+        ))}
+      </section>
     </div>
   );
 };

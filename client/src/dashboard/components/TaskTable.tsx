@@ -46,7 +46,11 @@ export const TaskTable = ({ tasks }) => {
                   </TableCell>
                   <TableCell>
                     <span className='dark:text-tertiary font-poppins'>
-                      {typeof task.percentage_true === "number" ? `${Math.round(task.percentage_true)}%` : task.percentage_true}
+                      {task.total_check_items === 0
+                        ? "No medible"
+                        : typeof task.percentage_true === "number"
+                          ? `${Math.round(task.percentage_true)}%`
+                          : `${Math.trunc(task.percentage_true)}%`}
                     </span>
                   </TableCell>
                 </TableRow>

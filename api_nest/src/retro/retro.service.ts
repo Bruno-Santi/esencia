@@ -311,16 +311,16 @@ export class RetroService {
 
     // const formattedDate = currentDate.toISOString();
     try {
-      const newData = { ...data };
-      console.log(newData);
+      // const newData = { ...data };
+      // console.log(newData);
 
-      const resp = await axios.post(`${process.env.API_DATA}/retro`, newData);
-      console.log(data);
-      console.log(resp);
-
+      // const resp = await axios.post(`${process.env.API_DATA}/retro`, newData);
+      // console.log(data);
+      // console.log(resp);
+      //localhost:3000
       axios
         .post(
-          `${process.env.API_DATA}/report_2?team_id=${data.team_id}&sprint=${data.sprint}`,
+          `https://esencia-api.onrender.com/api/sprintreport/${data.team_id}/${data.sprint}`,
         )
         .then(() => {
           console.log('Trigger enviado correctamente');
