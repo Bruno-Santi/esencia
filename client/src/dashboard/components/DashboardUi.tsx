@@ -159,10 +159,10 @@ export const DashboardUi = () => {
           <div className=''>
             <div className='lg:flex lg:flex-col'>
               <span className=' lg:pb-4 md:pb-6 font-poppins text-tertiary w-full my-auto place-items-center md:text-lg lg:text-2xl  sm:text-lg ml-4 mt-4 font-bold'>
-                Perspectivas Accionables
+                Recomendaciones Generales.
                 <Tooltip
                   title={`
-      Las Perspectivas Accionables resumen los datos recopilados de las encuestas diarias y ofrecen recomendaciones concretas y útiles. Estas recomendaciones están diseñadas para ayudar al equipo a tomar medidas específicas y efectivas para abordar áreas de mejora identificadas en las encuestas.
+      Las Recomendaciones Generales resumen los datos recopilados de las encuestas diarias y ofrecen recomendaciones concretas y útiles. Estas recomendaciones están diseñadas para ayudar al equipo a tomar medidas específicas y efectivas para abordar áreas de mejora identificadas en las encuestas.
     `}
                   className='ml-2 mb-4 md:relative md:top-2'
                   arrow
@@ -182,7 +182,7 @@ export const DashboardUi = () => {
             className='bg-tertiary  dark:bg-gray-900 w-5/6 mt-1  place-items-center align-bottom lg:h-4/6 md:h-[13em] mx-auto rounded-lg overflow-y-scroll'
           >
             <div ref={containerRef} className='font-poppin p-3 w-6/6 scroll-p-12 overflow-x-hidden my-auto   bg-tertiary  dark:bg-gray-900 m-auto'>
-              {shortRecomendation.length > 0 ? (
+              {shortRecomendation !== "There is not enought data." ? (
                 <UsePagination shortRecommendation={shortRecomendation} containerRef={containerRef} />
               ) : (
                 <p className='text-xl  text-primary/50  inset-0 text-center font-normal font-poppins dark:text-tertiary'>

@@ -22,11 +22,11 @@ export const UsePagination = ({ shortRecommendation, containerRef }) => {
 
   const inicio = (paginaActual - 1) * itemsPorPagina + 1;
   const fin = inicio + itemsPorPagina;
-  const datosPagina = shortRecommendation.slice(inicio, fin);
+  const datosPagina = shortRecommendation?.slice(inicio, fin);
 
   return (
     <div className='flex flex-col my-auto justify-center place-content-center items-center dark:bg-gray-900 dark:text-tertiary'>
-      {datosPagina.map((recomendacion, index) => (
+      {datosPagina?.map((recomendacion, index) => (
         <div key={index} className='my-4'>
           <h2 className='font-bold font-manrope text-lg text-secondary dark:text-green-600'>{recomendacion.key}</h2>
           <p className='font-poppins text-sm'>{recomendacion.value}</p>

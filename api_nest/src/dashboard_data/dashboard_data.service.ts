@@ -71,33 +71,38 @@ export class DashboardDataService {
           { $sort: { date: 1 } },
         ])
         .exec();
-
-      if (lines.length === 0) {
-        throw new BadRequestException('No existe data de este equipo');
-      }
+      console.log(lines);
 
       // Pie chart calculations
-      const pieChart = {
-        general_satisfaction:
-          lines.reduce(
-            (acc, curr) => acc + curr.daily_general_satisfaction,
-            0,
-          ) / lines.length,
-        self_satisfaction:
-          lines.reduce((acc, curr) => acc + curr.daily_self_satisfaction, 0) /
-          lines.length,
-        team_collaboration:
-          lines.reduce((acc, curr) => acc + curr.daily_team_collaboration, 0) /
-          lines.length,
-        work_engagement:
-          lines.reduce((acc, curr) => acc + curr.daily_work_engagement, 0) /
-          lines.length,
-        workspace_wellbeing:
-          lines.reduce((acc, curr) => acc + curr.daily_workspace_wellbeing, 0) /
-          lines.length,
-      };
+      let pieChart;
+      console.log(lines);
 
-      // Calculate answers
+      if (lines.length) {
+        pieChart = {
+          general_satisfaction:
+            lines.reduce(
+              (acc, curr) => acc + curr.daily_general_satisfaction,
+              0,
+            ) / lines.length,
+          self_satisfaction:
+            lines.reduce((acc, curr) => acc + curr.daily_self_satisfaction, 0) /
+            lines.length,
+          team_collaboration:
+            lines.reduce(
+              (acc, curr) => acc + curr.daily_team_collaboration,
+              0,
+            ) / lines.length,
+          work_engagement:
+            lines.reduce((acc, curr) => acc + curr.daily_work_engagement, 0) /
+            lines.length,
+          workspace_wellbeing:
+            lines.reduce(
+              (acc, curr) => acc + curr.daily_workspace_wellbeing,
+              0,
+            ) / lines.length,
+        };
+      }
+
       const answers = await this.surveyModel
         .aggregate([
           { $match: { team_id: teamId } },
@@ -105,9 +110,9 @@ export class DashboardDataService {
           { $group: { _id: null, total_entries: { $sum: 1 } } },
         ])
         .exec();
-      console.log(answers[0].total_entries);
-
       const totalAnswers = answers.length > 0 ? answers[0].total_entries : 0;
+
+      console.log(answers);
       console.log(totalAnswers);
 
       // Recommendation
@@ -272,8 +277,9 @@ export class DashboardDataService {
           cantidad_de_retros: retroCount,
           reportes_generados: reportCount,
         },
-        short_recommendation:
-          short_recommendation || 'There is not enought data.',
+        short_recommendation: short_recommendation.length
+          ? short_recommendation
+          : 'There is not enought data.',
         topics: topics.map((topic) => topic.content),
         cards: cardsAmount,
         task: task,
@@ -312,9 +318,11 @@ export class DashboardDataService {
         ])
         .exec();
       console.log(questionsData);
+      if (questionsData.length === 0) return [];
       const preguntas = questionsData[0].questions.map(
         (question) => question.content,
       );
+
       console.log(preguntas);
       const data = await this.surveyModel.aggregate([
         { $match: { team_id: teamId } },
@@ -341,7 +349,7 @@ export class DashboardDataService {
         },
       ]);
       console.log(data);
-
+      if (data.length === 0) return [];
       if (data.length === 0) {
         throw new BadRequestException('There is not enough data');
       }
