@@ -484,8 +484,6 @@ export class SprintreportService {
         // add the datasummary to the prompt variable
         prompt += `Data del Sprint: ${dataSummary}\n\n`;
         prompt += `Analisis del Sprint: ${sprintAnalysis}\n`;
-        //console.log("Prompt:", prompt);
-        //console.log('Recommendations Prompt:', prompt);
         return prompt;
       }
     }
