@@ -50,7 +50,7 @@ export class SprintreportService {
         cards,
       );
       const newReport = await new this.sprintReportModel(report);
-      await newReport.save();
+      //await newReport.save();
       console.log('Report saved');
       return newReport;
     } catch (error) {
@@ -98,9 +98,10 @@ export class SprintreportService {
           GoalStatus: boardCards,
         };
         // Ask Analyss to chatgpt
-        const analysis = await generateAnalysis(sprintReport, openaiApiKey);
+        const {analysis, prompt} = await generateAnalysis(sprintReport, openaiApiKey);
+        
         const recomendaciones = await generateRecommendations(
-          sprintReport,
+          prompt,
           analysis,
           openaiApiKey,
         );
@@ -186,6 +187,15 @@ export class SprintreportService {
       const weightedAverages = results.map((result, index) =>
         (result / totals[index]).toFixed(2),
       );
+
+      const generalAverage = (
+        weightedAverages.reduce((sum, avg) => sum + parseFloat(avg), 0) /
+        weightedAverages.length
+      ).toFixed(2);
+
+      // Add the general average as the last element of the array
+      weightedAverages.push(generalAverage);
+
       return weightedAverages;
     }
     async function getMinMaxDate(weightedAverages): Promise<any> {
@@ -216,7 +226,7 @@ export class SprintreportService {
         //Calculate the difference between de max date and min date
         const cuadrantsDifference: number[] = [];
         // Iterate over each quadrant
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 5; i++) {
           // Calculate the difference for the current quadrant between the maximum and minimum dates
           const difference =
             weightedAverages[maxDate][i] - weightedAverages[minDate][i];
@@ -380,29 +390,71 @@ export class SprintreportService {
           messages: [{ role: 'user', content: prompt }],
           model: 'gpt-3.5-turbo',
         });
-
-        return response.choices[0].message.content.trim();
+        const analysis = response.choices[0].message.content.trim();
+        return {analysis,prompt};
       } catch (error) {
         console.error('Error generating recommendations:', error);
         throw new Error('Failed to generate recommendations');
       }
 
-      async function constructPrompt(dataSummary: any): Promise<any> {
-        let prompt = `Basados en la data del siguiente sprint, genera algun análisis al respecto:\n\n`;
-        // add the datasummary to the prompt variable
-        Object.entries(dataSummary).forEach(([key, value]) => {
-          // Check if the value is an object
-          if (typeof value === 'object' && value !== null) {
-            // If it's an object, stringify it and add it to the prompt
-            prompt += `${key}: ${JSON.stringify(value)}\n`;
-          } else {
-            // If it's not an object, just add it to the prompt as-is
-            prompt += `${key}: ${value}\n`;
-          }
+      async function constructPrompt(dataSummary: typeof sprintData): Promise<any> {
+        //Deconstruct the dataSummary object
+        const { teamid, sprint, startDate, endDate, tasks, cuadrants_difference, retrospective, line_graphs, survey_answers, GoalStatus } = dataSummary;
+
+        // Construct the prompt
+        let prompt = `Actuarás como un consultor expero en agilidad empresarial. Basados en la data del siguiente sprint, genera un análisis relevante sobre el progreso del sprint, los objetivos planteados, los puntos altos y bajos del equipo en el sprint:\n\n`;
+
+        // Sprint Information
+        prompt += `Sprint ${sprint}:\n`;
+        prompt += `Fecha de inicio: ${startDate}\n`;
+        prompt += `Fecha de fin: ${endDate}\n`;
+
+        prompt += `\nEstado de los objetivos planteados:`;
+        prompt = await addtoPrompt(prompt, GoalStatus)
+
+        // Task Summary
+        prompt += `\nResumen del progreso de estos objetivos al cierre del sprint:\n`;
+        Object.entries(tasks).forEach(([category, count]) => {
+          prompt += `${category}: ${count}\n`;
         });
-        // console.log("Prompt:", prompt);
+
+        // Retrospective
+        prompt += `\nFeedback encontrado en la retrospectiva, bajo el formato; Pregunta Realizada, Respuesta Obtenidas, Votos a cada respuesta:\n`;
+        prompt = await addtoPrompt(prompt, retrospective)
+
+        // Survey Answers
+        prompt += `\nRespuestas a las encuestas de pulso realizadas:\n`;
+        prompt = await addtoPrompt(prompt, survey_answers)
+
+        // Cuadrants Difference
+        prompt += `\nDiferencia entre cuadrantes, en relación al inicio y cierre del sprint, donde cada cuadrante es:\n
+              daily_self_satisfaction: ${cuadrants_difference[0]}\n
+              daily_team_collaboration: ${cuadrants_difference[1]}\n
+              daily_work_engagement: ${cuadrants_difference[2]}\n
+              daily_workspace_wellbeing: ${cuadrants_difference[3]}\n
+              daily_general_satisfaction:${cuadrants_difference[4]}\n`;
+
+        // Line Graphs
+        prompt += `\nEvolución de estos cuadrantes en el sprint, por fecha:\n`;
+        prompt = await addtoPrompt(prompt, line_graphs)
+
+        // Helper function to add the data to the prompt
+        async function addtoPrompt(prompt, dataobject): Promise<any> {
+          Object.entries(dataobject).forEach(([key, value]) => {
+            // Check if the value is an object
+            if (typeof value === 'object' && value !== null) {
+              // If it's an object, stringify it and add it to the prompt
+              prompt += `${key}: ${JSON.stringify(value)}\n`;
+            } else {
+              // If it's not an object, just add it to the prompt as-is
+              prompt += `${key}: ${value}\n`;
+            }
+          });
+          return prompt;
+        }
         return prompt;
       }
+
     }
     async function generateRecommendations(
       sprintData: any,
@@ -430,23 +482,14 @@ export class SprintreportService {
       ): Promise<any> {
         let prompt = `Basados en la data y análisis del siguiente sprint, genera recomendaciones de mejora para el equipo:\n\n`;
         // add the datasummary to the prompt variable
-        Object.entries(dataSummary).forEach(([key, value]) => {
-          // Check if the value is an object
-          if (typeof value === 'object' && value !== null) {
-            // If it's an object, stringify it and add it to the prompt
-            prompt += `${key}: ${JSON.stringify(value)}\n`;
-          } else {
-            // If it's not an object, just add it to the prompt as-is
-            prompt += `${key}: ${value}\n`;
-          }
-        });
-        prompt += `Sprint Analysis: ${sprintAnalysis}\n`;
-        //console.log("Prompt:", prompt);
+        prompt += `Data del Sprint: ${dataSummary}\n\n`;
+        prompt += `Analisis del Sprint: ${sprintAnalysis}\n`;
         return prompt;
       }
     }
-  }
 
+  }
+  
   async getAllTeamReports(teamId: string): Promise<any> {
     try {
       const SprintReports = await this.sprintReportModel.find({
@@ -462,16 +505,3 @@ export class SprintreportService {
     return `This action removes a #${id} sprintreport`;
   }
 }
-
-//TODO:
-//Get All Reports
-//Bring card details % of progress.
-// {
-//   total_check_items: 3,
-//   true_count: 2,
-//   title: 'Hacer redes sociales',
-//   status: 'In Progress',
-//   percentage_true: 66.66666666666666
-// },
-//To filter by sprint, only some questions have sprint field; sprint: sprint });
-//No founds scenarios.
