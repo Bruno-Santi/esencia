@@ -26,13 +26,16 @@ export const UsePaginationTopics = ({ topics, containerRef }) => {
   return (
     <div className='flex flex-col my-auto justify-center place-content-center  text-left dark:bg-gray-900 dark:text-tertiary mb-6 py-2'>
       {datosPagina.map((item, index) => (
-        <div key={index} className='p-3 duration-500 hover:bg-gray-400 dark:hover:bg-gray-300/50 group list-none border-b-2 border-gray-600/20'>
+        <div
+          key={index}
+          className='p-3 duration-500 cursor-pointer hover:bg-gray-400/60 dark:hover:bg-gray-200/10 group list-none border-b-2 border-gray-600/20'
+        >
           <div className='flex justify-between'>
             <span className='font-poppins text-left'>{item}</span>
           </div>
         </div>
       ))}
-      {datosPagina.length === 0 && <p className='font-poppins mx-auto my-auto flex'>Complete more than 1 survey to get short recommendations</p>}
+      {datosPagina.length === 0 && <p className='font-poppins mx-auto my-auto flex'>Completa al menos una encuesta para obtener datos.</p>}
       <div className='flex mx-auto justify-center mt-2'>
         <button
           onClick={() => cambiarPagina(paginaActual - 1)}

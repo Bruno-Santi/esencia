@@ -42,7 +42,7 @@ export const NoRetro = () => {
     <div className='flex mt-6 h-full flex-col   m-auto text-center justify-center '>
       <div className='flex m-auto space-x-6  '>
         <div className='flex-col w-full space-y-6  px-10 '>
-          <div className='p-20  w-12/12 h-3/6 text-2xl relative font-poppins rounded-lg shadow-lg bg-gray-300/80 text-primary dark:text-tertiary  dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800 dark:shadow-white/10'>
+          <div className='p-20  w-12/12 h-3/6 text-2xl relative font-poppins rounded-lg shadow-lg bg-tertiary/20 text-primary dark:text-tertiary  dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800 dark:shadow-white/10'>
             {editMode === "c1" ? (
               <div>
                 <input
@@ -80,7 +80,7 @@ export const NoRetro = () => {
               </div>
             )}
           </div>
-          <div className='p-20  w-12/12 h-3/6 text-2xl relative font-poppins rounded-lg shadow-lg bg-gray-300/80 text-primary dark:text-tertiary  dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800 dark:shadow-white/10'>
+          <div className='p-20  w-12/12 h-3/6 text-2xl relative font-poppins rounded-lg shadow-lg bg-tertiary/20 text-primary dark:text-tertiary  dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800 dark:shadow-white/10'>
             {editMode === "c3" ? (
               <div>
                 <input
@@ -119,7 +119,7 @@ export const NoRetro = () => {
           </div>
         </div>
         <div className='flex-col w-full space-y-6 relative px-10'>
-          <div className='p-20 w-12/12 h-3/6 text-2xl font-poppins relative rounded-lg shadow-lg bg-gray-300/80 text-primary dark:text-tertiary dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800 dark:shadow-white/10'>
+          <div className='p-20 w-12/12 h-3/6 text-2xl font-poppins relative rounded-lg shadow-lg bg-tertiary/20 text-primary dark:text-tertiary dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800 dark:shadow-white/10'>
             {editMode === "c2" ? (
               <div>
                 <input
@@ -156,7 +156,7 @@ export const NoRetro = () => {
               </div>
             )}
           </div>
-          <div className='p-20 text-2xl w-12/12 h-3/6 font-poppins relative rounded-lg shadow-lg bg-gray-300/80 text-primary  dark:text-tertiary dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800 dark:shadow-white/10'>
+          <div className='p-20 text-2xl w-12/12 h-3/6 font-poppins relative rounded-lg shadow-lg bg-tertiary/20 text-primary  dark:text-tertiary dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800 dark:shadow-white/10'>
             {editMode === "c4" ? (
               <div>
                 <input

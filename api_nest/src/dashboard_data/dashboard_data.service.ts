@@ -269,6 +269,8 @@ export class DashboardDataService {
         ])
         .exec();
       const short_recommendation = await this.shortRecommendation(teamId);
+      console.log(short_recommendation);
+
       const dashboard = {
         pie_chart: pieChart,
         lines_graph: lines,
@@ -292,119 +294,124 @@ export class DashboardDataService {
   }
 
   async shortRecommendation(teamId: string) {
-    console.log(teamId);
-
     try {
       const tz = 'America/Argentina/Buenos_Aires';
       const fecha = moment().tz(tz).toDate();
       const minDate = moment(fecha).startOf('day').toDate();
       const maxDate = moment(fecha).endOf('day').toDate();
       const today = moment().startOf('day');
-      console.log(today.toDate());
 
-      const questionsData = await this.daySurveyModel
-        .aggregate([
-          {
-            $match: {
-              team_id: teamId,
-              $expr: {
-                $eq: [
-                  { $dateToString: { format: '%Y-%m-%d', date: '$date' } },
-                  today.format('YYYY-MM-DD'),
-                ],
-              },
+      const questionsData = await this.daySurveyModel.aggregate([
+        {
+          $match: {
+            team_id: teamId,
+            $expr: {
+              $eq: [
+                { $dateToString: { format: '%Y-%m-%d', date: '$date' } },
+                today.format('YYYY-MM-DD'),
+              ],
             },
           },
-        ])
-        .exec();
-      console.log(questionsData);
+        },
+      ]);
+
       if (questionsData.length === 0) return [];
+
       const preguntas = questionsData[0].questions.map(
         (question) => question.content,
       );
 
-      console.log(preguntas);
       const data = await this.surveyModel.aggregate([
         { $match: { team_id: teamId } },
-
-        {
-          $match: {
-            date: {
-              $gte: minDate,
-              $lte: maxDate,
-            },
-          },
-        },
+        { $match: { date: { $gte: minDate, $lte: maxDate } } },
         {
           $group: {
             _id: {
               team_id: '$team_id',
               date: { $dateToString: { format: '%Y-%m-%d', date: '$date' } },
             },
-            daily_self_satisfaction: { $avg: '$question1.value' },
-            daily_team_collaboration: { $avg: '$question2.value' },
-            daily_work_engagement: { $avg: '$question3.value' },
-            daily_workspace_wellbeing: { $avg: '$question4.value' },
+            daily_self_satisfaction: {
+              $avg: { $multiply: ['$question1.value', 100] },
+            },
+            daily_team_collaboration: {
+              $avg: { $multiply: ['$question2.value', 100] },
+            },
+            daily_work_engagement: {
+              $avg: { $multiply: ['$question3.value', 100] },
+            },
+            daily_workspace_wellbeing: {
+              $avg: { $multiply: ['$question4.value', 100] },
+            },
           },
         },
       ]);
-      console.log(data);
-      if (data.length === 0) return [];
-      if (data.length === 0) {
-        throw new BadRequestException('There is not enough data');
-      }
 
-      const metrics = Object.values(data[0]);
+      if (data.length === 0) return [];
+
       let prompt = `Actuarás como un Agile coach experto. Darás recomendaciones para un equipo pensando en mejorar sus capacidades de desarrollo ágil.
-      Te daré 4 preguntas que se hicieron a un grupo de trabajo y me darás como máximo 3 recomendaciones a partir de tu análisis de la puntuación de las respuestas
+      Te daré 4 preguntas que se hicieron a un grupo de trabajo y me darás como máximo 4 recomendaciones a partir de tu análisis de la puntuación de las respuestas
       y de lo que se enuncia. Debes dar recomendaciones creativas que aporten valor a estos equipos de trabajo.
-  
+      
+      Necesito que las recomendaciones me las mandes en este formato:
+      [Titulo recomendacion]: 
+      [Recomendación extensa que de valor]
+      
+      Hasta un máximo de 4 de estas. Asegúrate de que las respuestas que me des no tengan ningún otro texto adicional.
+      
       Preguntas:\n`;
 
       for (const pregunta of preguntas) {
         prompt += `${pregunta}\n`;
-        console.log(pregunta);
       }
+
+      // Obtener recomendaciones del modelo de OpenAI
       const client = new openai.OpenAI({ apiKey: this.openaiApiKey });
       const response = await client.chat.completions.create({
         messages: [{ role: 'system', content: prompt }],
         model: 'gpt-3.5-turbo',
+        temperature: 0.8, // Ajusta este valor según lo que desees, valores típicos están en el rango de 0.1 a 1.0
       });
+      console.log(response);
 
       const recommendationText = response.choices[0].message.content.trim();
-      const recommendations = recommendationText
-        .split('\n')
-        .filter((line) => line.trim() !== '')
-        .map((line, index) => {
-          if (index === 0) {
-            return { key: line.trim(), value: '' };
-          } else {
-            const [key, ...valueLines] = line.split(':');
-            const formattedValue = valueLines
-              .map((line) => line.trim())
-              .join(':')
-              .trim();
-            return { key: key.trim(), value: formattedValue };
+      console.log(
+        'Texto de la recomendación antes del procesamiento:',
+        recommendationText,
+      ); // Agregar esta línea para imprimir el texto antes de procesarlo
+
+      // Formatear recomendaciones
+      const formattedRecommendations = [];
+      let currentRecommendation;
+      recommendationText.split('\n').forEach((line) => {
+        if (line.trim() !== '') {
+          const match = line.match(/^\d+\.\s\*\*(.+?)\*\*:\s*(.*)$/);
+          if (match) {
+            if (currentRecommendation) {
+              formattedRecommendations.push(currentRecommendation);
+            }
+            currentRecommendation = {
+              title: match[1].trim(),
+              content: match[2].trim(),
+            };
+          } else if (currentRecommendation) {
+            currentRecommendation.content += ' ' + line.trim();
           }
-        });
+        }
+      });
+      if (currentRecommendation) {
+        formattedRecommendations.push(currentRecommendation);
+      }
 
-      console.log(recommendations);
-
-      const recommendationsAsString = recommendations
-        .map(
-          (recommendation) => `${recommendation.key}\n${recommendation.value}`,
-        )
-        .join('\n\n');
-
+      // Guardar recomendaciones en la base de datos
       await this.recommendationModel.insertMany({
         team_id: teamId,
-        date: minDate,
+        date: moment().startOf('day').toDate(),
         kind: 'daily',
-        answers: data[0].answers,
-        content: recommendationsAsString,
+        answers: data[0].answers, // Aquí debes especificar de dónde vienen las respuestas
+        content: JSON.stringify(formattedRecommendations), // Convertir a cadena de texto
       });
 
-      return recommendations;
+      return formattedRecommendations;
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException(error.message);

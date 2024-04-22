@@ -1,90 +1,54 @@
-import React, { useEffect, useRef } from "react";
-import Chart from "chart.js/auto";
+import React, { useMemo, useState } from "react";
+import { LineChart } from "@tremor/react";
+import { formatDate } from "../helpers";
 
 export const LineChartReport = ({ data, height = "8em" }) => {
+  const themeLocal = localStorage.getItem("theme");
+  const [theme, setTheme] = useState(themeLocal);
   console.log(data);
 
-  const transformLineGraphData = (lineGraphsData) => {
-    const labels = Object.keys(lineGraphsData);
-    const values = lineGraphsData[labels[0]].map((value) => parseFloat(value) * 100);
+  const chartData = useMemo(() => {
+    if (!data || Object.keys(data).length === 0) {
+      return null;
+    }
 
-    const datasets = [
+    const [date, values] = Object.entries(data)[0];
+    const formattedData = [
       {
-        label: "Satisfacción General Diaria",
-        data: [values[0]],
-        borderColor: "rgba(255, 99, 132, 0.5)",
-        backgroundColor: "rgba(255, 99, 132, 0.2)",
-      },
-      {
-        label: "Colaboración en Equipo Diaria",
-        data: [values[1]],
-        borderColor: "rgba(255, 206, 86, 0.5)",
-        backgroundColor: "rgba(255, 206, 86, 0.2)",
-      },
-      {
-        label: "Compromiso Laboral Diario",
-        data: [values[2]],
-        borderColor: "rgba(75, 192, 192, 0.5)",
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
-      },
-      {
-        label: "Bienestar en el Espacio de Trabajo Diario",
-        data: [values[3]],
-        borderColor: "rgba(153, 102, 255, 0.5)",
-        backgroundColor: "rgba(153, 102, 255, 0.2)",
+        date: formatDate(date),
+        "Satisfacción personal diaria": parseFloat(values[0]) * 100,
+        "Colaboración en equipo diaria": parseFloat(values[1]) * 100,
+        "Compromiso laboral diario": parseFloat(values[2]) * 100,
+        "Bienestar en el espacio de trabajo": parseFloat(values[3]) * 100,
+        "Satisfacción general diaria": ((parseFloat(values[0]) + parseFloat(values[1]) + parseFloat(values[2]) + parseFloat(values[3])) * 100) / 4,
       },
     ];
 
-    return {
-      labels: labels,
-      datasets: datasets,
-    };
-  };
-
-  const chartContainer = useRef(null);
-  const chartInstance = useRef(null);
-
-  useEffect(() => {
-    if (chartContainer.current && data && Object.keys(data).length > 0) {
-      const formattedData = transformLineGraphData(data);
-
-      if (!chartInstance.current) {
-        chartInstance.current = new Chart(chartContainer.current.getContext("2d"), {
-          type: "line",
-          data: formattedData,
-          options: {
-            responsive: false,
-            maintainAspectRatio: false,
-            scales: {
-              x: {
-                type: "time",
-                time: {
-                  unit: "day",
-                  displayFormats: {
-                    day: "YYYY-MM-DD",
-                  },
-                },
-              },
-            },
-            plugins: {
-              title: {
-                display: true,
-                text: "Gráfico de líneas",
-              },
-            },
-          },
-        });
-      } else {
-        chartInstance.current.data.labels = formattedData.labels;
-        chartInstance.current.data.datasets = formattedData.datasets;
-        chartInstance.current.update();
-      }
-    }
+    return formattedData;
   }, [data]);
+
+  const dataFormatter = (number) => `${Intl.NumberFormat("us").format(number).toString()}`;
 
   return (
     <div>
-      <canvas id='SesionLine' ref={chartContainer} style={{ marginBottom: "10px", width: "100%", height: `${height}`, margin: "auto", padding: 10 }} />
+      <div className='h-80 p-4 antialiased ' style={{ marginBottom: "10px", width: "100%", height: `${height}`, margin: "auto", padding: 10 }}>
+        <LineChart
+          data={chartData}
+          index='date'
+          categories={[
+            "Satisfacción personal diaria",
+            "Colaboración en equipo diaria",
+            "Compromiso laboral diario",
+            "Bienestar en el espacio de trabajo",
+            "Satisfacción general diaria",
+          ]}
+          connectNulls={true}
+          valueFormatter={dataFormatter}
+          colors={["red-400", "orange-400", "blue-400", "rose-300", "rose-400"]}
+          yAxisWidth={50}
+          onValueChange={(v) => console.log(v)}
+        />
+      </div>
     </div>
   );
 };

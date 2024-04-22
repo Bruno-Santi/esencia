@@ -10,16 +10,16 @@ export const TrendingTopics = () => {
   if (!topics.length)
     return (
       <div
-        className='bg-tertiary shadow-lg rounded-md
-      shadow-primary/50 dark:bg-gradient-to-br md:h-[300px] lg:h-[400px] lg:-my-[108px] dark:from-zinc-900 dark:to-gray-800 font-poppins text-xl justify-center flex h-4/6 items-center'
+        className='bg-tertiary/20 shadow-lg rounded-md
+      shadow-primary/50 md:-my-[145px]   lg:-my-[108px] dark:bg-quaternary/40 font-poppins text-xl justify-center flex h-5/6 items-center'
       >
         <span className='text-primary/60 dark:text-tertiary'>Sin tópicos aún.</span>
       </div>
     );
   return (
-    <li className='list-none lg:-my-28 md:-my-32 md:overflow-y-scroll md:h-[300px]'>
+    <li className='list-none lg:-my-28 md:-my-36 lg:min-h-[400px]  md:min-h-[400px]'>
       <div className='flex items-center justify-between p-2 rounded-t-md shadow-xs bg-quaternary  dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800   '>
-        <div className='flex items-center'>
+        <div className='flex items-center '>
           <span className='flex mx-2 font-semibold relative text-tertiary dark:text-tertiary lg:text-2xl lg:font-bold text-xl'>
             Tendencias{" "}
             <div className=''>
@@ -38,10 +38,10 @@ Las Tendencias resumen los temas destacados en los comentarios durante las retro
       </div>
       <div className=''>
         <ul
-          className='divide-y divide-gray-300 bg-gray-500/20 shadow-lg
+          className='divide-y divide-gray-300 bg-tertiary/20 shadow-lg
          shadow-primary/50  rounded-b-md'
         >
-          <div className='animate__animated animate__fadeIn  animate__slower'>
+          <div className='animate__animated animate__fadeIn overflow-y-auto  animate__slower'>
             <UsePaginationTopics topics={topics} />
           </div>
         </ul>

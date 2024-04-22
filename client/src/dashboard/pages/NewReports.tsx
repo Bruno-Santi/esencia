@@ -142,16 +142,21 @@ export const NewReports = () => {
               )}
             </button>
           </div>
-          <div className='flex items-center justify-center font-poppins mt-6 mr-32 '>
-            {!activeReport[0].startDate.length ? "" : `${formatDate(activeReport[0].startDate)} - ${formatDate(activeReport[0].endDate)}`}
-          </div>
+          {activeReport.map((report, index) => (
+            <div key={index} className='flex flex-col items-center justify-center font-poppins mt-6 mr-32 '>
+              <div className='text-sm text-gray-500 mb-2'>Inicio - Fin</div>
+              {report.startDate && report.endDate && (
+                <div className='dark:text-tertiary'>{`${formatDate(report.startDate)} - ${formatDate(report.endDate)}`}</div>
+              )}
+            </div>
+          ))}
           <Grid
             container
             spacing={0}
             justifyContent='left'
             alignItems='center'
             ml={{ xs: 0, lg: 0 }}
-            className='mb-20 gap-y-2 items-center lg:space-x-6 md:space-x-6 lg:mt-6'
+            className='lg:pb-20 md:pb-20 gap-y-2 items-center lg:space-x-6 md:space-x-6 lg:mt-6 font-poppins'
           >
             <Grid item xs={12} lg={3}>
               <div className='flex space-x-0 lg:ml-10 md:ml-10 gap-2 mb-20 font-poppins text-primary '>
@@ -173,25 +178,25 @@ export const NewReports = () => {
                   icon={<MdOutlineSelfImprovement />}
                   label='Satisfacción Personal'
                   value={Math.round(activeReport[0]?.cuadrants_difference[0] * 100)}
-                  color='bg-[#FF6384]'
+                  color='bg-red-400'
                 />
                 <Cuadrants
                   icon={<FaUsers />}
                   label='Colaboracion en Equipo'
                   value={Math.round(activeReport[0]?.cuadrants_difference[1] * 100)}
-                  color='bg-[#36A2EB]'
+                  color='bg-orange-400'
                 />
                 <Cuadrants
                   icon={<FaTools />}
                   label='Compromiso Laboral'
                   value={Math.round(activeReport[0]?.cuadrants_difference[2] * 100)}
-                  color='bg-[#ebb734]'
+                  color='bg-blue-400'
                 />
                 <Cuadrants
                   icon={<FaHome />}
                   label='Bienestar en el espacio de trabajo'
                   value={Math.round(activeReport[0]?.cuadrants_difference[3] * 100)}
-                  color='bg-[#5a2f80]'
+                  color='bg-rose-300'
                 />
               </div>
             </Grid>
@@ -209,14 +214,16 @@ export const NewReports = () => {
             </Grid>
 
             <Grid item xs={12} lg={6}>
-              <div className='bg-gray-200/60 rounded-md shadow-md shadow-primary/20 text-primary h-[250px] font-poppins p-2 overflow-hidden relative'>
+              <div className='bg-tertiary/20 rounded-md shadow-lg shadow-primary/40 text-primary h-[250px] font-poppins p-2 overflow-hidden relative'>
                 <div className=' h-full '>
-                  <div className='p-2 text-lg'>Recomendaciones.</div>
+                  <div className='p-2 text-lg text-secondary'>Recomendaciones.</div>
                   <Divider className='py-2 ' />
                   <div className='mt-6 px-4 pb-4 overflow-y-scroll absolute top-14 left-0 right-0 bottom-0'>
                     <ul>
                       {formattedRecommendations.map((recommendation, index) => (
-                        <li key={index}>{recommendation.trim()}</li>
+                        <li className='dark:text-tertiary' key={index}>
+                          {recommendation.trim()}
+                        </li>
                       ))}
                     </ul>
                   </div>{" "}
@@ -224,21 +231,21 @@ export const NewReports = () => {
               </div>
             </Grid>
             <Grid item xs={12} lg={5}>
-              <div className='bg-gray-200/60 rounded-md shadow-md shadow-primary/20 text-primary h-[250px] font-poppins p-2 overflow-hidden relative'>
+              <div className='bg-tertiary/20 rounded-md shadow-lg shadow-primary/40 text-primary h-[250px] font-poppins p-2 overflow-hidden relative'>
                 <div className=' h-full '>
-                  <div className='p-2 text-lg'>Análisis de conocimiento.</div>
+                  <div className='p-2 text-lg text-secondary'>Análisis de conocimiento.</div>
                   <Divider className='py-2 ' />
 
-                  <div className='mt-6 px-4  pb-4 overflow-y-scroll absolute top-14 left-0 right-0 bottom-0'>{activeReport[0].analysis}</div>
+                  <div className='mt-6 px-4  pb-4 overflow-y-scroll absolute top-14 left-0 right-0 bottom-0 dark:text-tertiary'>{activeReport[0].analysis}</div>
                 </div>
               </div>
             </Grid>
             <Grid item xs={12} lg={6} className=''>
-              <div className='bg-gray-200/60 rounded-md shadow-md shadow-primary/20 text-primary font-poppins p-2 h-[250px] overflow-hidden relative'>
+              <div className='bg-tertiary/20 rounded-md shadow-lg shadow-primary/40 text-primary font-poppins p-2 h-[250px] overflow-hidden relative'>
                 <div className=' h-full'>
                   <div className='flex flex-col'>
-                    <span className='p-2 text-lg'>Preguntas realizadas en este sprint.</span>
-                    <span className='italic text-sm font-light px-2 font-poppins'>Pregunta / Resultado</span>
+                    <span className='p-2 text-lg text-secondary'>Preguntas realizadas en este sprint.</span>
+                    <span className='italic text-sm font-light px-2 font-poppins dark:text-tertiary '>Pregunta / Resultado</span>
                   </div>
 
                   <Divider className='py-2' />
@@ -268,7 +275,7 @@ export const NewReports = () => {
                                   <li className='text-secondary font-bold'>
                                     <span className='text-primary font-bold'>•</span> {answer._id}{" "}
                                     <span>
-                                      /<span className='text-red-600 font-bold'>{Math.round(answer.average_value * 100)}%🔻</span>{" "}
+                                      /<span className='text-red-600 font-bold'> {Math.round(answer.average_value * 100)}%🔻</span>{" "}
                                     </span>{" "}
                                   </li>
                                 </div>
@@ -298,11 +305,11 @@ export const NewReports = () => {
               </div>
             </Grid>
             <Grid item xs={12} lg={5}>
-              <div className='bg-gray-200/60 rounded-md shadow-md shadow-primary/20 text-primary font-poppins p-2 h-[250px] overflow-hidden relative'>
+              <div className='bg-tertiary/20 rounded-md shadow-lg shadow-primary/40 text-primary font-poppins p-2 h-[250px] overflow-hidden relative'>
                 <div className=' h-full'>
                   <div className='flex flex-col'>
-                    <span className='p-2 text-lg'>Resumen de retro.</span>
-                    <span className='italic text-sm font-light px-2 font-poppins'>Pregunta / Idea / Votos</span>
+                    <span className='p-2 text-lg text-secondary'>Resumen de retro.</span>
+                    <span className='italic text-sm font-light px-2 font-poppins dark:text-tertiary'>Pregunta / Idea / Votos</span>
                   </div>
                   <Divider className='py-2' />
                   <div className='mt-8 px-2 overflow-y-scroll absolute top-14 left-0 right-0 bottom-0'>

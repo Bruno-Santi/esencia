@@ -15,7 +15,7 @@ export class Team extends Document {
   })
   logo?: string;
   @Prop({
-    default: 0,
+    default: 1,
   })
   sprint?: number;
 }

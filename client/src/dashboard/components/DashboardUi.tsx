@@ -45,7 +45,7 @@ export const DashboardUi = () => {
   };
   console.log(cards);
   console.log(metricsForToday);
-  console.log(shortRecomendation);
+  console.log(Object.keys(shortRecomendation).length);
 
   const handleAcceptTeam = async (teamId) => {
     try {
@@ -75,6 +75,7 @@ export const DashboardUi = () => {
       </div>
     );
   };
+  console.log(cards);
 
   const { handleNavigate } = useNavigateTo();
   const containerRef = useRef();
@@ -98,16 +99,17 @@ export const DashboardUi = () => {
   const handleVote = () => {
     toastSuccess("Thanks for your feedback! 🤗");
   };
+
   return (
     <section className='lg:mt-2 md:mt-2'>
-      <div className='items-center lg:flex lg:flex-col md:flex md:flex-col md:space-y-2 lg:space-y-2 lg:items-center font-poppins lg:justify-center md:justify-center md:flex mt-2 lg:ml-6 md:mr-2 '>
+      <div className='items-center lg:flex sm:flex sm:flex-col lg:flex-col md:flex md:flex-col md:space-y-2 lg:space-y-2 lg:items-center font-poppins lg:justify-center md:justify-center md:flex mt-2 lg:ml-6 md:mr-2 '>
         <span
           onClick={() => buttonGetData(activeTeam._id, activeTeam.sprint, true)}
           disabled={dataLoading}
           className={
             dataLoading
               ? "btn-secondary w-fit"
-              : "btn-primary w-fit  flex lg:p-2 md:p-2 space-x-2 mb-3 lg:text-2xl rounded-lg font-bold hover:text-primary  dark:font-bold hover:bg-tertiary duration-700"
+              : "btn-primary w-fit  flex lg:p-2 md:p-2 sm:p-2  space-x-2 mb-3 lg:text-2xl rounded-lg font-bold hover:text-primary  dark:font-bold hover:bg-tertiary duration-700"
           }
         >
           {dataLoading ? <ClipLoader /> : <span className='lg:text-sm '>Actualizar datos </span>}
@@ -121,9 +123,9 @@ export const DashboardUi = () => {
       </div>
       <div className=' w-full  lg:-mt-14 md:mt-2 sm:max-w-screen sm:p-6 md:grid lg:grid lg:px-6 md:px-6 sm:px-0 sm:my-6 lg:ml-2 md:ml-2 sm:ml-0 sm:flex sm:flex-col sm:items-center sm:justify-center lg:py-2 md:py-2 lg:grid-cols-12 md:grid-cols-12 md:grid-rows-3 lg:grid-rows-2 lg:gap-y-0 md:gap-2 md:gap-y-0 '>
         <div
-          className='bg-tertiary shadow-lg 
-         shadow-primary/50  lg:min-h-[400px] md:h-[320px] sm:h-[350px] sm:w-[360px]  sm:mb-6 md:w-full lg:w-full
-         dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800  lg:row-span-1
+          className='bg-tertiary/20 shadow-lg 
+         shadow-black/30  lg:min-h-[400px] md:h-[320px] sm:h-[350px] sm:w-[360px]  sm:mb-6 md:w-full lg:w-full
+         dark:bg-quaternary/40 lg:row-span-1
    lg:col-span-6 md:col-span-6   rounded-md'
         >
           <div className='flex justify-between relative'>
@@ -150,21 +152,23 @@ export const DashboardUi = () => {
                   <Charts />
                 </div>
               ) : (
-                <p className='text-2xl dark:text-tertiary font-normal font-poppins mt-20'>Sin datos, intenta primero con una encuesta de pulso.</p>
+                <p className='lg:text-2xl md:text-xl sm:text-base sm:p-2 sm:relative  sm:bottom-14 sm:justify-center lg:align-center lg:justify-center lg:my-auto lg:inset-0 lg:relative lg:top-16 dark:text-tertiary md:inset-0 md:align-center md:justify-center md:my-auto md:bottom-20 relative font-normal font-poppins mt-20'>
+                  Sin datos, intenta primero con una encuesta de pulso.
+                </p>
               )}
             </span>
           </div>
         </div>
-        <div className='bg-quaternary lg:min-h-[400px] dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800   shadow-lg shadow-primary/50 lg:h-[400px] md:h-[320px] sm:h-[350px] sm:w-[360px]  sm:mb-6 md:w-full lg:w-full w-full lg:row-span-1 lg:col-span-3 md:col-span-3 rounded-md '>
+        <div className='bg-quaternary lg:min-h-[400px] dark:bg-gradient-to-br dark:bg-quaternary/40   shadow-lg shadow-primary/50 lg:h-[400px] md:h-[320px] sm:h-[350px] sm:w-[360px]  sm:mb-6 md:w-full lg:w-full w-full lg:row-span-1 lg:col-span-3 md:col-span-3 rounded-md '>
           <div className=''>
-            <div className='lg:flex lg:flex-col'>
-              <span className=' lg:pb-4 md:pb-6 font-poppins text-tertiary w-full my-auto place-items-center md:text-lg lg:text-2xl  sm:text-lg ml-4 mt-4 font-bold'>
+            <div className='lg:flex lg:flex-col '>
+              <span className=' lg:pb-4 md:pb-6 font-poppins text-tertiary w-full my-auto place-items-center md:text-sm  lg:text-2xl  sm:text-lg ml-4 mt-4 font-bold'>
                 Recomendaciones Generales.
                 <Tooltip
                   title={`
       Las Recomendaciones Generales resumen los datos recopilados de las encuestas diarias y ofrecen recomendaciones concretas y útiles. Estas recomendaciones están diseñadas para ayudar al equipo a tomar medidas específicas y efectivas para abordar áreas de mejora identificadas en las encuestas.
     `}
-                  className='ml-2 mb-4 md:relative md:top-2'
+                  className='ml-2 mb-4 md:relative md:top-1.5 lg:top-1'
                   arrow
                   TransitionComponent={Zoom}
                 >
@@ -179,13 +183,13 @@ export const DashboardUi = () => {
           </div>
           <div
             ref={containerRef}
-            className='bg-tertiary  dark:bg-gray-900 w-5/6 mt-1  place-items-center align-bottom lg:h-4/6 md:h-[13em] mx-auto rounded-lg overflow-y-scroll'
+            className='bg-tertiary  dark:bg-gray-900 w-5/6 mt-1  place-items-center align-bottom lg:h-4/6 md:h-[13em] sm:h-5/6 mx-auto rounded-lg overflow-y-scroll'
           >
             <div ref={containerRef} className='font-poppin p-3 w-6/6 scroll-p-12 overflow-x-hidden my-auto   bg-tertiary  dark:bg-gray-900 m-auto'>
               {shortRecomendation !== "There is not enought data." ? (
                 <UsePagination shortRecommendation={shortRecomendation} containerRef={containerRef} />
               ) : (
-                <p className='text-xl  text-primary/50  inset-0 text-center font-normal font-poppins dark:text-tertiary'>
+                <p className='lg:text-xl md:text-lg  text-primary/50  inset-0 text-center font-normal font-poppins dark:text-tertiary'>
                   Sin datos, intenta primero con una encuesta de pulso.
                 </p>
               )}
@@ -194,19 +198,21 @@ export const DashboardUi = () => {
         </div>
         <div className='flex justify-center w-full md:-mt-40  lg:-mt-0 lg:row-span-1 md:row-start-2 md:row-span-2 md:col-start-7  md:mr-24 md:-mt-56 lg:col-span-3 md:col-span-4 lg:h-[400px] lg:space-y-2 items-center sm:mt-0 flex-col -mt-16 mb-20'>
           <div className='flex mb-2 mt-6'>
-            {cards.map((card, index) => {
-              const key = card._id;
-              const value = card.count;
-              return <BoardReport key={index} title={englishToSpanish[key]} value={value} />;
-            })}
+            <div className='flex mb-2 mt-6'>
+              {Object.keys(englishToSpanish).map((key, index) => {
+                const matchingCard = cards.find((card) => card._id === key);
+                const value = matchingCard ? matchingCard.count : 0;
+                return <BoardReport key={index} title={englishToSpanish[key]} value={value} />;
+              })}
+            </div>
           </div>
           <div>{task && <TaskTable tasks={task} />}</div>
         </div>
 
         <div
-          className='bg-tertiary shadow-lg
+          className=' shadow-lg
          shadow-primary/50  lg:h-[400px] md:h-[400px] md:-mt-48 sm:h-[350px] sm:w-[360px]  sm:mb-6 md:w-full lg:w-full 
-         dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800 
+         dark:bg-quaternary/40
       w-full lg:col-span-6 md:col-span-6 lg:row-span-2 md:row-start-2 md:row-span-2  rounded-md '
         >
           <span className='font-poppins text-primary flex items-center mt-4 ml-4 lg:text-2xl md:text-xl dark:text-tertiary font-bold'>
@@ -228,18 +234,20 @@ export const DashboardUi = () => {
               {Object.keys(linesMetrics).length > 0 ? (
                 <LineCharts />
               ) : (
-                <p className='text-2xl dark:text-tertiary font-normal font-poppins'>Sin datos, intenta primero con una encuesta de pulso.</p>
+                <p className='lg:text-2xl md:text-xl sm:text-base sm:p-2 sm:relative  sm:bottom-14 sm:justify-center lg:align-center lg:justify-center lg:my-auto lg:inset-0 lg:relative lg:top-1 dark:text-tertiary md:inset-0 md:align-center md:justify-center md:my-auto md:bottom-20 md:relative font-normal font-poppins mt-20'>
+                  Sin datos, intenta primero con una encuesta de pulso.
+                </p>
               )}
             </span>
           </div>
         </div>
-        <div className='lg:h-[400px] lg:w-[440px] md:w-[300px] lg:space-y-28 md:space-y-32 md:-mt-52 lg:mt-16 sm:h-[350px] sm:w-[350px] md:h-[400px]  lg:col-start-7 lg:row-start-2 lg:col-span-2  md:col-span-2 md:col-start-10 md:row-span-2 md:row-start-1 sm:my-16 rounded-md justify-center my-auto gap-y-4'>
+        <div className='lg:h-[400px] md:h-[380px] lg:w-[440px] md:w-[300px] lg:space-y-28 md:space-y-32  lg:mt-16 sm:h-[350px] sm:w-[350px]  lg:col-start-7 lg:row-start-2 lg:col-span-2  md:col-span-2 md:col-start-10 md:row-span-2 md:row-start-1 sm:my-16 rounded-md justify-center my-auto gap-y-4'>
           <TrendingTopics />
         </div>
         <div
-          className='bg-tertiary shadow-lg
+          className='bg-tertiary/20 shadow-lg
          shadow-primary/50 md:-mt-[500px]  lg:h-[400px] md:h-[320px]  sm:h-[350px] sm:w-[360px]  sm:mb-6 md:w-full lg:w-full 
-         dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800 
+         dark:bg-quaternary/40
      lg:col-span-3 md:row-start-3 md:col-start-11 md:col-span-2 lg:row-start-2 lg:row-span-2 lg:col-start-10  rounded-md lg:place-content-start lg:self-start lg:items-start lg:justify-start lg:-my-12'
         >
           {" "}
@@ -254,7 +262,7 @@ export const DashboardUi = () => {
                   onClick={() => startCreatingSurvey(activeTeam.name, activeTeam._id)}
                   className={
                     !surveyLoading
-                      ? "btn-primary sm:w-2/3 sm:flex md:w-5/6 sm:items-center p-2 sm:justify-center font-poppins dark:hover:border-white dark:hover:border-1 dark:hover:duration-500 md:text-base md:p-1 lg:text-xl rounded-md lg:p-2 duration-700 hover:bg-amber-100 hover:text-primary mt-4"
+                      ? "btn-primary sm:w-full sm:flex md:w-5/6 sm:items-center p-2 sm:justify-center font-poppins dark:hover:border-white dark:hover:border-1 dark:hover:duration-500 md:text-base md:p-1 lg:text-xl rounded-md lg:p-2 duration-700 hover:bg-amber-100 hover:text-primary mt-4"
                       : "btn-secondary font-poppins  md:w-5/6 text-xl rounded-md p-2 duration-700 sm:flex sm:items-center sm:justify-center mt-4"
                   }
                 >

@@ -1,19 +1,17 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import Chart from "chart.js/auto";
-import "chartjs-adapter-moment";
+import { LineChart } from "@tremor/react";
+import { useEffect, useMemo, useState } from "react";
 import { useDashboard } from "../../hooks/useDashboard";
 import { formatDate } from "../../helpers";
 
-export const LineCharts = ({ height = "8em" }) => {
+export function LineCharts({ height = "8em" }) {
   const themeLocal = localStorage.getItem("theme");
-  const [theme, setTheme] = useState();
+  const [theme, setTheme] = useState(themeLocal);
   const { linesMetrics } = useDashboard();
-  const chartContainer = useRef(null);
-  const chartInstance = useRef(null);
+  console.log(linesMetrics);
 
   useEffect(() => {
     setTheme(themeLocal);
-  }, [theme]);
+  }, [themeLocal]);
 
   const chartData = useMemo(() => {
     if (!linesMetrics || linesMetrics.length === 0) {
@@ -22,87 +20,34 @@ export const LineCharts = ({ height = "8em" }) => {
 
     const formattedData = linesMetrics.map((metric) => ({
       date: formatDate(metric.date),
-      daily_general_satisfaction: Math.round(metric.daily_general_satisfaction * 100),
-      daily_self_satisfaction: Math.round(metric.daily_self_satisfaction * 100),
-      daily_team_collaboration: Math.round(metric.daily_team_collaboration * 100),
-      daily_work_engagement: Math.round(metric.daily_work_engagement * 100),
-      daily_workspace_wellbeing: Math.round(metric.daily_workspace_wellbeing * 100),
+      "Satisfacción personal diaria": metric.daily_self_satisfaction * 100,
+      "Colaboración en equipo diaria": metric.daily_team_collaboration * 100,
+      "Compromiso laboral diario": metric.daily_work_engagement * 100,
+      "Bienestar en el espacio de trabajo": metric.daily_workspace_wellbeing * 100,
+      "Satisfacción general diaria": Math.round(metric.daily_general_satisfaction * 100),
     }));
 
-    const labels = formattedData.map((data) => data.date);
-
-    return {
-      labels: labels,
-      datasets: [
-        {
-          label: "Satisfacción Personal",
-          data: formattedData.map((data) => data.daily_self_satisfaction),
-          borderColor: "rgba(255, 99, 132, 0.5)",
-          backgroundColor: "rgba(255, 99, 132, 0.2)",
-        },
-        {
-          label: "Colaboración en equipo",
-          data: formattedData.map((data) => data.daily_team_collaboration),
-          borderColor: "rgba(54, 162, 235, 0.5)",
-          backgroundColor: "rgba(54, 162, 235, 0.2)",
-        },
-        {
-          label: "Compromiso laboral",
-          data: formattedData.map((data) => data.daily_work_engagement),
-          borderColor: "rgba(255, 206, 86, 0.5)",
-          backgroundColor: "rgba(255, 206, 86, 0.2)",
-        },
-        {
-          label: "Bienestar en el espacio de trabajo",
-          data: formattedData.map((data) => data.daily_workspace_wellbeing),
-          borderColor: "#2f8032",
-          backgroundColor: "rgba(75, 192, 192, 0.2)",
-        },
-      ],
-    };
+    return formattedData;
   }, [linesMetrics]);
 
-  useEffect(() => {
-    if (chartContainer.current && chartData && chartData.labels.length > 0) {
-      if (!chartInstance.current) {
-        chartInstance.current = new Chart(chartContainer.current.getContext("2d"), {
-          type: "line",
-          data: chartData,
-          options: {
-            responsive: false,
-            maintainAspectRatio: false,
-            scales: {
-              x: {
-                type: "time",
-                time: {
-                  unit: "day",
-                  parser: "MM/DD/YYYY",
-                  tooltipFormat: "ll",
-                },
-              },
-            },
-            plugins: {
-              title: {
-                display: true,
-              },
-            },
-          },
-        });
-      } else {
-        chartInstance.current.data.labels = chartData.labels;
-        chartInstance.current.data.datasets.forEach((dataset, index) => {
-          dataset.data = chartData.datasets[index].data;
-        });
-        chartInstance.current.update();
-      }
-    }
-  }, [chartData, themeLocal]);
+  const dataFormatter = (number) => `${Intl.NumberFormat("us").format(number).toString()}`;
 
   return (
-    <div>
-      <div>
-        <canvas id='SesionLine' ref={chartContainer} style={{ marginBottom: "10px", width: "100%", height: `${height}`, margin: "auto", padding: 10 }} />
-      </div>
-    </div>
+    <LineChart
+      className='h-80 p-2 antialiased '
+      data={chartData}
+      index='date'
+      categories={[
+        "Satisfacción personal diaria",
+        "Colaboración en equipo diaria",
+        "Compromiso laboral diario",
+        "Bienestar en el espacio de trabajo",
+        "Satisfacción general diaria",
+      ]}
+      connectNulls={true}
+      valueFormatter={dataFormatter}
+      colors={["red-400", "orange-400", "blue-400", "rose-300", "rose-400"]}
+      yAxisWidth={50}
+    />
   );
-};
+}

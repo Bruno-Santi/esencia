@@ -28,8 +28,8 @@ export const UsePagination = ({ shortRecommendation, containerRef }) => {
     <div className='flex flex-col my-auto justify-center place-content-center items-center dark:bg-gray-900 dark:text-tertiary'>
       {datosPagina?.map((recomendacion, index) => (
         <div key={index} className='my-4'>
-          <h2 className='font-bold font-manrope text-lg text-secondary dark:text-green-600'>{recomendacion.key}</h2>
-          <p className='font-poppins text-sm'>{recomendacion.value}</p>
+          <h2 className='font-bold font-manrope text-lg text-secondary dark:text-green-600'>{recomendacion.title}</h2>
+          <p className='font-poppins text-sm'>{recomendacion.content}</p>
         </div>
       ))}
       <div className='flex mx-auto justify-end space-x-2 mt-2'>

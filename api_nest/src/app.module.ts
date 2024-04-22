@@ -16,6 +16,7 @@ import { RecommendationsModule } from './recommendations/recommendations.module'
 
 import { SprintreportModule } from './sprintreport/sprintreport.module';
 import { DashboardDataModule } from './dashboard_data/dashboard_data.module';
+import { MercadoPagoModule } from './mercado-pago/mercado-pago.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { DashboardDataModule } from './dashboard_data/dashboard_data.module';
     RecommendationsModule,
     SprintreportModule,
     DashboardDataModule,
+    MercadoPagoModule,
   ],
   exports: [],
   controllers: [],

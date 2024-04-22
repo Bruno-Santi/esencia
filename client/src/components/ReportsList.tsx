@@ -9,7 +9,7 @@ export const ReportsList = ({ reports }) => {
   console.log(reportSorted);
 
   return (
-    <div className='absolute bg-white z-50  overflow-y-scroll h-[500px]'>
+    <div className='absolute bg-white z-50   min-h-fit'>
       <AccordionDetails
         style={{ backgroundColor: "white", width: "300px" }}
         className='space-y-4 cursor-pointer shadow-lg shadow-primary/40  flex-col relative z-50'

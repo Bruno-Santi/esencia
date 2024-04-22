@@ -18,7 +18,7 @@ export const Retrospectives = () => {
           <span className='dark:text-tertiary text-primary pb-44 '>Selecciona un equipo.</span>
         ) : (
           <div
-            className={`w-full h-full bg-tertiary shadow-lg
+            className={`w-full h-full bg-tertiary/20 shadow-lg
          shadow-primary/50 p-8 rounded-md  -z-${modalOpen ? "10" : "0"} dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800 dark:shadow-white/10`}
           >
             {" "}

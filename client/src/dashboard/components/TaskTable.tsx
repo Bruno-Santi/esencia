@@ -5,19 +5,19 @@ export const TaskTable = ({ tasks }) => {
   console.log(tasks);
 
   return (
-    <div className='bg-gray-200/60 rounded-md md:h-[350px] lg:h-[400px] lg:w-[430px] md:w-[400px] sm:w-5/6 sm:m-auto   dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800  shadow-md shadow-primary/20 overflow-y-scroll text-primary font-poppins p-1 max-h-[300px] overflow-hidden relative'>
-      <TableContainer>
+    <div className='bg-tertiary/20 rounded-md md:h-[350px] lg:h-[400px] lg:w-[430px] md:w-[400px] sm:w-5/6 sm:m-auto   dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800  shadow-lg  shadow-primary/20 text-primary font-poppins p-1 max-h-[300px] overflow-hidden relative'>
+      <TableContainer sx={{ maxHeight: "400px", overflowY: "scroll" }}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell className='sticky top-0 bg-gray-200   dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800  z-10'>
+              <TableCell className='sticky top-0 bg-gray-200   dark:bg-quaternary/40  z-10'>
                 {" "}
                 <span className='font-poppins text-primary text-lg dark:text-tertiary'>Estado</span>
               </TableCell>
-              <TableCell className='sticky top-0 bg-gray-200 z-10   dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800 '>
+              <TableCell className='sticky top-0 bg-gray-200 z-10   dark:bg-quaternary/40'>
                 <span className='font-poppins text-primary text-lg dark:text-tertiary'>Título</span>
               </TableCell>
-              <TableCell className='sticky top-0 bg-gray-200 z-10  dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800 '>
+              <TableCell className='sticky top-0 bg-gray-200 z-10  dark:bg-quaternary/40 '>
                 {" "}
                 <span className='font-poppins text-primary text-lg dark:text-tertiary'>Avance</span>
               </TableCell>
