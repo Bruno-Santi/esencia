@@ -9,7 +9,14 @@ export const UsePagination = ({ shortRecommendation, containerRef }) => {
   useEffect(() => {
     console.log(shortRecommendation);
   }, []);
-
+  if (shortRecommendation === "There is not enough data.")
+    return (
+      <>
+        <p className='lg:text-xl md:text-lg  text-primary/50  inset-0 text-center font-normal font-poppins dark:text-tertiary'>
+          Sin datos, intenta primero con una encuesta de pulso.
+        </p>
+      </>
+    );
   const paginasTotales = Math.ceil((shortRecommendation.length - 1) / itemsPorPagina);
 
   const cambiarPagina = (nuevaPagina) => {
