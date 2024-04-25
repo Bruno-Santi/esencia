@@ -8,7 +8,7 @@ export const UsePagination = ({ shortRecommendation, containerRef }) => {
 
   useEffect(() => {
     console.log(shortRecommendation);
-  }, []);
+  }, [shortRecommendation]);
   if (shortRecommendation === "There is not enough data.")
     return (
       <>
