@@ -19,7 +19,17 @@ import { DaySurvey } from 'src/survey/entities/daySurvey.entity';
 import { Recommendation } from './entities/Recommendation.entity';
 
 import * as openai from 'openai';
-
+interface AggregatedData {
+  [date: string]: {
+    date: string;
+    daily_self_satisfaction: number;
+    daily_team_collaboration: number;
+    daily_work_engagement: number;
+    daily_workspace_wellbeing: number;
+    daily_general_satisfaction: number;
+    count: number;
+  };
+}
 @Injectable()
 export class DashboardDataService {
   private readonly openaiApiKey: string;
@@ -73,9 +83,7 @@ export class DashboardDataService {
         .exec();
       console.log(lines);
 
-      // Pie chart calculations
       let pieChart;
-      console.log(lines);
 
       if (lines.length) {
         pieChart = {
@@ -102,7 +110,55 @@ export class DashboardDataService {
             ) / lines.length,
         };
       }
+      console.log(lines);
 
+      const groupedByDate = lines.reduce((acc: any, curr: any) => {
+        const date = curr.date.toISOString().split('T')[0];
+        if (!acc[date]) {
+          acc[date] = {
+            date: date,
+            daily_self_satisfaction: 0,
+            daily_team_collaboration: 0,
+            daily_work_engagement: 0,
+            daily_workspace_wellbeing: 0,
+            daily_general_satisfaction: 0,
+            count: 0,
+          };
+        }
+
+        acc[date].daily_self_satisfaction += curr.daily_self_satisfaction;
+        acc[date].daily_team_collaboration += curr.daily_team_collaboration;
+        acc[date].daily_work_engagement += curr.daily_work_engagement;
+        acc[date].daily_workspace_wellbeing += curr.daily_workspace_wellbeing;
+        acc[date].daily_general_satisfaction += curr.daily_general_satisfaction;
+        acc[date].count++;
+
+        return acc;
+      }, {});
+
+      console.log(groupedByDate);
+      const finalAggregatedValues = Object.values(groupedByDate).map(
+        (dayData: any) => {
+          const { count, ...metrics } = dayData as {
+            count: number;
+            [key: string]: any;
+          };
+
+          const formattedDate = moment(dayData.date).toISOString();
+          return {
+            ...metrics,
+            date: formattedDate,
+            daily_self_satisfaction: metrics.daily_self_satisfaction / count,
+            daily_team_collaboration: metrics.daily_team_collaboration / count,
+            daily_work_engagement: metrics.daily_work_engagement / count,
+            daily_workspace_wellbeing:
+              metrics.daily_workspace_wellbeing / count,
+            daily_general_satisfaction:
+              metrics.daily_general_satisfaction / count,
+          };
+        },
+      );
+      console.log(finalAggregatedValues);
       const answers = await this.surveyModel
         .aggregate([
           { $match: { team_id: teamId } },
@@ -111,9 +167,6 @@ export class DashboardDataService {
         ])
         .exec();
       const totalAnswers = answers.length > 0 ? answers[0].total_entries : 0;
-
-      console.log(answers);
-      console.log(totalAnswers);
 
       // Recommendation
       const recommendation = await this.recommendationModel
@@ -135,51 +188,30 @@ export class DashboardDataService {
           date: { $gte: fifteenDaysAgo.toDate() },
         })
         .exec();
+
       const topics = await this.surveyModel
         .aggregate([
           {
             $match: {
               team_id: teamId,
-              'comment.content': { $ne: '' }, // Excluir comentarios vacíos
-              date: { $gte: fifteenDaysAgo.toDate() }, // Filtrar los últimos 15 días
+              'comment.content': { $ne: '' },
+              date: { $gte: fifteenDaysAgo.toDate() },
             },
           },
           {
             $group: {
-              _id: '$comment.content', // Agrupar por el contenido del comentario
+              _id: '$comment.content',
             },
           },
           {
             $project: {
               _id: 0,
-              content: '$_id', // Proyectar solo el contenido del comentario
+              content: '$_id',
             },
           },
         ])
         .exec();
 
-      // Topics
-      // const topics = await this.test1Model
-      //   .aggregate([
-      //     { $match: { team_id: teamId } },
-      //     { $unwind: '$days' },
-      //     { $unwind: '$days.post' },
-      //     {
-      //       $project: {
-      //         _id: 0,
-      //         topic: '$days.post.comment.topic',
-      //       },
-      //     },
-      //     {
-      //       $match: {
-      //         topic: { $exists: true, $nin: ['', 'Sin tema relevante'] },
-      //       },
-      //     },
-      //   ])
-      //   .exec();
-      // const topicList = topics.map((topic: any) => topic.topic);
-
-      // Cards amount
       const cardsAmount = await this.boardsModel
         .aggregate([
           { $match: { team_id: teamId } },
@@ -268,12 +300,12 @@ export class DashboardDataService {
           },
         ])
         .exec();
+
       const short_recommendation = await this.shortRecommendation(teamId);
-      console.log(short_recommendation);
 
       const dashboard = {
         pie_chart: pieChart,
-        lines_graph: lines,
+        lines_graph: finalAggregatedValues,
         data_amount: {
           respuestas_diarias: totalAnswers,
           cantidad_de_retros: retroCount,
@@ -281,7 +313,7 @@ export class DashboardDataService {
         },
         short_recommendation: short_recommendation.length
           ? short_recommendation
-          : 'There is not enought data.',
+          : 'There is not enough data.',
         topics: topics.map((topic) => topic.content),
         cards: cardsAmount,
         task: task,
@@ -314,12 +346,14 @@ export class DashboardDataService {
           },
         },
       ]);
+      console.log(questionsData);
 
       if (questionsData.length === 0) return [];
 
       const preguntas = questionsData[0].questions.map(
         (question) => question.content,
       );
+      console.log(preguntas);
 
       const data = await this.surveyModel.aggregate([
         { $match: { team_id: teamId } },
@@ -345,6 +379,7 @@ export class DashboardDataService {
           },
         },
       ]);
+      console.log(data);
 
       if (data.length === 0) return [];
 
@@ -364,12 +399,11 @@ export class DashboardDataService {
         prompt += `${pregunta}\n`;
       }
 
-      // Obtener recomendaciones del modelo de OpenAI
       const client = new openai.OpenAI({ apiKey: this.openaiApiKey });
       const response = await client.chat.completions.create({
         messages: [{ role: 'system', content: prompt }],
         model: 'gpt-3.5-turbo',
-        temperature: 0.8, // Ajusta este valor según lo que desees, valores típicos están en el rango de 0.1 a 1.0
+        temperature: 0.8,
       });
       console.log(response);
 
@@ -377,9 +411,8 @@ export class DashboardDataService {
       console.log(
         'Texto de la recomendación antes del procesamiento:',
         recommendationText,
-      ); // Agregar esta línea para imprimir el texto antes de procesarlo
+      );
 
-      // Formatear recomendaciones
       const formattedRecommendations = [];
       let currentRecommendation;
       recommendationText.split('\n').forEach((line) => {
@@ -402,13 +435,12 @@ export class DashboardDataService {
         formattedRecommendations.push(currentRecommendation);
       }
 
-      // Guardar recomendaciones en la base de datos
       await this.recommendationModel.insertMany({
         team_id: teamId,
         date: moment().startOf('day').toDate(),
         kind: 'daily',
-        answers: data[0].answers, // Aquí debes especificar de dónde vienen las respuestas
-        content: JSON.stringify(formattedRecommendations), // Convertir a cadena de texto
+        answers: data[0].answers,
+        content: JSON.stringify(formattedRecommendations),
       });
 
       return formattedRecommendations;

@@ -50,7 +50,7 @@ export class SprintreportService {
         cards,
       );
       const newReport = await new this.sprintReportModel(report);
-      //await newReport.save();
+      await newReport.save();
       console.log('Report saved');
       return newReport;
     } catch (error) {
@@ -98,9 +98,12 @@ export class SprintreportService {
           GoalStatus: boardCards,
         };
         // Ask Analyss to chatgpt
-        const {analysis, prompt} = await generateAnalysis(sprintReport, openaiApiKey);
-        
-        const recomendaciones = await generateRecommendations(
+        const { analysis, prompt } = await generateSprintAnalysis(
+          sprintReport,
+          openaiApiKey,
+        );
+
+        const recomendaciones = await generateSprintRecommendations(
           prompt,
           analysis,
           openaiApiKey,
@@ -378,7 +381,7 @@ export class SprintreportService {
         console.log('Error calculando estado de cards');
       }
     }
-    async function generateAnalysis(
+    async function generateSprintAnalysis(
       sprintData: any,
       openaiApiKey,
     ): Promise<any> {
@@ -391,18 +394,31 @@ export class SprintreportService {
           model: 'gpt-3.5-turbo',
         });
         const analysis = response.choices[0].message.content.trim();
-        return {analysis,prompt};
+        return { analysis, prompt };
       } catch (error) {
         console.error('Error generating recommendations:', error);
         throw new Error('Failed to generate recommendations');
       }
 
-      async function constructPrompt(dataSummary: typeof sprintData): Promise<any> {
+      async function constructPrompt(
+        dataSummary: typeof sprintData,
+      ): Promise<any> {
         //Deconstruct the dataSummary object
-        const { teamid, sprint, startDate, endDate, tasks, cuadrants_difference, retrospective, line_graphs, survey_answers, GoalStatus } = dataSummary;
+        const {
+          teamid,
+          sprint,
+          startDate,
+          endDate,
+          tasks,
+          cuadrants_difference,
+          retrospective,
+          line_graphs,
+          survey_answers,
+          GoalStatus,
+        } = dataSummary;
 
         // Construct the prompt
-        let prompt = `Actuarás como un consultor expero en agilidad empresarial. Basados en la data del siguiente sprint, genera un análisis relevante sobre el progreso del sprint, los objetivos planteados, los puntos altos y bajos del equipo en el sprint:\n\n`;
+        let prompt = `Actuarás como un consultor experto en agilidad empresarial. Basados en la data del siguiente sprint, genera un análisis relevante sobre el progreso del sprint, los objetivos planteados, los puntos altos y bajos del equipo en el sprint:\n\n`;
 
         // Sprint Information
         prompt += `Sprint ${sprint}:\n`;
@@ -410,7 +426,7 @@ export class SprintreportService {
         prompt += `Fecha de fin: ${endDate}\n`;
 
         prompt += `\nEstado de los objetivos planteados:`;
-        prompt = await addtoPrompt(prompt, GoalStatus)
+        prompt = await addtoPrompt(prompt, GoalStatus);
 
         // Task Summary
         prompt += `\nResumen del progreso de estos objetivos al cierre del sprint:\n`;
@@ -420,11 +436,11 @@ export class SprintreportService {
 
         // Retrospective
         prompt += `\nFeedback encontrado en la retrospectiva, bajo el formato; Pregunta Realizada, Respuesta Obtenidas, Votos a cada respuesta:\n`;
-        prompt = await addtoPrompt(prompt, retrospective)
+        prompt = await addtoPrompt(prompt, retrospective);
 
         // Survey Answers
         prompt += `\nRespuestas a las encuestas de pulso realizadas:\n`;
-        prompt = await addtoPrompt(prompt, survey_answers)
+        prompt = await addtoPrompt(prompt, survey_answers);
 
         // Cuadrants Difference
         prompt += `\nDiferencia entre cuadrantes, en relación al inicio y cierre del sprint, donde cada cuadrante es:\n
@@ -436,7 +452,7 @@ export class SprintreportService {
 
         // Line Graphs
         prompt += `\nEvolución de estos cuadrantes en el sprint, por fecha:\n`;
-        prompt = await addtoPrompt(prompt, line_graphs)
+        prompt = await addtoPrompt(prompt, line_graphs);
 
         // Helper function to add the data to the prompt
         async function addtoPrompt(prompt, dataobject): Promise<any> {
@@ -454,9 +470,8 @@ export class SprintreportService {
         }
         return prompt;
       }
-
     }
-    async function generateRecommendations(
+    async function generateSprintRecommendations(
       sprintData: any,
       sprintAnalysis: any,
       openaiApiKey,
@@ -480,16 +495,15 @@ export class SprintreportService {
         dataSummary: any,
         sprintAnalysis: any,
       ): Promise<any> {
-        let prompt = `Basados en la data y análisis del siguiente sprint, genera recomendaciones de mejora para el equipo:\n\n`;
+        let prompt = `Actuarás como un consultor experto en agilidad empresarial. Basados en la data y análisis del siguiente sprint, genera recomendaciones de mejora para el equipo:\n\n`;
         // add the datasummary to the prompt variable
         prompt += `Data del Sprint: ${dataSummary}\n\n`;
         prompt += `Analisis del Sprint: ${sprintAnalysis}\n`;
         return prompt;
       }
     }
-
   }
-  
+
   async getAllTeamReports(teamId: string): Promise<any> {
     try {
       const SprintReports = await this.sprintReportModel.find({

@@ -17,6 +17,7 @@ import { RecommendationsModule } from './recommendations/recommendations.module'
 import { SprintreportModule } from './sprintreport/sprintreport.module';
 import { DashboardDataModule } from './dashboard_data/dashboard_data.module';
 import { MercadoPagoModule } from './mercado-pago/mercado-pago.module';
+import { AgileassessmentModule } from './agileassessment/agileassessment.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { MercadoPagoModule } from './mercado-pago/mercado-pago.module';
     SprintreportModule,
     DashboardDataModule,
     MercadoPagoModule,
+    AgileassessmentModule,
   ],
   exports: [],
   controllers: [],
