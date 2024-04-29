@@ -98,12 +98,20 @@ export class SprintreportService {
           GoalStatus: boardCards,
         };
         // Ask Analyss to chatgpt
+<<<<<<< HEAD
         const { analysis, prompt } = await generateSprintAnalysis(
+=======
+        const { analysis, prompt } = await generateAnalysis(
+>>>>>>> e596e78a6b5c36548688e3142ce81305881114a6
           sprintReport,
           openaiApiKey,
         );
 
+<<<<<<< HEAD
         const recomendaciones = await generateSprintRecommendations(
+=======
+        const recomendaciones = await generateRecommendations(
+>>>>>>> e596e78a6b5c36548688e3142ce81305881114a6
           prompt,
           analysis,
           openaiApiKey,
