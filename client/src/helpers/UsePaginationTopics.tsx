@@ -13,7 +13,7 @@ export const UsePaginationTopics = ({ topics, containerRef }) => {
     console.log(datosPagina);
   }, [datosPagina]);
 
-  const paginasTotales = Math.ceil(datosPagina.length / itemsPorPagina);
+  const paginasTotales = Math.ceil(topics.length / itemsPorPagina);
 
   const cambiarPagina = (nuevaPagina) => {
     setPaginaActual(nuevaPagina);

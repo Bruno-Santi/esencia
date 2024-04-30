@@ -12,3 +12,5 @@ export * from "./FeatureList";
 export * from "./Testimonials";
 export * from "./Pricing";
 export * from "./PricingList";
+export * from "./WhyUs";
+export * from "./Assessment";

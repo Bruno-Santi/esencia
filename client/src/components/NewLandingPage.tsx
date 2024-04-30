@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { NavLanding, Home, About, Features, Testimonials, Pricing } from "./";
+import { NavLanding, Home, About, Features, Testimonials, Pricing, WhyUs, Assessment } from "./";
 import { Footer } from "./Footer";
 import { IoHomeOutline } from "react-icons/io5";
 
@@ -9,11 +9,15 @@ export const NewLandingPage = () => {
   const featuresRef = useRef(null);
   const aboutRef = useRef(null);
   const pricingRef = useRef(null);
-
+  const assessmentRef = useRef(null);
   const scrollToRef = (ref) => {
+    console.log(ref);
+
     if (!ref) {
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
+      console.log(ref.current);
+
       ref.current.scrollIntoView({ behavior: "smooth" });
     }
   };
@@ -24,8 +28,14 @@ export const NewLandingPage = () => {
       <div>
         <Home />
       </div>
-      <div onClick={() => scrollToRef(testimonialsRef)} ref={testimonialsRef}>
+      <div>
+        <WhyUs />
+      </div>
+      <div ref={testimonialsRef} id='testimonials'>
         <Testimonials />
+      </div>
+      <div ref={assessmentRef} id='assessment'>
+        <Assessment />
       </div>
       <div ref={featuresRef} id='features'>
         <Features />

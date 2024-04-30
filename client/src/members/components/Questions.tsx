@@ -3,7 +3,7 @@ import { useQuestions } from "../../hooks";
 import { useEffect } from "react";
 import Slider from "@mui/material/Slider";
 import { deepOrange, deepPurple } from "@mui/material/colors";
-
+import { ClipLoader } from "react-spinners";
 export const Questions = ({ token, team_id, user_id }) => {
   const navigate = useNavigate();
   const { rangeValues, changesMade, handleChange, loading, handleNavigateToComment, questions } = useQuestions(token, team_id, user_id);
@@ -32,7 +32,9 @@ export const Questions = ({ token, team_id, user_id }) => {
   return (
     <div className='flex flex-col sm:p-4 md:w-4/6 m-auto'>
       {loading ? (
-        <p className='text-center flex justify-center m-auto text-tertiary text-lg p-6'>Loading questions...</p>
+        <p className='text-center flex justify-center m-auto text-tertiary text-lg p-6'>
+          <ClipLoader />
+        </p>
       ) : (
         <div className='sm:w-full m-auto flex flex-col mt-6 h-fit bg-gray-600 rounded-md p-2 '>
           {questions?.map(({ id, content }) => (

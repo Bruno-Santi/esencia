@@ -5,7 +5,7 @@ import axios from "axios";
 export const useQuestions = (token, team_id, user_id) => {
   const navigate = useNavigate();
   const [changesMade, setChangesMade] = useState(false);
-  const [loading, setLoading] = useState(true); // Set initial loading state to true
+  const [loading, setLoading] = useState(true);
   const [questions, setQuestions] = useState([]);
   const [rangeValues, setRangeValues] = useState([]);
 
@@ -20,7 +20,7 @@ export const useQuestions = (token, team_id, user_id) => {
       setQuestions(response.data.questions);
       console.log(response.data.questions);
 
-      setLoading(false); // Set loading to false after successfully fetching data
+      setLoading(false);
     } catch (error) {
       console.log(error);
     }

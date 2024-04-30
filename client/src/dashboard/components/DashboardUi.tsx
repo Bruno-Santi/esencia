@@ -241,28 +241,28 @@ export const DashboardUi = () => {
             </span>
           </div>
         </div>
-        <div className='lg:h-[400px] md:h-[380px] lg:w-[440px] md:w-[300px] lg:space-y-28 md:space-y-32  lg:mt-16 sm:h-[350px] sm:w-[350px]  lg:col-start-7 lg:row-start-2 lg:col-span-2  md:col-span-2 md:col-start-10 md:row-span-2 md:row-start-1 sm:my-16 rounded-md justify-center my-auto gap-y-4'>
+        <div className='lg:h-[400px] md:h-[380px]  lg:w-full md:w-[300px] lg:space-y-28 md:space-y-32  lg:mt-16 sm:h-[350px] sm:w-[350px]  lg:col-start-7 lg:row-start-2 lg:col-span-3  md:col-span-2 md:col-start-10 md:row-span-2 md:row-start-1 sm:my-16 rounded-md justify-center my-auto gap-y-4'>
           <TrendingTopics />
         </div>
         <div
           className='bg-tertiary/20 shadow-lg
-         shadow-primary/50 md:-mt-[500px]  lg:h-[400px] md:h-[320px]  sm:h-[350px] sm:w-[360px]  sm:mb-6 md:w-full lg:w-full 
+         shadow-primary/50 md:-mt-[500px]  lg:h-[400px] md:h-[320px]  sm:h-[320px] sm:w-[360px]  sm:mb-6 md:w-full lg:w-full 
          dark:bg-quaternary/40
-     lg:col-span-3 md:row-start-3 md:col-start-11 md:col-span-2 lg:row-start-2 lg:row-span-2 lg:col-start-10  rounded-md lg:place-content-start lg:self-start lg:items-start lg:justify-start lg:-my-12'
+     lg:col-span-3 md:row-start-3 md:col-start-11 md:col-span-2 lg:row-start-2 lg:row-span-2 lg:col-start-10  rounded-md  lg:place-content-start lg:self-start lg:items-start lg:justify-start lg:-my-12'
         >
           {" "}
           {user.role ? (
             <span className=''>
-              <span className='font-poppins text-primary flex sm:text-lg mt-4 lg:ml-4 md:ml-4 sm:ml-4 lg:text-2xl dark:text-tertiary font-bold'>
+              <span className='font-poppins  text-primary flex sm:text-lg mt-4 lg:ml-4 md:ml-4 sm:ml-4 lg:text-2xl dark:text-tertiary font-bold'>
                 Acciones Disponibles
               </span>
-              <div className='md:flex md:flex-col md:justify-center md:items-center md:mt-4'>
+              <div className='md:flex md:flex-col sm:justify-center sm:m-auto sm:flex sm:flex-col sm:items-center md:justify-center md:items-center md:mt-4'>
                 <span
                   disabled={surveyLoading}
                   onClick={() => startCreatingSurvey(activeTeam.name, activeTeam._id)}
                   className={
                     !surveyLoading
-                      ? "btn-primary sm:w-full sm:flex md:w-5/6 sm:items-center p-2 sm:justify-center font-poppins dark:hover:border-white dark:hover:border-1 dark:hover:duration-500 md:text-base md:p-1 lg:text-xl rounded-md lg:p-2 duration-700 hover:bg-amber-100 hover:text-primary mt-4"
+                      ? "btn-primary sm:w-2/3 sm:flex md:w-5/6 sm:items-center p-2 sm:justify-center font-poppins dark:hover:border-white dark:hover:border-1 dark:hover:duration-500 md:text-base md:p-1 lg:text-xl rounded-md lg:p-2 duration-700 hover:bg-amber-100 hover:text-primary mt-4"
                       : "btn-secondary font-poppins  md:w-5/6 text-xl rounded-md p-2 duration-700 sm:flex sm:items-center sm:justify-center mt-4"
                   }
                 >
@@ -305,7 +305,7 @@ export const DashboardUi = () => {
                   disabled={surveyLoading}
                   className={
                     !surveyLoading
-                      ? "btn-primary sm:w-2/3 sm:flex md:w-5/6 sm:items-center p-2 sm:justify-center font-poppins dark:hover:border-white dark:hover:border-1 dark:hover:duration-500 md:text-base md:p-1 lg:text-xl rounded-md lg:p-2 duration-700 hover:bg-amber-100 hover:text-primary mt-4"
+                      ? "btn-primary sm:w-2/3  sm:flex md:w-5/6 sm:items-center p-2 sm:justify-center font-poppins dark:hover:border-white dark:hover:border-1 dark:hover:duration-500 md:text-base md:p-1 lg:text-xl rounded-md lg:p-2 duration-700 hover:bg-amber-100 hover:text-primary mt-4"
                       : "btn-secondary font-poppins text-xl  md:w-5/6 rounded-md p-2 duration-700 sm:flex sm:items-center sm:justify-center mt-4"
                   }
                 >

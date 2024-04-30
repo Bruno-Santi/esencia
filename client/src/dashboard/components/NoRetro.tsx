@@ -40,9 +40,9 @@ export const NoRetro = () => {
 
   return (
     <div className='flex mt-6 h-full flex-col   m-auto text-center justify-center '>
-      <div className='flex m-auto space-x-6  '>
-        <div className='flex-col w-full space-y-6  px-10 '>
-          <div className='p-20  w-12/12 h-3/6 text-2xl relative font-poppins rounded-lg shadow-lg bg-tertiary/20 text-primary dark:text-tertiary  dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800 dark:shadow-white/10'>
+      <div className='lg:flex-row md:flex-row   sm:flex sm:flex-col sm:items-center sm:justify-center sm:space-x-0 m-auto lg:space-x-6 md:space-x-6  '>
+        <div className='flex-col w-full  lg:space-y-6 md:space-y-6 sm:space-y-4  md:px-10 lg:px-10 sm:px-4 '>
+          <div className='md:p-20 lg:p-20  lg:w-12/12 md:w-12/12 sm:w-12/12 md:h-3/6 lg:h-3/6 sm:h- text-2xl relative font-poppins rounded-lg shadow-lg bg-tertiary/20 text-primary dark:text-tertiary  dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800 dark:shadow-white/10'>
             {editMode === "c1" ? (
               <div>
                 <input
@@ -55,7 +55,7 @@ export const NoRetro = () => {
                   className='border-b-2  border-gray-500 outline-none bg-transparent dark:text-tertiary text-primary text-center'
                 />
                 <i
-                  className='text-secondary duration-700 hover:text-primary cursor-pointer absolute bottom-4 right-4'
+                  className='text-secondary  duration-700 hover:text-primary cursor-pointer absolute bottom-4 right-4'
                   onClick={(e) => {
                     e.stopPropagation();
                   }}
@@ -64,7 +64,7 @@ export const NoRetro = () => {
                 </i>
               </div>
             ) : (
-              <div className=' whitespace-pre-line '>
+              <div className=' whitespace-pre-line sm:text-lg lg:text-2xl md:text-2xl '>
                 {questions.c1}
                 <div className='text-secondary duration-700 hover:text-primary cursor-pointer absolute bottom-4 right-4'>
                   <i
@@ -80,7 +80,7 @@ export const NoRetro = () => {
               </div>
             )}
           </div>
-          <div className='p-20  w-12/12 h-3/6 text-2xl relative font-poppins rounded-lg shadow-lg bg-tertiary/20 text-primary dark:text-tertiary  dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800 dark:shadow-white/10'>
+          <div className='p-20  w-12/12 h-4/6 text-2xl relative font-poppins rounded-lg shadow-lg bg-tertiary/20 text-primary dark:text-tertiary  dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800 dark:shadow-white/10'>
             {editMode === "c3" ? (
               <div>
                 <input
@@ -101,7 +101,7 @@ export const NoRetro = () => {
                 </i>
               </div>
             ) : (
-              <div className=' whitespace-pre-line '>
+              <div className=' whitespace-pre-line  sm:text-lg lg:text-2xl md:text-2xl '>
                 {questions.c3}
                 <div className='text-secondary duration-700 hover:text-primary cursor-pointer absolute bottom-4 right-4'>
                   <i
@@ -118,7 +118,7 @@ export const NoRetro = () => {
             )}
           </div>
         </div>
-        <div className='flex-col w-full space-y-6 relative px-10'>
+        <div className='flex-col w-full space-y-6 relative md:px-10 lg:px-10 sm:px-4'>
           <div className='p-20 w-12/12 h-3/6 text-2xl font-poppins relative rounded-lg shadow-lg bg-tertiary/20 text-primary dark:text-tertiary dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800 dark:shadow-white/10'>
             {editMode === "c2" ? (
               <div>
@@ -140,7 +140,7 @@ export const NoRetro = () => {
                 </i>
               </div>
             ) : (
-              <div className=' whitespace-pre-line '>
+              <div className=' whitespace-pre-line  sm:text-lg lg:text-2xl md:text-2xl'>
                 {questions.c2}
                 <div className='text-secondary duration-700 hover:text-primary cursor-pointer absolute bottom-4 right-4'>
                   <i
@@ -177,7 +177,7 @@ export const NoRetro = () => {
                 </i>
               </div>
             ) : (
-              <div className=' whitespace-pre-line '>
+              <div className=' whitespace-pre-line  sm:text-lg lg:text-2xl md:text-2xl '>
                 {questions.c4}
                 <div className='text-secondary duration-700 hover:text-primary cursor-pointer absolute bottom-4 right-4'>
                   <i

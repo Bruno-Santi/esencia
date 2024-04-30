@@ -9,7 +9,7 @@ export const UsePagination = ({ shortRecommendation, containerRef }) => {
   useEffect(() => {
     console.log(shortRecommendation);
   }, [shortRecommendation]);
-  if (shortRecommendation === "There is not enough data.")
+  if (shortRecommendation === "There is not enough data." || !Object.keys(shortRecommendation).length)
     return (
       <>
         <p className='lg:text-xl md:text-lg  text-primary/50  inset-0 text-center font-normal font-poppins dark:text-tertiary'>

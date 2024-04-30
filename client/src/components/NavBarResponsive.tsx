@@ -1,5 +1,5 @@
 import { IoMdClose, IoMdArrowDropdown } from "react-icons/io";
-import { ModalMembers, TeamList, Teams } from "../dashboard/components";
+import { ModalMembers, ModalTeam, TeamList, Teams } from "../dashboard/components";
 import { HiOutlineMenuAlt2 } from "react-icons/hi";
 import { useDashboard } from "../hooks/useDashboard";
 import { FaRegCircleUser } from "react-icons/fa6";
@@ -11,6 +11,12 @@ export const NavBarResponsive = () => {
   const { user, activeTeam, startGettingMembers, startToggleModal } = useDashboard();
   const { openModal, closeModal, isOpen } = useModal();
   const [toggleSideBar, setToggleSideBar] = useState(false);
+  const [toggleTeamModal, setToggleTeamModal] = useState(false);
+  const handleToggleTeamModal = () => {
+    if (toggleTeamModal) return setToggleTeamModal(!toggleTeamModal);
+    setToggleSideBar(!toggleSideBar);
+    setToggleTeamModal(!toggleTeamModal);
+  };
   const { handleNavigate } = useNavigateTo();
   function dropdown() {
     document.querySelector("#submenu").classList.toggle("hidden");
@@ -52,6 +58,7 @@ export const NavBarResponsive = () => {
             : "z-50 fixed top-0 bottom-0 lg:left-0 p-2 w-[300px] overflow-y-auto text-center bg-gray-900 animate__animated animate__fadeInLeft animate__fast "
         }
       >
+        {toggleTeamModal && <ModalTeam closeModal={handleToggleTeamModal} />}
         <div class='text-gray-100 text-xl'>
           <div class='p-2.5 mt-1 flex items-center'>
             <div className={`${user.avtColor} rounded-full h-8 w-8 flex items-center justify-center`}>
@@ -64,6 +71,24 @@ export const NavBarResponsive = () => {
             </i>
           </div>
           <div class='my-2 bg-gray-600 h-[1px]'></div>
+          <div class='p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white'>
+            <i class='bi bi-house-door-fill'></i>
+            <span onClick={handleToggleTeamModal} class='text-[15px] ml-4 text-gray-200 font-bold'>
+              Crear equipo
+            </span>
+          </div>
+          <div class='p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-secondary hover:text-primary text-white'>
+            <span class='text-[15px] ml-4 text-gray-200 font-bold'>Mis equipos</span>
+            <i onClick={dropdown} class='text-tertiary text-3xl arrow -rotate-90 '>
+              <IoMdArrowDropdown id='arrow' />
+            </i>
+          </div>
+          <div
+            className='text-left text-sm mt-2 w-4/5 mx-auto text-gray-200 font-bold hidden' // Añade la clase 'hidden'
+            id='submenu'
+          >
+            <Teams />
+          </div>
         </div>
         <div class='p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white'>
           <i class='bi bi-box-arrow-in-right'></i>
@@ -73,30 +98,23 @@ export const NavBarResponsive = () => {
         </div>
         <div class='p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white'>
           <i class='bi bi-box-arrow-in-right'></i>
-          <span class='text-[15px] ml-4 text-gray-200 font-bold'>Retrospectivas</span>
-        </div>
-        <div class='p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white'>
-          <i class='bi bi-box-arrow-in-right'></i>
           <span class='text-[15px] ml-4 text-gray-200 font-bold' onClick={() => handleNavigate("/teams/boards")}>
             Tableros
           </span>
         </div>
         <div class='p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white'>
-          <i class='bi bi-house-door-fill'></i>
-          <span class='text-[15px] ml-4 text-gray-200 font-bold'>Crear equipo</span>
+          <i class='bi bi-box-arrow-in-right'></i>
+          <span onClick={() => handleNavigate("/dashboard/retro")} class='text-[15px] ml-4 text-gray-200 font-bold'>
+            Retrospectivas
+          </span>
         </div>
-        <div class='p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-secondary hover:text-primary text-white'>
-          <span class='text-[15px] ml-4 text-gray-200 font-bold'>Mis equipos</span>
-          <i onClick={dropdown} class='text-tertiary text-3xl arrow -rotate-90 '>
-            <IoMdArrowDropdown id='arrow' />
-          </i>
+        <div class='p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white'>
+          <i class='bi bi-box-arrow-in-right'></i>
+          <span class='text-[15px] ml-4 text-gray-200 font-bold' onClick={() => handleNavigate("/dashboard")}>
+            Reportes
+          </span>
         </div>
-        <div
-          className='text-left text-sm mt-2 w-4/5 mx-auto text-gray-200 font-bold hidden' // Añade la clase 'hidden'
-          id='submenu'
-        >
-          <Teams />
-        </div>
+
         <div class='my-4 bg-gray-600 h-[1px]'></div>
         <div class='p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white'>
           <i class='bi bi-box-arrow-in-right'></i>

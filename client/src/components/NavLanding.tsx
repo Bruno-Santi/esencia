@@ -54,9 +54,14 @@ export const NavLanding = () => {
             user ? "lg:ml-16 md:mr-48" : "lg:ml-48 md:mr-10"
           } `}
         >
+          <span className='relative duration-300 hover:text-secondary cursor-pointer' onClick={() => scrollToSection("assessment")}>
+            Assessment
+            <span className='absolute -top-2 right-0 text-yellow-500 text-xs font-bold'>¡Nuevo!</span>
+          </span>
           <span className='duration-300 hover:text-secondary cursor-pointer' onClick={() => scrollToSection("features")}>
             Features
           </span>
+
           <span className='duration-300 hover:text-secondary cursor-pointer' onClick={() => scrollToSection("about")}>
             Nosotros
           </span>
@@ -64,7 +69,7 @@ export const NavLanding = () => {
             Precios
           </span>
         </div>
-        <div className='space-x-5 mr-20  md:block lg:block sm:hidden'>
+        <div className='space-x-5 mr-16  md:block lg:block sm:hidden'>
           {!user ? (
             <>
               <span onClick={() => handleNavigate("/auth/login")} className='duration-300 md:text-[16px]  hover:text-secondary cursor-pointer'>

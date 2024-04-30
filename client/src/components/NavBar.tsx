@@ -22,6 +22,7 @@ import { MdOutlineDashboard } from "react-icons/md";
 import { toastWarning } from "../helpers/toastWarning";
 import { useBoards } from "../teams/hooks/useBoards";
 import { logo } from "../assets";
+import { TbReportSearch } from "react-icons/tb";
 
 export const NavBar = () => {
   const { longRecommendation } = useDashboard();
@@ -88,9 +89,11 @@ export const NavBar = () => {
               <SideBarItem icon={<MdOutlineStickyNote2 />} text='Retrospectivas' />
             </span>
             <span onClick={() => handleNavigate("/dashboard/reports")}>
-              <SideBarItem icon={<MdOutlineInsertChart />} text='Reportes' />
+              <SideBarItem icon={<TbReportSearch />} text='Reportes' />
             </span>
-
+            <span>
+              <SideBarItem icon={<MdOutlineInsertChart />} text='Assessment' />
+            </span>
             <hr />
             <span onClick={() => handleNavigate("/profile")}>
               {" "}
@@ -98,6 +101,15 @@ export const NavBar = () => {
             </span>
 
             <SideBarItem icon={<CiCircleQuestion />} text="Faq's" />
+            <span
+              onClick={() => {
+                startLogingOut();
+                handleClose();
+                startCleaningBoards();
+              }}
+            >
+              <SideBarItem icon={<IoLogOutOutline className=' text-secondary dark:text-red-700' />} text='Salir' />
+            </span>
           </SideBar>
           <SideBarContext.Provider />
         </div>
