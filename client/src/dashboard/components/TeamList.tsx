@@ -7,6 +7,7 @@ import Avatar from "@mui/material/Avatar";
 export const TeamList: React.FC<TeamListProps> = ({ id, name, logo, sprint }) => {
   const { startSettingActiveTeam, activeTeam, closeModal } = useDashboard();
   const isActive = activeTeam?._id === id;
+  console.log(logo);
 
   return (
     <ListItem button selected={isActive} onClick={() => startSettingActiveTeam(id)}>

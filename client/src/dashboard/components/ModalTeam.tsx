@@ -8,9 +8,14 @@ export const ModalTeam: React.FC<{
 }> = ({ closeModal }) => {
   const { startToggleModal } = useDashboard();
   const theme = localStorage.getItem("theme");
-
+  const handleClose = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if ((event.target as HTMLElement).tagName.toLowerCase() !== "div") {
+      closeModal();
+      startToggleModal();
+    }
+  };
   return (
-    <Dialog open={true} onClose={() => closeModal()} fullWidth maxWidth='sm'>
+    <Dialog open={true} onClose={() => handleClose(e)} fullWidth maxWidth='lg' sx={{ overflowY: "hidden" }}>
       <DialogTitle className='dark:bg-black'>
         <Box sx={{ position: "absolute", top: 4, right: 4 }}>
           <IconButton
@@ -20,13 +25,13 @@ export const ModalTeam: React.FC<{
               startToggleModal();
             }}
           >
-            <IoMdClose className='dark:text-teal-50 text-secondary' />
+            {/* <IoMdClose className='dark:text-teal-50 text-secondary' /> */}
           </IconButton>
         </Box>
       </DialogTitle>
-      <DialogContent className='dark:bg-black'>
-        <div className='flex flex-col dark:bg-black'>
-          <TeamForm closeModal={closeModal} />
+      <DialogContent className='dark:bg-black overflow-y-hidden'>
+        <div className='flex flex-col dark:bg-black w-full'>
+          <TeamForm closeModal={closeModal} handleClose={handleClose} />
         </div>
       </DialogContent>
     </Dialog>

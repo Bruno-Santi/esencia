@@ -32,11 +32,12 @@ export class TeamService {
           `Team ${createTeamDto.name} already exists`,
         );
       }
+      console.log(createTeamDto.logo);
 
       const team = await this.teamModel.create({
         ...createTeamDto,
         scrumId: scrumId,
-        logo: createTeamDto.logo || null,
+        logo: createTeamDto.logo,
       });
 
       return team;
