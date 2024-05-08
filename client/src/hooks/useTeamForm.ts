@@ -4,14 +4,19 @@ import { useAuthSlice } from "./useAuthSlice";
 import { toastSuccess, toastWarning } from "../helpers";
 import { useDashboard } from "./useDashboard";
 import { TbRuler2 } from "react-icons/tb";
+import { useNavigateTo } from "./useNavigateTo";
+import { onSetActiveTeam, onSetAssessment } from "../store/dashboard/dashboardSlice";
+import { useDispatch } from "react-redux";
 
 export const useTeamForm = () => {
+  const dispatch = useDispatch();
   const [teamCreated, setTeamCreated] = useState(false);
   const [teamCreatedData, setTeamCreatedData] = useState({});
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [reportGenerated, setReportGenerated] = useState(false);
   const [generatingReport, setGeneratingReport] = useState(false);
+  const { handleNavigate } = useNavigateTo();
   const { user } = useAuthSlice();
   const { startSettingTeams } = useDashboard();
   const createTeam = async (
@@ -50,12 +55,17 @@ export const useTeamForm = () => {
     setGeneratingReport(true);
     try {
       const resp = await api.post(`/api/agileassessment/${data.teamID}`, data);
+      dispatch(onSetAssessment(resp));
       console.log(data);
 
       console.log(resp);
 
       setGeneratingReport(false);
       setReportGenerated(true);
+      startSettingTeams();
+      onSetActiveTeam(data.teamId);
+      localStorage.setItem("firstLoggin", JSON.stringify(1));
+      handleNavigate("/dashboard/assessment");
     } catch (error) {
       setGeneratingReport(false);
       setReportGenerated(false);

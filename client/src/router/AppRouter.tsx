@@ -99,11 +99,11 @@ export const AppRouter = () => {
               <Route element={<TeamsRoutes />} path={`/teams/*`} />
               <Route element={<Navigate to='/dashboard' />} path={`/teams/login`} />
               <Route path='/profile' element={<Profile />} />
-              {firstLogging === "0" ? (
+              {/* {firstLogging === "0" ? (
                 <Route element={<Navigate to={"/onboarding"} />} path={`/auth/*`} />
               ) : (
                 <Route element={<Navigate to={"/dashboard"} />} path={`/auth/*`} />
-              )}
+              )} */}
             </>
           ) : (
             <>

@@ -12,6 +12,7 @@ import {
   onSetDataLoading,
   onSetLongRecommendation,
   onSetActiveReport,
+  onSetAssessment,
 } from "../store/dashboard/dashboardSlice";
 
 import { UserTeams } from "../store/dashboard/interfaces";
@@ -50,6 +51,7 @@ export const useDashboard = () => {
     activeReport,
     cards,
     task,
+    assessment,
   } = useSelector(({ dashboard }) => dashboard);
 
   const startSettingTeams = async () => {
@@ -112,7 +114,7 @@ export const useDashboard = () => {
       const surveyData = await getTeamData(id, members.members.length);
       await startGettingReports(id, sprint);
       console.log(surveyData);
-
+      await startGettingAssessment(id);
       if (surveyData === "No existe data de este equipo") toast.warning("No existe data de este equipo 😢");
       const datalocal = localStorage.getItem("surveyData");
       if (datalocal) localStorage.removeItem("surveyData");
@@ -170,6 +172,19 @@ export const useDashboard = () => {
       console.log(error);
     } finally {
       dispatch(onSetDataLoading(false));
+    }
+  };
+
+  const startGettingAssessment = async (teamID) => {
+    try {
+      const resp = await api.get(`/api/agileassessment/${teamID}`);
+      dispatch(onSetAssessment(resp));
+
+      console.log(resp);
+
+      localStorage.setItem("firstLoggin", JSON.stringify(1));
+    } catch (error) {
+      console.log(error);
     }
   };
   const startCleaningActiveTeam = () => {
@@ -402,5 +417,6 @@ export const useDashboard = () => {
     cards,
     task,
     startCleaningActiveTeam,
+    assessment,
   };
 };

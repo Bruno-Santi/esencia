@@ -1,6 +1,6 @@
-import React, { useMemo, useState } from "react";
-import { LineChart } from "@tremor/react";
+import { useMemo, useState } from "react";
 import { formatDate } from "../helpers";
+import { LineChart } from "@tremor/react";
 
 export const LineChartReport = ({ data, height = "8em" }) => {
   const themeLocal = localStorage.getItem("theme");
@@ -12,17 +12,14 @@ export const LineChartReport = ({ data, height = "8em" }) => {
       return null;
     }
 
-    const [date, values] = Object.entries(data)[0];
-    const formattedData = [
-      {
-        date: formatDate(date),
-        "Satisfacción personal diaria": parseFloat(values[0]) * 100,
-        "Colaboración en equipo diaria": parseFloat(values[1]) * 100,
-        "Compromiso laboral diario": parseFloat(values[2]) * 100,
-        "Bienestar en el espacio de trabajo": parseFloat(values[3]) * 100,
-        "Satisfacción general diaria": ((parseFloat(values[0]) + parseFloat(values[1]) + parseFloat(values[2]) + parseFloat(values[3])) * 100) / 4,
-      },
-    ];
+    const formattedData = Object.entries(data).map(([date, values]) => ({
+      date: formatDate(date),
+      "Satisfacción personal diaria": parseFloat(values[0]) * 100,
+      "Colaboración en equipo diaria": parseFloat(values[1]) * 100,
+      "Compromiso laboral diario": parseFloat(values[2]) * 100,
+      "Bienestar en el espacio de trabajo": parseFloat(values[3]) * 100,
+      "Satisfacción general diaria": ((parseFloat(values[0]) + parseFloat(values[1]) + parseFloat(values[2]) + parseFloat(values[3])) * 100) / 4,
+    }));
 
     return formattedData;
   }, [data]);

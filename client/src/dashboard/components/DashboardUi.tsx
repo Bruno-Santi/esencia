@@ -36,7 +36,7 @@ export const DashboardUi = () => {
     cards,
     task,
     startCleaningActiveTeam,
-
+    userTeams,
     startGettingMembers,
     startToggleModal,
   } = useDashboard();

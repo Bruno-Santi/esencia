@@ -91,7 +91,7 @@ export const NavBar = () => {
             <span onClick={() => handleNavigate("/dashboard/reports")}>
               <SideBarItem icon={<TbReportSearch />} text='Reportes' />
             </span>
-            <span>
+            <span onClick={() => handleNavigate("/dashboard/assessment")}>
               <SideBarItem icon={<MdOutlineInsertChart />} text='Assessment' />
             </span>
             <hr />

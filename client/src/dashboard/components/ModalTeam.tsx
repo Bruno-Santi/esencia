@@ -6,31 +6,28 @@ import { useDashboard } from "../../hooks/useDashboard";
 export const ModalTeam: React.FC<{
   closeModal: () => void;
 }> = ({ closeModal }) => {
-  const { startToggleModal } = useDashboard();
   const theme = localStorage.getItem("theme");
-  const handleClose = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if ((event.target as HTMLElement).tagName.toLowerCase() !== "div") {
-      closeModal();
-      startToggleModal();
-    }
+  const { startToggleModal } = useDashboard();
+
+  const handleClose = () => {
+    closeModal();
+    startToggleModal();
   };
+
   return (
-    <Dialog open={true} onClose={() => handleClose(e)} fullWidth maxWidth='lg' sx={{ overflowY: "hidden" }}>
+    <Dialog open={true} onClose={handleClose} fullWidth maxWidth='lg' sx={{ overflowY: "hidden" }}>
       <DialogTitle className='dark:bg-black'>
         <Box sx={{ position: "absolute", top: 4, right: 4 }}>
           <IconButton
             className={`text-5xl ${theme !== "dark" ? `text-primary/60` : `text-tertiary`} z-1 cursor-pointer duration-700 hover:text-secondary `}
-            onClick={() => {
-              closeModal();
-              startToggleModal();
-            }}
+            onClick={handleClose}
           >
-            {/* <IoMdClose className='dark:text-teal-50 text-secondary' /> */}
+            <IoMdClose className='dark:text-teal-50 text-secondary' />
           </IconButton>
         </Box>
       </DialogTitle>
-      <DialogContent className='dark:bg-black overflow-y-hidden'>
-        <div className='flex flex-col dark:bg-black w-full'>
+      <DialogContent className='dark:bg-primary overflow-y-hidden'>
+        <div className='flex flex-col dark:bg-primary w-full'>
           <TeamForm closeModal={closeModal} handleClose={handleClose} />
         </div>
       </DialogContent>

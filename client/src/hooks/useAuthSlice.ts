@@ -66,11 +66,7 @@ export const useAuthSlice = () => {
 
       dispatch(onLogin(resp.data.user));
       if (!firstLog) localStorage.setItem("firstLoggin", "0");
-      if (resp.data.user.role) {
-        firstLog == "1" ? handleNavigate("/dashboard") : handleNavigate("/onboarding");
-      } else {
-        handleNavigate("/dashboard");
-      }
+      handleNavigate("/dashboard");
     } catch (error) {
       console.log(error.response.data);
 

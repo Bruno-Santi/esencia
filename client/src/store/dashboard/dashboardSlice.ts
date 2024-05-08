@@ -43,6 +43,7 @@ export const dashboardSlice = createSlice({
       state.cards = [];
       state.task = [];
       state.activeReport = [];
+      state.assessment = [];
     },
     onLoadingTeam: (state) => {
       state.isLoading = true;
@@ -59,6 +60,7 @@ export const dashboardSlice = createSlice({
       state.cards = [];
       state.task = [];
       state.activeReport = [];
+      state.assessment = [];
     },
     onSetUserTeams: (
       state,
@@ -114,6 +116,9 @@ export const dashboardSlice = createSlice({
       state.userTeams.push(action.payload.team);
       state.isLoading = false;
     },
+    onSetAssessment: (state, { payload }) => {
+      state.assessment = payload;
+    },
     onToggleModal: (state, { payload }) => {
       state.modalOpen = payload;
     },
@@ -154,6 +159,7 @@ export const {
   onSetDataLoading,
   onSetLongRecommendation,
   onSetActiveReport,
+  onSetAssessment,
 } = dashboardSlice.actions;
 
 export default dashboardSlice.reducer;

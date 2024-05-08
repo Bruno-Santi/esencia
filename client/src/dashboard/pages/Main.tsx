@@ -7,16 +7,16 @@ import { ClipLoader } from "react-spinners";
 import ReactGA from "react-ga";
 
 export const Main = () => {
-  const { startSettingTeams, userTeams, dataLoading, startToggleModal, modalOpen } = useDashboard();
+  const { startSettingTeams, userTeams, dataLoading, activeTeam } = useDashboard();
 
   useDocumentTitle("Dashboard | Esencia.app");
-  useEffect(() => {
-    const fetchData = async () => {
-      await startSettingTeams();
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     await startSettingTeams();
+  //   };
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
   useEffect(() => {
     ReactGA.pageview(window.location.pathname);
   }, []);
@@ -24,7 +24,7 @@ export const Main = () => {
   return (
     <DashboardLayout>
       {dataLoading === false ? (
-        userTeams?.length ? (
+        userTeams?.length && activeTeam ? (
           <ActiveTeam />
         ) : (
           <NoTeams />

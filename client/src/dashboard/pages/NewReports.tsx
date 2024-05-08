@@ -118,215 +118,221 @@ export const NewReports = () => {
 
   return (
     <DashboardLayout>
-      {!activeReport.length ? (
-        <div className='flex-col items-center flex justify-center mt-4'>
-          {" "}
-          <ReportAccordion reports={longRecommendation} />{" "}
-          <div className='mt-64'>
-            <h1 className='font-poppins text-4xl text-primary/60'>Selecciona un reporte</h1>
-          </div>
+      {!activeTeam ? (
+        <div className='flex items-center my-0 justify-center mt-4'>
+          <span className='dark:text-tertiary text-primary items-center justify-center my-0 text-2xl mt-72'>Selecciona un equipo.</span>
         </div>
       ) : (
         <>
-          <div className='font-poppins flex justify-center mt-4 items-center '>
-            <ReportAccordion reports={longRecommendation} />
-
-            <button className={`btn-primary p-2 rounded-md ml-2`} disabled={loadingReports} onClick={(e) => handleGetReports(e)}>
-              {loadingReports ? (
-                <span className='w-4 h-4 flex items-center justify-center'>
-                  {" "}
-                  <CircularProgress color='success' style={{ width: "1em", height: "1em" }} />
-                </span>
-              ) : (
-                "Actualizar datos"
-              )}
-            </button>
-          </div>
-          {activeReport.map((report, index) => (
-            <div key={index} className='flex flex-col items-center justify-center font-poppins mt-6 mr-32 '>
-              <div className='text-sm text-gray-500 mb-2'>Inicio - Fin</div>
-              {report.startDate && report.endDate && (
-                <div className='dark:text-tertiary'>{`${formatDate(report.startDate)} - ${formatDate(report.endDate)}`}</div>
-              )}
+          {!activeReport.length ? (
+            <div className='flex-col items-center flex justify-center mt-4'>
+              <ReportAccordion reports={longRecommendation} />
+              <div className='mt-64'>
+                <h1 className='font-poppins text-4xl text-primary/60'>Selecciona un reporte</h1>
+              </div>
             </div>
-          ))}
-          <Grid
-            container
-            spacing={0}
-            justifyContent='left'
-            alignItems='center'
-            ml={{ xs: 0, lg: 0 }}
-            className='lg:pb-20 md:pb-20 gap-y-2 items-center lg:space-x-6 md:space-x-6 lg:mt-6 font-poppins'
-          >
-            <Grid item xs={12} lg={3}>
-              <div className='flex space-x-0 lg:ml-10 md:ml-10 gap-2 mb-20 font-poppins text-primary '>
-                <BoardReport title='Planificados' value={backlogValue} />
-                <BoardReport title='En proceso' value={inProgressValue} />
-                <BoardReport title='En revisión' value={inReviewValue} />
-                <BoardReport title='Completados' value={finishedValue} />
+          ) : (
+            <>
+              <div className='font-poppins flex justify-center mt-4 items-center '>
+                <ReportAccordion reports={longRecommendation} />
+                <button className={`btn-primary p-2 rounded-md ml-2`} disabled={loadingReports} onClick={(e) => handleGetReports(e)}>
+                  {loadingReports ? (
+                    <span className='w-4 h-4 flex items-center justify-center'>
+                      {" "}
+                      <CircularProgress color='success' style={{ width: "1em", height: "1em" }} />
+                    </span>
+                  ) : (
+                    "Actualizar datos"
+                  )}
+                </button>
               </div>
-            </Grid>
-            <Grid item xs={12} lg={8}>
-              <div className='flex ml-48  text-center sm:flex sm:flex-col md:flex-row lg:flex-row '>
-                {/* <Cuadrants
-                  icon={<FaSmile />}
-                  label='Satisfacción General'
-                  value={Math.round(activeReport[0]?.differences[0] * 100)}
-                  color='bg-[#8136c2]'
-                />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        */}
-                <Cuadrants
-                  icon={<MdOutlineSelfImprovement />}
-                  label='Satisfacción Personal'
-                  value={Math.round(activeReport[0]?.cuadrants_difference[0] * 100)}
-                  color='bg-red-400'
-                />
-                <Cuadrants
-                  icon={<FaUsers />}
-                  label='Colaboracion en Equipo'
-                  value={Math.round(activeReport[0]?.cuadrants_difference[1] * 100)}
-                  color='bg-orange-400'
-                />
-                <Cuadrants
-                  icon={<FaTools />}
-                  label='Compromiso Laboral'
-                  value={Math.round(activeReport[0]?.cuadrants_difference[2] * 100)}
-                  color='bg-blue-400'
-                />
-                <Cuadrants
-                  icon={<FaHome />}
-                  label='Bienestar en el espacio de trabajo'
-                  value={Math.round(activeReport[0]?.cuadrants_difference[3] * 100)}
-                  color='bg-rose-300'
-                />
-              </div>
-            </Grid>
-            <Grid item xs={12} lg={3}>
-              <span className=''>
-                {" "}
-                <TaskTable tasks={activeReport[0]?.GoalStatus} />
-              </span>
-            </Grid>
-            <Grid item xs={12} lg={8} className='lg:pl-36 md:pl-36 pr-6'>
-              <div className=''>
-                {" "}
-                <LineChartReport data={activeReport[0].line_graphs} height='20em' />
-              </div>
-            </Grid>
-
-            <Grid item xs={12} lg={6}>
-              <div className='bg-tertiary/20 rounded-md shadow-lg shadow-primary/40 text-primary h-[250px] font-poppins p-2 overflow-hidden relative'>
-                <div className=' h-full '>
-                  <div className='p-2 text-lg text-secondary'>Recomendaciones.</div>
-                  <Divider className='py-2 ' />
-                  <div className='mt-6 px-4 pb-4 overflow-y-scroll absolute top-14 left-0 right-0 bottom-0'>
-                    <ul>
-                      {formattedRecommendations.map((recommendation, index) => (
-                        <li className='dark:text-tertiary' key={index}>
-                          {recommendation.trim()}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>{" "}
+              {activeReport.map((report, index) => (
+                <div key={index} className='flex flex-col items-center justify-center font-poppins mt-6 mr-32 '>
+                  <div className='text-sm text-gray-500 mb-2'>Inicio - Fin</div>
+                  {report.startDate && report.endDate && (
+                    <div className='dark:text-tertiary'>{`${formatDate(report.startDate)} - ${formatDate(report.endDate)}`}</div>
+                  )}
                 </div>
-              </div>
-            </Grid>
-            <Grid item xs={12} lg={5}>
-              <div className='bg-tertiary/20 rounded-md shadow-lg shadow-primary/40 text-primary h-[250px] font-poppins p-2 overflow-hidden relative'>
-                <div className=' h-full '>
-                  <div className='p-2 text-lg text-secondary'>Análisis de conocimiento.</div>
-                  <Divider className='py-2 ' />
-
-                  <div className='mt-6 px-4  pb-4 overflow-y-scroll absolute top-14 left-0 right-0 bottom-0 dark:text-tertiary'>{activeReport[0].analysis}</div>
-                </div>
-              </div>
-            </Grid>
-            <Grid item xs={12} lg={6} className=''>
-              <div className='bg-tertiary/20 rounded-md shadow-lg shadow-primary/40 text-primary font-poppins p-2 h-[250px] overflow-hidden relative'>
-                <div className=' h-full'>
-                  <div className='flex flex-col'>
-                    <span className='p-2 text-lg text-secondary'>Preguntas realizadas en este sprint.</span>
-                    <span className='italic text-sm font-light px-2 font-poppins dark:text-tertiary '>Pregunta / Resultado</span>
+              ))}
+              <Grid
+                container
+                spacing={0}
+                justifyContent='left'
+                alignItems='center'
+                ml={{ xs: 0, lg: 0 }}
+                className='lg:pb-20 md:pb-20 gap-y-6 items-center lg:space-x-6 md:space-x-6 lg:mt-6 font-poppins'
+              >
+                <Grid item xs={12} lg={3}>
+                  <div className='flex space-x-0 lg:ml-10 md:ml-10 gap-2 mb-20 font-poppins text-primary '>
+                    <BoardReport title='Planificados' value={backlogValue} />
+                    <BoardReport title='En proceso' value={inProgressValue} />
+                    <BoardReport title='En revisión' value={inReviewValue} />
+                    <BoardReport title='Completados' value={finishedValue} />
                   </div>
+                </Grid>
+                <Grid item xs={12} lg={8}>
+                  <div className='flex ml-48  text-center sm:flex sm:flex-col md:flex-row lg:flex-row '>
+                    <Cuadrants
+                      icon={<MdOutlineSelfImprovement />}
+                      label='Satisfacción Personal'
+                      value={Math.round(activeReport[0]?.cuadrants_difference[0] * 100)}
+                      color='bg-red-400'
+                    />
+                    <Cuadrants
+                      icon={<FaUsers />}
+                      label='Colaboracion en Equipo'
+                      value={Math.round(activeReport[0]?.cuadrants_difference[1] * 100)}
+                      color='bg-orange-400'
+                    />
+                    <Cuadrants
+                      icon={<FaTools />}
+                      label='Compromiso Laboral'
+                      value={Math.round(activeReport[0]?.cuadrants_difference[2] * 100)}
+                      color='bg-blue-400'
+                    />
+                    <Cuadrants
+                      icon={<FaHome />}
+                      label='Bienestar en el espacio de trabajo'
+                      value={Math.round(activeReport[0]?.cuadrants_difference[3] * 100)}
+                      color='bg-rose-300'
+                    />
+                    <Cuadrants
+                      icon={<FaSmile />}
+                      label='Satisfacción General'
+                      value={Math.round(activeReport[0]?.cuadrants_difference[4] * 100)}
+                      color='bg-red-400/80'
+                    />
+                  </div>
+                </Grid>
+                <Grid item xs={12} lg={3}>
+                  <span className=''>
+                    {" "}
+                    <TaskTable tasks={activeReport[0]?.GoalStatus} />
+                  </span>
+                </Grid>
+                <Grid item xs={12} lg={8} className='lg:pl-36 md:pl-36 pr-6'>
+                  <div className=''>
+                    {" "}
+                    <LineChartReport data={activeReport[0].line_graphs} height='20em' />
+                  </div>
+                </Grid>
+                <Grid item xs={12} lg={6} className=''>
+                  <div className='bg-tertiary/20 rounded-md shadow-lg shadow-primary/40 text-primary font-poppins p-2 h-[250px] overflow-hidden relative'>
+                    <div className=' h-full'>
+                      <div className='flex flex-col'>
+                        <span className='p-2 text-lg text-secondary'>Preguntas realizadas en este sprint.</span>
+                        <span className='italic text-sm font-light px-2 font-poppins dark:text-tertiary '>Pregunta / Resultado</span>
+                      </div>
 
-                  <Divider className='py-2' />
-                  <div className='mt-8 px-2 overflow-y-scroll absolute top-14 left-0 right-0 bottom-0'>
-                    {!Object.keys(activeReport[0].survey_answers).length <= 0 ? (
-                      <div>
-                        <div className='mt-2'>
-                          <button
-                            className={`px-4 py-2 rounded-l ${selectedTab === "worst" ? "bg-secondary text-white" : "bg-gray-200"}`}
-                            onClick={() => handleTabChange("worst")}
-                          >
-                            Peores
-                          </button>
-                          <button
-                            className={`px-4 py-2 rounded-r ${selectedTab === "best" ? "bg-secondary text-white" : "bg-gray-200"}`}
-                            onClick={() => handleTabChange("best")}
-                          >
-                            Mejores
-                          </button>
-                        </div>
+                      <Divider className='py-2' />
+                      <div className='mt-8 px-2 overflow-y-scroll absolute top-14 left-0 right-0 bottom-0'>
+                        {!Object.keys(activeReport[0].survey_answers).length <= 0 ? (
+                          <div>
+                            <div className='mt-2'>
+                              <button
+                                className={`px-4 py-2 rounded-l ${selectedTab === "worst" ? "bg-secondary text-white" : "bg-gray-200"}`}
+                                onClick={() => handleTabChange("worst")}
+                              >
+                                Peores
+                              </button>
+                              <button
+                                className={`px-4 py-2 rounded-r ${selectedTab === "best" ? "bg-secondary text-white" : "bg-gray-200"}`}
+                                onClick={() => handleTabChange("best")}
+                              >
+                                Mejores
+                              </button>
+                            </div>
+                            <ul className='text-sm space-y-4 py-4 px-2'>
+                              {selectedTab === "worst" &&
+                                (formattedSurveyAnswers
+                                  .filter((answer) => answer.type === "worst")
+                                  .map((answer) => (
+                                    <div key={answer._id}>
+                                      <li className='text-secondary font-bold'>
+                                        <span className='text-primary font-bold'>•</span> {answer._id}{" "}
+                                        <span>
+                                          /<span className='text-red-600 font-bold'> {Math.round(answer.average_value * 100)}%🔻</span>{" "}
+                                        </span>{" "}
+                                      </li>
+                                    </div>
+                                  )) || <div>Sin datos</div>)}
+
+                              {selectedTab === "best" &&
+                                (formattedSurveyAnswers
+                                  .filter((answer) => answer.type === "best")
+                                  .map((answer) => (
+                                    <div key={answer._id}>
+                                      <li className='text-secondary font-bold'>
+                                        <span className='text-primary font-bold'>•</span> {answer._id}{" "}
+                                        <span className='text-green-600 text-bold'>
+                                          {" "}
+                                          / <span className='text-red-600 font-bold'>{Math.round(answer.average_value * 100)}%🔺</span>
+                                        </span>{" "}
+                                      </li>
+                                    </div>
+                                  )) || <div>Sin datos</div>)}
+                            </ul>
+                          </div>
+                        ) : (
+                          <div>Sin datos</div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </Grid>
+                <Grid item xs={12} lg={5}>
+                  <div className='bg-tertiary/20 rounded-md shadow-lg shadow-primary/40 text-primary font-poppins p-2 h-[250px] overflow-hidden relative'>
+                    <div className=' h-full'>
+                      <div className='flex flex-col'>
+                        <span className='p-2 text-lg text-secondary'>Resumen de retro.</span>
+                        <span className='italic text-sm font-light px-2 font-poppins dark:text-tertiary'>Pregunta / Idea / Votos</span>
+                      </div>
+                      <Divider className='py-2' />
+                      <div className='mt-8 px-2 overflow-y-scroll absolute top-14 left-0 right-0 bottom-0'>
                         <ul className='text-sm space-y-4 py-4 px-2'>
-                          {selectedTab === "worst" &&
-                            (formattedSurveyAnswers
-                              .filter((answer) => answer.type === "worst")
-                              .map((answer) => (
-                                <div key={answer._id}>
-                                  <li className='text-secondary font-bold'>
-                                    <span className='text-primary font-bold'>•</span> {answer._id}{" "}
-                                    <span>
-                                      /<span className='text-red-600 font-bold'> {Math.round(answer.average_value * 100)}%🔻</span>{" "}
-                                    </span>{" "}
-                                  </li>
-                                </div>
-                              )) || <div>Sin datos</div>)}
-
-                          {selectedTab === "best" &&
-                            (formattedSurveyAnswers
-                              .filter((answer) => answer.type === "best")
-                              .map((answer) => (
-                                <div key={answer._id}>
-                                  <li className='text-secondary font-bold'>
-                                    <span className='text-primary font-bold'>•</span> {answer._id}{" "}
-                                    <span className='text-green-600 text-bold'>
-                                      {" "}
-                                      / <span className='text-red-600 font-bold'>{Math.round(answer.average_value * 100)}%🔺</span>
-                                    </span>{" "}
-                                  </li>
-                                </div>
-                              )) || <div>Sin datos</div>)}
+                          {formattedRetrospective.length ? (
+                            formattedRetrospective.map((retro) => {
+                              return <RetroResume question={retro.content} response={retro.note} vote_up={retro.thumb_up} vote_down={retro.thumb_down} />;
+                            })
+                          ) : (
+                            <span>Sin datos</span>
+                          )}
                         </ul>
                       </div>
-                    ) : (
-                      <div>Sin datos</div>
-                    )}
+                    </div>
                   </div>
-                </div>
-              </div>
-            </Grid>
-            <Grid item xs={12} lg={5}>
-              <div className='bg-tertiary/20 rounded-md shadow-lg shadow-primary/40 text-primary font-poppins p-2 h-[250px] overflow-hidden relative'>
-                <div className=' h-full'>
-                  <div className='flex flex-col'>
-                    <span className='p-2 text-lg text-secondary'>Resumen de retro.</span>
-                    <span className='italic text-sm font-light px-2 font-poppins dark:text-tertiary'>Pregunta / Idea / Votos</span>
+                </Grid>
+                <Grid item xs={12} lg={6}>
+                  <div className='bg-tertiary/20 rounded-md shadow-lg shadow-primary/40 text-primary h-[250px] font-poppins p-2 overflow-hidden relative'>
+                    <div className=' h-full '>
+                      <div className='p-2 text-lg text-secondary'>Recomendaciones.</div>
+                      <Divider className='py-2 ' />
+                      <div className='mt-6 px-4 pb-4 overflow-y-scroll absolute top-14 left-0 right-0 bottom-0'>
+                        <ul>
+                          {formattedRecommendations.map((recommendation, index) => (
+                            <li className='dark:text-tertiary' key={index}>
+                              {recommendation.trim()}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>{" "}
+                    </div>
                   </div>
-                  <Divider className='py-2' />
-                  <div className='mt-8 px-2 overflow-y-scroll absolute top-14 left-0 right-0 bottom-0'>
-                    <ul className='text-sm space-y-4 py-4 px-2'>
-                      {formattedRetrospective.length ? (
-                        formattedRetrospective.map((retro) => {
-                          return <RetroResume question={retro.content} response={retro.note} vote_up={retro.thumb_up} vote_down={retro.thumb_down} />;
-                        })
-                      ) : (
-                        <span>Sin datos</span>
-                      )}
-                    </ul>
+                </Grid>
+                <Grid item xs={12} lg={5}>
+                  <div className='bg-tertiary/20 rounded-md shadow-lg shadow-primary/40 text-primary h-[250px] font-poppins p-2 overflow-hidden relative'>
+                    <div className=' h-full '>
+                      <div className='p-2 text-lg text-secondary'>Análisis de conocimiento.</div>
+                      <Divider className='py-2 ' />
+                      <div className='mt-6 px-4  pb-4 overflow-y-scroll absolute top-14 left-0 right-0 bottom-0 dark:text-tertiary'>
+                        {activeReport[0].analysis}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            </Grid>
-          </Grid>{" "}
+                </Grid>
+              </Grid>{" "}
+            </>
+          )}
         </>
       )}
     </DashboardLayout>
