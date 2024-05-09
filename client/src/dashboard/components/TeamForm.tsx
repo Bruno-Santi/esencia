@@ -307,7 +307,7 @@ export const TeamForm: React.FC<TeamFormProps> = ({ closeModal, handleClose }) =
                         className='input rounded-md mt-2 dark:text-tertiary dark:bg-black'
                       >
                         <option value='0'>No</option>
-                        <option value='2'>Sí</option>
+                        <option value='3'>Sí</option>
                         <option value='1'>A veces</option>
                       </select>
                     </div>

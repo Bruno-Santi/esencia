@@ -25,6 +25,7 @@ export const NewLandingPage = () => {
   return (
     <div className='lg:min-w-screen md:min-w-screen sm:min-w-screen animate__animated animate__fadeIn animate__slower' style={{ position: "relative" }}>
       <NavLanding />
+
       <div>
         <Home />
       </div>

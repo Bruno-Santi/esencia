@@ -11,7 +11,7 @@ export const ActiveTeam = () => {
 
   useEffect(() => {
     if (activeTeam) startGettingMembers(activeTeam._id);
-  }, [activeTeam, startGettingMembers]);
+  }, [activeTeam]);
 
   useEffect(() => {
     console.log(firstLogging);

@@ -11,6 +11,7 @@ import { Login } from "../teams/pages/Login";
 import ReactGA from "react-ga";
 import { NewLandingPage } from "../components/NewLandingPage";
 import Profile from "../auth/pages/Profile";
+import { Faqs } from "../components/Faqs";
 
 export const AppRouter = () => {
   const [searchParams1] = useSearchParams();
@@ -96,6 +97,7 @@ export const AppRouter = () => {
               {userTokenLocal && <Route element={<MembersRoutes />} path={`/members/*`} />}
               <Route element={<OnBoardingRoutes />} path={`/onboarding/*`} />
               <Route element={<DashboardRoutes />} path={`/dashboard/*`} />
+              <Route element={<Faqs />} path={`/faqs`} />
               <Route element={<TeamsRoutes />} path={`/teams/*`} />
               <Route element={<Navigate to='/dashboard' />} path={`/teams/login`} />
               <Route path='/profile' element={<Profile />} />

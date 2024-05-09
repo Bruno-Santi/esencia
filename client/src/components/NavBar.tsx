@@ -99,8 +99,9 @@ export const NavBar = () => {
               {" "}
               <SideBarItem icon={<IoSettingsOutline />} text='Ajustes' />
             </span>
-
-            <SideBarItem icon={<CiCircleQuestion />} text="Faq's" />
+            <span onClick={() => handleNavigate("/faqs")}>
+              <SideBarItem icon={<CiCircleQuestion />} text="Faq's" />
+            </span>
             <span
               onClick={() => {
                 startLogingOut();

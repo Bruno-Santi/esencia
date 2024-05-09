@@ -36,7 +36,7 @@ export const MembersTable = () => {
 
   useEffect(() => {
     startGettingMembers(activeTeam._id);
-  }, [membersActiveTeam.length]);
+  }, [membersActiveTeam]);
 
   return (
     <TableContainer>

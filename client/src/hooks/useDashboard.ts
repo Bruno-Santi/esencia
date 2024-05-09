@@ -16,7 +16,7 @@ import {
 } from "../store/dashboard/dashboardSlice";
 
 import { UserTeams } from "../store/dashboard/interfaces";
-import { useModal } from ".";
+import { useModal, useNavigateTo } from ".";
 import { useState } from "react";
 import api, { baseURL } from "../helpers/apiToken";
 import { getTeamData } from "../helpers/getTeamData";
@@ -28,6 +28,7 @@ import { finalRandomizedQuestions, generateRandomQuestions } from "../members/da
 import { Toast } from "react-toastify/dist/components";
 
 export const useDashboard = () => {
+  const { handleNavigate } = useNavigateTo();
   const [surveyLoading, setSurveyLoading] = useState(false);
   const [creatingLoading, setCreatingLoading] = useState(false);
   const [loadingReports, setLoadingReports] = useState(false);
@@ -95,7 +96,7 @@ export const useDashboard = () => {
   const starGettingData = async (id: string, sprint = 0, triggered?: boolean) => {
     dispatch(onSetDataLoading(true));
     console.log(id, sprint);
-
+    handleNavigate("/dashboard");
     toast.promise(startGettingDataFunc(id, sprint, triggered), {
       pending: "Buscando nueva información 🕐",
       success: "Información recibida correctamente! 🎉",
@@ -288,7 +289,7 @@ export const useDashboard = () => {
 
       toast.warning(`${formData.email} has already been added to the some team`);
 
-      startGettingMembers(teamId);
+      await startGettingMembers(teamId);
       setCreatingLoading(false);
     } catch (error) {
       console.log(error);
@@ -309,6 +310,7 @@ export const useDashboard = () => {
       return data;
     } catch (error) {
       console.log(error);
+      return error;
     }
   };
 
