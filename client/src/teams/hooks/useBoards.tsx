@@ -31,8 +31,8 @@ export const useBoards = () => {
     handleError(cardTitle);
   };
   const handleError = (title) => {
-    if (!title.length) setTitleError("You must provide a title.");
-    if (title.length < 4) setTitleError("Title must have at least 4 characters long.");
+    if (!title.length) setTitleError("Debes ingresar un título.");
+    if (title.length < 4) setTitleError("El título debe tener al menos 4 carácteres.");
     setTitleError("");
   };
   const toggleModal = () => setModalCard(!modalCard);

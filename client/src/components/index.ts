@@ -14,3 +14,4 @@ export * from "./Pricing";
 export * from "./PricingList";
 export * from "./WhyUs";
 export * from "./Assessment";
+export * from "./FaqItem";

@@ -33,9 +33,9 @@ export const Footer = () => {
                 Nosotros
               </li>
 
-              <li className='cursor-pointer duration-300 hover:text-secondary' onClick={() => scrollToSection("pricing")}>
+              {/* <li className='cursor-pointer duration-300 hover:text-secondary' onClick={() => scrollToSection("pricing")}>
                 Precios
-              </li>
+              </li> */}
             </ul>
           </div>
           <div className=''>

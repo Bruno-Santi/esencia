@@ -12,6 +12,7 @@ import ReactGA from "react-ga";
 import { NewLandingPage } from "../components/NewLandingPage";
 import Profile from "../auth/pages/Profile";
 import { Faqs } from "../components/Faqs";
+import { FaqsLanding } from "../components/FaqsLanding";
 
 export const AppRouter = () => {
   const [searchParams1] = useSearchParams();
@@ -93,6 +94,7 @@ export const AppRouter = () => {
             <>
               {/* Rutas para usuarios autenticados */}
               <Route element={<NewLandingPage />} path={"/"} />
+              <Route element={<FaqsLanding />} path={"/faqs"} />
               {userToken && <Route element={<MembersRoutes />} path={`/members/*`} />}
               {userTokenLocal && <Route element={<MembersRoutes />} path={`/members/*`} />}
               <Route element={<OnBoardingRoutes />} path={`/onboarding/*`} />
@@ -115,6 +117,7 @@ export const AppRouter = () => {
               {userTokenLocal && <Route element={<MembersRoutes />} path={`/members/*`} />}
 
               <Route element={<NewLandingPage />} path={"/"} />
+              <Route element={<FaqsLanding />} path={"/faqs"} />
               <Route element={<AuthRoutes />} path={`/auth/*`} />
               <Route element={<Navigate to='/auth/login' />} path={`/dashboard/`} />
               <Route element={<Navigate to='/auth/login' />} path={`/onboarding/`} />

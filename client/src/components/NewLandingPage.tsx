@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { NavLanding, Home, About, Features, Testimonials, Pricing, WhyUs, Assessment } from "./";
 import { Footer } from "./Footer";
 import { IoHomeOutline } from "react-icons/io5";
+import { LandingLayaout } from "../layaout/LandingLayaout";
 
 export const NewLandingPage = () => {
   const homeRef = useRef(null);
@@ -23,9 +24,7 @@ export const NewLandingPage = () => {
   };
 
   return (
-    <div className='lg:min-w-screen md:min-w-screen sm:min-w-screen animate__animated animate__fadeIn animate__slower' style={{ position: "relative" }}>
-      <NavLanding />
-
+    <LandingLayaout>
       <div>
         <Home />
       </div>
@@ -62,10 +61,9 @@ export const NewLandingPage = () => {
       <div ref={aboutRef} id='about'>
         <About />
       </div>
-      <div ref={pricingRef} id='pricing' className='pt-2'>
+      {/* <div ref={pricingRef} id='pricing' className='pt-2'>
         <Pricing />
-      </div>
-      <Footer />
+      </div> */}
 
       <span
         className='  px-4 py-2  cursor-pointer rounded-full bg-secondary duration-300 group hover:bg-tertiary'
@@ -74,6 +72,6 @@ export const NewLandingPage = () => {
       >
         <IoHomeOutline className='w-8 h-12 text-teal-50 group-hover:text-primary duration-300' />
       </span>
-    </div>
+    </LandingLayaout>
   );
 };
