@@ -19,6 +19,8 @@ import { DashboardDataModule } from './dashboard_data/dashboard_data.module';
 import { MercadoPagoModule } from './mercado-pago/mercado-pago.module';
 import { AgileassessmentModule } from './agileassessment/agileassessment.module';
 
+import { EmailModule } from './email/email.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -45,6 +47,7 @@ import { AgileassessmentModule } from './agileassessment/agileassessment.module'
     DashboardDataModule,
     MercadoPagoModule,
     AgileassessmentModule,
+    EmailModule,
   ],
   exports: [],
   controllers: [],
