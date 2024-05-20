@@ -61,7 +61,7 @@ export const NavLanding = () => {
           <img src={logo} className='lg:w-16 lg:h-16 md:h-12 md:w-12 sm:w-12' alt='Logo' />
           <div className='flex flex-col -space-y-2'>
             <span className='ml-4 select-none lg:flex lg:items-center md:flex md:items-center md:text-[16px]  sm:hidden'>ESENCIA.APP</span>
-            <span className='italic ml-4 text-sm text-secondary select-none'>Beta</span>
+            <span className='italic ml-4 text-sm text-secondary select-none sm:hidden md:block lg:block'>Beta</span>
           </div>
           <div onClick={handleNavBar} className='text-tertiary absolute right-6 md:hidden lg:hidden sm:block sm:cursor-pointer'>
             {!navBar ? <IoMenu className='w-10 h-10' /> : <IoCloseOutline className='w-12 h-12 right-4 text-green-500' />}
@@ -69,7 +69,7 @@ export const NavLanding = () => {
         </div>
         <div
           className={`space-x-10  md:flex md:text-[16px] md:items-center md:justify-center md:ml-48 sm:hidden lg:flex lg:items-center lg:justify-center ${
-            user ? "lg:ml-16 md:mr-48" : "lg:ml-48 md:mr-10"
+            user ? "lg:ml-16 md:mr-48" : "lg:ml-48 md:mr-44"
           } `}
         >
           <span className='relative duration-300 hover:text-secondary cursor-pointer' onClick={() => handleMenuClick("assessment")}>
@@ -156,9 +156,20 @@ export const NavLanding = () => {
           )}
         </div>
         <section
-          className={`lg:hidden md:hidden sm:${navBar ? "block" : "hidden"} sm:min-w-full sm:top-20 sm:flex sm:items-center sm:z-auto sm:absolute bg-primary`}
+          className={`lg:hidden md:hidden sm:${
+            navBar ? "block" : "hidden"
+          } sm:min-w-full sm:z-10 sm:top-20 sm:flex sm:items-center sm:z-auto sm:absolute bg-primary`}
         >
           <ul className='text-tertiary space-y-4 font-inter ml-8 mt-6 mb-6 w-full'>
+            <li
+              className='cursor-pointer duration-300 hover:text-green-400'
+              onClick={() => {
+                scrollToSection("assessment");
+                handleNavBar();
+              }}
+            >
+              Assessment
+            </li>
             <li
               className='cursor-pointer duration-300 hover:text-green-400'
               onClick={() => {
@@ -176,6 +187,15 @@ export const NavLanding = () => {
               }}
             >
               Nosotros
+            </li>
+            <li
+              className='cursor-pointer duration-300 hover:text-green-400'
+              onClick={() => {
+                handleNavigate("/faqs");
+                handleNavBar();
+              }}
+            >
+              Faq's
             </li>
             {/* <li
               className='cursor-pointer duration-300 hover:text-green-400'
@@ -202,7 +222,7 @@ export const NavLanding = () => {
                   Ingresar
                 </li>
                 <li onClick={() => handleNavigate("/auth/register")} className='cursor-pointer duration-300 hover:text-green-400 font-bold'>
-                  Comenzar prueba gratuita
+                  Registrate
                 </li>
               </>
             )}

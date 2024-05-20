@@ -8,6 +8,7 @@ export const FeatureList = ({ feature }) => {
     >
       <div className='md:w-4/6 md:order-2 lg:w-1/3 items-center md:ml-20 md:mr-20 sm:mx-6 sm:ml-8 sm:text-left md:mb-0'>
         <span className='lg:text-2xl md:text-2xl sm:text-xl font-bold text-secondary'>{feature.title}</span>
+        <br></br>
         <span className='sm:text-normal lg:text-lg md:text-normal sm:text-left'>{feature.description}</span>
         <br></br>
         {/* <span className='p-2 rounded-md bg-primary text-tertiary font-poppins cursor-pointer mt-6 hover:bg-secondary hover:text-primary'>Quiero saber más</span> */}

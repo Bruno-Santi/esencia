@@ -2,13 +2,17 @@ import {
   BadGatewayException,
   BadRequestException,
   Injectable,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateEmailDto } from './dto/create-email.dto';
 import { UpdateEmailDto } from './dto/update-email.dto';
 import { InjectSendGrid, SendGridService } from '@ntegral/nestjs-sendgrid';
 import { subscribeMail } from 'common/utils/subscribeMail';
 import { BadRequestError } from 'openai';
+import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 
+@UseGuards(ThrottlerGuard)
+@Throttle({ default: { limit: 2, ttl: 60000 } })
 @Injectable()
 export class EmailService {
   constructor(@InjectSendGrid() private readonly client: SendGridService) {}

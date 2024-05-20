@@ -6,11 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { RecommendationsService } from './recommendations.service';
 import { CreateRecommendationDto } from './dto/create-recommendation.dto';
 import { UpdateRecommendationDto } from './dto/update-recommendation.dto';
+import { JwtAuthGuard } from 'common/jwt-guard/jwt-guard.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('recommendations')
 export class RecommendationsController {
   constructor(

@@ -30,11 +30,14 @@ export const NewLandingPage = () => {
       </div>
       <div>
         <WhyUs />
-        <div className='flex flex-col mt-6 items-center font-poppins'>
-          <h1 className=' sm:text-2xl flex items-center justify-center m-auto mt-6 lg:text-2xl md:text-2xl font-bold lg:w-full md:w-3/3'>
+        <div className='flex flex-col mt-6 sm:items-center sm:justify-center sm:flex sm:flex-col items-center font-poppins'>
+          <h1 className=' sm:text-xl  sm:hidden md:flex lg:flex items-center justify-center m-auto mt-6 lg:text-2xl md:text-2xl font-bold lg:w-full md:w-3/3'>
             Mira este breve video para entender la magia de <br></br>
           </h1>
-          <p className='font-bold text-secondary text-2xl'> Esencia.app:</p>
+          <p className='font-bold text-secondary text-xl  sm:hidden md:flex lg:flex'> Esencia.app:</p>
+          <p className='lg:hidden md:hidden sm:flex sm:flex-col sm:w-2/3 sm:items-center sm:text-center sm:text-lg sm:font-bold '>
+            Mira este breve video para entender la magia de <p className='text-secondary'>Esencia.app:</p>{" "}
+          </p>
         </div>
         <div className='m-auto  flex md:mt-10 mt-20 sm:mt-10 items-center justify-center  lg:w-3/6 md:w-3/6 sm:w-5/6 h-2/3 rounded-xl'>
           <iframe

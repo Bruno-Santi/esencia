@@ -1,8 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { SprintreportService } from './sprintreport.service';
 import { CreateSprintreportDto } from './dto/create-sprintreport.dto';
 import { UpdateSprintreportDto } from './dto/update-sprintreport.dto';
+import { JwtAuthGuard } from 'common/jwt-guard/jwt-guard.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('sprintreport')
 export class SprintreportController {
   constructor(private readonly sprintreportService: SprintreportService) {}

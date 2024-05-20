@@ -1,4 +1,6 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { ScrumMaster, ScrumMasterSchema } from './entities/user.entity';
@@ -8,7 +10,13 @@ import { TeamModule } from 'src/team/team.module';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [
+    AuthService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
   imports: [
     MongooseModule.forFeature([
       {
@@ -19,6 +27,12 @@ import { TeamModule } from 'src/team/team.module';
     ]),
     JwtModule,
     TeamModule,
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 10,
+      },
+    ]),
   ],
   exports: [AuthService, MongooseModule],
 })

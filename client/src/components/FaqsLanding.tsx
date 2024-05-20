@@ -33,8 +33,10 @@ export const FaqsLanding = () => {
 
   return (
     <LandingLayaout>
-      {/* Botón para scrollear a la Guía de Uso de Esencia.app */}
-      <div className='flex flex-col absolute space-y-2 font-poppins text-sm ' style={{ position: "fixed", top: "50%", left: "70px" }}>
+      <div
+        className='flex flex-col md:top-[50%] lg:md:top-[50%]  lg:fixed md:left-[20px] lg:absolute md:fixed lg:flex lg:flex-col md:flex md:flex-col sm:hidden space-y-2  font-poppins text-sm '
+        style={{ position: "fixed", left: "70px" }}
+      >
         <button
           onClick={() => document.getElementById("guia-uso-esencia").scrollIntoView({ behavior: "smooth" })}
           className={`${currentSection === "guia-uso-esencia" ? "bg-secondary text-tertiary" : "bg-gray-200"} p-2 duration-300 rounded-md `}
@@ -70,8 +72,11 @@ export const FaqsLanding = () => {
       {/* Ancla para la sección de Guía de Uso de Esencia.app */}
       <a id='guia-uso-esencia' />
 
-      <div className='w-3/6  flex flex-col justify-center m-auto space-y-4 -mt-6 mb-20 '>
-        <section id='guia-uso-esencia' className='min-h-screen items-center m-auto flex flex-col justify-center space-y-6'>
+      <div className='md:w-3/6 lg:w-3/6 sm:w-full sm:px-4  flex flex-col justify-center m-auto space-y-4 -mt-6 md:mb-20 lg:mb-20 sm:mb-6 '>
+        <section
+          id='guia-uso-esencia'
+          className='lg:min-h-screen md:min-h-screen sm:h-fit sm:mt-20 md:mt-0 lg:mt-0 items-center m-auto flex flex-col justify-center space-y-6'
+        >
           <h1 className='text-center font-manrope text-2xl text-primary/60 dark:text-tertiary p-2'>Guía de uso Esencia.app</h1>
           {guides.map(({ id, title, subtitle, text, url }) => {
             return <FaqItem key={id} title={title} subtitle={subtitle} text={text} url={url} />;
@@ -81,7 +86,10 @@ export const FaqsLanding = () => {
         {/* Ancla para la sección de Preguntas Frecuentes sobre Esencia */}
         <a id='preguntas-frecuentes-esencia' className='' />
 
-        <section id='preguntas-frecuentes-esencia' className='min-h-screen items-center m-auto flex flex-col justify-center space-y-6'>
+        <section
+          id='preguntas-frecuentes-esencia'
+          className='lg:min-h-screen md:min-h-screen sm:h-fit items-center m-auto flex flex-col justify-center space-y-6'
+        >
           <h1 className='text-center font-manrope text-2xl text-primary/60 dark:text-tertiary p-2'>Preguntas Frecuentas sobre Esencia:</h1>
           {faqsList.map(({ id, title, text }) => {
             return <FaqItem key={id} title={title} text={text} />;
@@ -91,7 +99,10 @@ export const FaqsLanding = () => {
         {/* Ancla para la sección de Preguntas Frecuentes sobre Agilidad */}
         <a id='preguntas-frecuentes-agile' />
 
-        <section id='preguntas-frecuentes-agile' className='min-h-screen items-center m-auto flex flex-col justify-center space-y-6'>
+        <section
+          id='preguntas-frecuentes-agile'
+          className='lg:min-h-screen md:min-h-screen sm:h-fit items-center m-auto flex flex-col justify-center space-y-6'
+        >
           <h1 className='text-center font-manrope text-2xl text-primary/60 dark:text-tertiary p-2'>Preguntas Frecuentas sobre Agilidad:</h1>
           {agileList.map(({ id, title, text }) => {
             return <FaqItem key={id} title={title} text={text} />;

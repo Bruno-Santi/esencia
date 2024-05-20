@@ -20,6 +20,7 @@ import { MercadoPagoModule } from './mercado-pago/mercado-pago.module';
 import { AgileassessmentModule } from './agileassessment/agileassessment.module';
 
 import { EmailModule } from './email/email.module';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { EmailModule } from './email/email.module';
     MercadoPagoModule,
     AgileassessmentModule,
     EmailModule,
+    ThrottlerModule,
   ],
   exports: [],
   controllers: [],

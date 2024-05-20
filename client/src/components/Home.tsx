@@ -55,7 +55,7 @@ export const Home = () => {
           Conocer más.
         </button>
         <br></br>
-        <div className='flex flex-col'>
+        <div className='flex flex-col '>
           <div className='mb-6 relative'>
             <label htmlFor='default-input' className='block mb-6 font-poppins bg-secondary text-tertiary p-1 rounded-md w-fit'>
               En este momento nos encontramos en etapa Beta; <br></br> Si te interesa participar de nuestro programa beta deja tu email aquí:
@@ -68,13 +68,15 @@ export const Home = () => {
                 value={email}
                 disabled={loadingSend}
                 onChange={(e) => setEmail(e.target.value)}
-                className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-1/3 p-2.5 pr-12 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
+                className='bg-gray-50 border md:w-full lg:w-[550px] sm:w-full  border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-secondary focus:border-secondary block w-1/3 p-2.5 pr-12 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
               />
-              <span
-                onClick={loadingSend ? null : enviarCorreo}
-                className={`absolute top-2 left-72 cursor-pointer hover:text-primary duration-300 ${loadingSend ? "text-gray-500" : "text-secondary"}`}
-              >
-                <IoIosSend className='w-6 h-6' />
+              <span>
+                <IoIosSend
+                  onClick={loadingSend ? null : enviarCorreo}
+                  className={`w-6 h-6 cursor-pointer absolute top-2 sm:right-3 lg:left-[510px] md:right-2  hover:text-primary duration-300 ${
+                    loadingSend ? "text-gray-500" : "text-secondary"
+                  }`}
+                />
               </span>
             </div>
           </div>

@@ -20,7 +20,16 @@ export const FaqItem = ({ title, subtitle, text, url }) => {
               </>
             )}
             {text} <br />
-            {url && <iframe className='mt-6 m-auto' width='560' height='315' src={url} title='Registro' allowFullScreen></iframe>}
+            {url && (
+              <iframe
+                className='mt-6 m-auto sm:w-fit md:w-[560px] md:h-[315px] lg:w-[560px] lg:h-[315px]'
+                width='560'
+                height='315'
+                src={url}
+                title='Registro'
+                allowFullScreen
+              ></iframe>
+            )}
           </div>
         </Typography>
       </AccordionDetails>

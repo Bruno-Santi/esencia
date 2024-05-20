@@ -1,11 +1,24 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { AgileassessmentService } from './agileassessment.service';
 import { CreateAgileassessmentDto } from './dto/create-agileassessment.dto';
 import { UpdateAgileassessmentDto } from './dto/update-agileassessment.dto';
+import { JwtAuthGuard } from 'common/jwt-guard/jwt-guard.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('agileassessment')
 export class AgileassessmentController {
-  constructor(private readonly agileassessmentService: AgileassessmentService) { }
+  constructor(
+    private readonly agileassessmentService: AgileassessmentService,
+  ) {}
 
   @Post(':teamid/')
   createAgileAssessment(
@@ -13,12 +26,18 @@ export class AgileassessmentController {
     @Body('teamGoalsAndFunctions') teamGoalsAndFunctions: string,
     @Body('teamChallenges') teamChallenges: string,
     @Body('teamCultureAndValues') teamCultureAndValues: string,
-    @Body('agileQuestions') agileQuestions: any[]) {
-
-    return this.agileassessmentService.createAgileAssessment(teamId, teamGoalsAndFunctions, teamChallenges, teamCultureAndValues, agileQuestions);
+    @Body('agileQuestions') agileQuestions: any[],
+  ) {
+    return this.agileassessmentService.createAgileAssessment(
+      teamId,
+      teamGoalsAndFunctions,
+      teamChallenges,
+      teamCultureAndValues,
+      agileQuestions,
+    );
   }
 
-  @Get(":teamid/")
+  @Get(':teamid/')
   findAll(@Param('teamid') teamId: string) {
     return this.agileassessmentService.findAll(teamId);
   }
