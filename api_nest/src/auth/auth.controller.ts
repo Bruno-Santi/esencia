@@ -18,7 +18,7 @@ export class AuthController {
   }
 
   @UseGuards(ThrottlerGuard)
-  @Throttle({ default: { limit: 3, ttl: 60000 } })
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @Post('register')
   create(@Body() createAuthDto: CreateAuthDto) {
     console.log(createAuthDto);
