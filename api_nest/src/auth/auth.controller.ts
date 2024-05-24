@@ -9,6 +9,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @UseGuards(ThrottlerGuard)
+  @Throttle({ default: { limit: 15, ttl: 60000 } })
   @Post('login')
   findOne(@Body() getUserDto: GetUserDto) {
     console.log(getUserDto);
