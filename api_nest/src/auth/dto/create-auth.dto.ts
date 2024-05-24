@@ -23,11 +23,5 @@ export class CreateAuthDto {
   @IsString()
   avtColor: string;
   @IsString()
-  avatar: string;
-  @IsString()
   role: string;
-  @IsString()
-  method: string;
-  @IsString()
-  uid: string;
 }
