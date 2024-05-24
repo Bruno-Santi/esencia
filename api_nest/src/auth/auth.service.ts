@@ -42,15 +42,41 @@ export class AuthService {
   }
 
   async findOne(getUserDto: GetUserDto) {
+    const { email, password, method, uid, name, avatar } = getUserDto;
+    console.log(getUserDto);
+
     try {
-      const { email, password } = await getUserDto;
+      let user = await this.scrumMasterModel.findOne({
+        email: email,
+        method: method,
+      });
 
-      const user = await this.scrumMasterModel.findOne({ email: email });
+      if (user) {
+        if (method === 'Google') {
+          // Autentica al usuario con Google
+          if (user.uid !== uid) {
+            throw new BadRequestException('Invalid UID for Google method');
+          }
+        } else {
+          // Verifica la contraseña para métodos diferentes a Google
+          const passwordValid = await passwordCompare(password, user.password);
+          if (!passwordValid) {
+            throw new BadRequestException('Invalid email or password');
+          }
+        }
+      } else {
+        // Si no se encuentra un usuario con ese correo y método, registra un nuevo usuario
+        user = new this.scrumMasterModel({
+          email,
+          name,
+          avtColor: avatar,
+          method,
+          uid,
+          role: 'admin',
+        });
+        await user.save();
+      }
 
-      if (!user) throw new BadRequestException(`Invalid email or password`);
-      const passwordValid = await passwordCompare(password, user.password);
-      if (!passwordValid)
-        throw new BadRequestException(`Invalid email or password`);
       const token = this.jwtService.sign(
         { sub: user._id },
         { secret: process.env.JWT_SECRET_KEY },
@@ -65,6 +91,7 @@ export class AuthService {
           email: user.email,
           avtColor: user.avtColor,
           role: user.role,
+          method: user.method || null,
         },
         teams,
       };

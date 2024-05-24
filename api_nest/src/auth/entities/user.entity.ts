@@ -21,7 +21,7 @@ export class ScrumMaster extends Document {
 
   @Prop({
     unique: false,
-    required: true,
+    required: false,
   })
   password: string;
 
@@ -30,6 +30,21 @@ export class ScrumMaster extends Document {
     required: true,
   })
   avtColor: string;
+  @Prop({
+    unique: false,
+    required: false,
+  })
+  avatar: string;
+  @Prop({
+    unique: false,
+    required: true,
+  })
+  method: string;
+  @Prop({
+    unique: true,
+    required: false,
+  })
+  uid: string;
 }
 
 export const ScrumMasterSchema = SchemaFactory.createForClass(ScrumMaster);

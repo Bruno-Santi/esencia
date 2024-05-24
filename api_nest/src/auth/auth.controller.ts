@@ -11,6 +11,8 @@ export class AuthController {
   @UseGuards(ThrottlerGuard)
   @Post('login')
   findOne(@Body() getUserDto: GetUserDto) {
+    console.log(getUserDto);
+
     return this.authService.findOne(getUserDto);
   }
 
@@ -18,6 +20,8 @@ export class AuthController {
   @Throttle({ default: { limit: 3, ttl: 60000 } })
   @Post('register')
   create(@Body() createAuthDto: CreateAuthDto) {
+    console.log(createAuthDto);
+
     return this.authService.create(createAuthDto);
   }
 }
