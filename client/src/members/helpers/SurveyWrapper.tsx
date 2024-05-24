@@ -5,6 +5,7 @@ import { Survey } from "../pages";
 import { SurveyAlreadyExist } from "../pages/SurveyAlreadyExist";
 
 const SurveyWrapper = () => {
+  const API_URL = import.meta.env.VITE_API_URL;
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
 
@@ -30,9 +31,7 @@ const SurveyWrapper = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // `http://http://localhost:3000
-        // `https://esencia-api.onrender.com`
-        const response = await axios.get(`https://esencia-api.onrender.com/api/survey/${params.team_id}/${params.user_id}`, {
+        const response = await axios.get(`${API_URL}/api/survey/${params.team_id}/${params.user_id}`, {
           headers: {
             Authorization: `Bearer ${params.token}`,
           },

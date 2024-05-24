@@ -36,9 +36,9 @@ export const useBoards = () => {
     setTitleError("");
   };
   const toggleModal = () => setModalCard(!modalCard);
-  const URL_LOCAL = "http://localhost:3000";
-  const URL_DEPLOY = "https://esencia-api.onrender.com";
-  //https://esencia-api.onrender.com
+  const API_URL = import.meta.env.VITE_API_URL;
+  const URL_DEPLOY = API_URL;
+
   const NAMESPACE = "/boardgateway";
   useEffect(() => {
     if (Object.keys(activeBoardLocal).length) {

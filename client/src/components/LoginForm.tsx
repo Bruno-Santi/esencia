@@ -5,6 +5,7 @@ import { useNavigateTo } from "../hooks";
 import { renderErrorMessage } from "../helpers/renderErrorMessage";
 import { MdOutlineVisibility, MdOutlineVisibilityOff } from "react-icons/md";
 import { useState } from "react";
+import { SignIn } from "../auth/helpers/SignIn";
 
 export const LoginForm = () => {
   const { startLoginUser, loading, errorMessage, cleanErrorMessage } = useAuthSlice();
@@ -80,8 +81,10 @@ export const LoginForm = () => {
         >
           Ingresar
         </button>
+
         {errorMessage && <p className='font-poppins text-red-500 m-auto'>{errorMessage}</p>}
       </form>
+      <SignIn />
       <span className='text-tertiary sm:w-[200px] font-normal mt-6 font-poppins cursor-pointer text-lg m-auto  duration-500 hover:text-secondary '>
         Olvidé mi contraseña.
       </span>

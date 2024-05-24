@@ -136,9 +136,13 @@ export const NavBar = () => {
             )}
 
             <div className='flex mt-4  ml-24 border-quaternary  border-2 p-1 rounded-md right-6 -bottom-0 absolute bg-gradient-to-r from-indigo-950 dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800 '>
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center mt-1 ${user.avtColor}`}>
-                <span className='text-white text-lg text-center'>{user?.name && user.name[0].toUpperCase()}</span>
-              </div>
+              {user.method === "Google" ? (
+                <img src={user.avtColor} alt={`${user.name}'s avatar`} className='rounded-full w-12 h-12' />
+              ) : (
+                <div className={`${user.avtColor} rounded-full w-12 h-12 flex items-center justify-center`}>
+                  <span className='text-tertiary'>{user.name[0].toUpperCase()}</span>
+                </div>
+              )}
               <div className={`flex flex-col`}>
                 <span className='text-tertiary my-auto ml-2 font-poppins text-[16px]'>{user?.name}</span>
                 <span className='text-tertiary my-auto ml-2 font-poppins text-[16px]'>{user?.email}</span>

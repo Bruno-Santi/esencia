@@ -23,11 +23,8 @@ const SOCKET_EVENTS = {
   STICKY_NOTE_EDITED: "stickyNoteEdited",
   GET_QUESTIONS: "questions",
 };
-const API_URL_DEPLOY = `https://esencia-api.onrender.com`;
-const RETRO_URL_DEPLOY = `https://esencia.app`;
-const RETRO_URL_LOCAL = `http://localhost:3000`;
-const CLIENT_URL = `http://localhost:5173`;
-const socket = new Manager(`${API_URL_DEPLOY}/socket.io/socket.io.js`).socket("/retro");
+const API_URL = import.meta.env.VITE_API_URL;
+const socket = new Manager(`${API_URL}/socket.io/socket.io.js`).socket("/retro");
 
 export const useSocket = () => {
   const [serverStatus, setServerStatus] = useState("");

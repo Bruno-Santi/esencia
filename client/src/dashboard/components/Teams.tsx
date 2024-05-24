@@ -14,6 +14,7 @@ export const Teams: React.FC = () => {
       {userTeams?.map(({ _id, name, logo, sprint }: { _id: number; name: string; logo: string }) => (
         <TeamList key={_id} id={_id} name={name} logo={logo} sprint={sprint} />
       ))}
+      {!userTeams.length && <span className='p-2 my-2 text-primary/40 dark:text-tertiary'>Sin equipos aún.</span>}
     </List>
   );
 };

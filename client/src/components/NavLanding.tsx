@@ -114,9 +114,13 @@ export const NavLanding = () => {
                 aria-haspopup='true'
                 onClick={handleToggle}
               >
-                <div className={`${user.avtColor} rounded-full w-12 h-12 flex items-center justify-center`}>
-                  <span className='text-tertiary'>{user.name[0]}</span>
-                </div>
+                {user.method === "Google" ? (
+                  <img src={user.avtColor} alt={`${user.name}'s avatar`} className='rounded-full w-12 h-12' />
+                ) : (
+                  <div className={`${user.avtColor} rounded-full w-12 h-12 flex items-center justify-center`}>
+                    <span className='text-tertiary'>{user.name[0]}</span>
+                  </div>
+                )}
               </Button>
               <Popper open={open} anchorEl={anchorRef.current} role={undefined} placement='bottom-start' transition disablePortal>
                 {({ TransitionProps, placement }) => (

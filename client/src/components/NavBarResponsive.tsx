@@ -61,9 +61,13 @@ export const NavBarResponsive = () => {
         {toggleTeamModal && <ModalTeam closeModal={handleToggleTeamModal} />}
         <div class='text-gray-100 text-xl'>
           <div class='p-2.5 mt-1 flex items-center'>
-            <div className={`${user.avtColor} rounded-full h-8 w-8 flex items-center justify-center`}>
-              <span className='text-tertiary'>{user.name[0]}</span>
-            </div>
+            {user.method === "Google" ? (
+              <img src={user.avtColor} alt={`${user.name}'s avatar`} className='rounded-full w-8 h-8' />
+            ) : (
+              <div className={`${user.avtColor} rounded-full w-8 h-8 flex items-center justify-center`}>
+                <span className='text-tertiary'>{user.name[0]}</span>
+              </div>
+            )}
             <span className='ml-2'>{user.name}</span>
             <h1 class='font-bold text-gray-200 text-lg ml-3'>{user?.first_name}</h1>
             <i class='cursor-pointer text-3xl ml-28 lg:hidden' onClick={handleToggle}>

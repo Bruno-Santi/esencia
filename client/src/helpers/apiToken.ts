@@ -1,10 +1,10 @@
 import axios from "axios";
+const API_URL = import.meta.env.VITE_API_URL;
+export const baseURL = API_URL;
+console.log(API_URL);
 
-export const baseURL = `https://esencia-api.onrender.com`;
-//  `http://localhost:3000`
-// `https://esencia-api.onrender.com`;
 const api = axios.create({
-  baseURL,
+  baseURL: API_URL,
 });
 
 api.interceptors.request.use(

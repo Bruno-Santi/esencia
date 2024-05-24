@@ -45,6 +45,26 @@ export const useAuthSlice = () => {
       setErrorLoginMembers(error.response.data.message);
     }
   };
+
+  const startLoginWithGoogle = async (data) => {
+    try {
+      console.log(data);
+      const { email, displayName, photoURL, uid } = data.user;
+      const resp = await api.post(`/api/auth/login`, { email: email, name: displayName, avatar: photoURL, method: "Google", uid: uid });
+      console.log(resp);
+
+      console.log(email, displayName, photoURL);
+      localStorage.setItem("authToken", JSON.stringify(resp.data.token));
+      dispatch(clearErrorMessage());
+      localStorage.setItem("isAuthenticated", true);
+      setErrorLoginMembers("");
+      dispatch(onSetUser(resp.data.user));
+      dispatch(onLogin(resp.data.user));
+      handleNavigate("/dashboard");
+    } catch (error) {
+      setErrorLoginMembers(error.response.data.message);
+    }
+  };
   const startLoginUser = async ({ email, password }: { email: string; password: string }) => {
     console.log({ email, password });
 
@@ -127,5 +147,6 @@ export const useAuthSlice = () => {
     startLoginMember,
     setErrorLoginMembers,
     errorLoginMember,
+    startLoginWithGoogle,
   };
 };

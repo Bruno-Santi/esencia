@@ -17,8 +17,25 @@ ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, 
 export const Assessment = () => {
   useDocumentTitle("Assessment | Esencia.app");
   const isDarkTheme = localStorage.getItem("theme") === "dark";
-  const { assessment } = useDashboard();
-
+  const { assessment, activeTeam } = useDashboard();
+  console.log(assessment);
+  if (!activeTeam) {
+    return (
+      <DashboardLayout>
+        <div className='flex h-screen justify-center text-3xl font-poppins items-center pb-32 dark:text-tertiary text-primary/60 '>Selecciona un equipo </div>
+      </DashboardLayout>
+    );
+  }
+  if (!assessment.length) {
+    return (
+      <DashboardLayout>
+        <div className='flex h-screen justify-center text-3xl font-poppins items-center pb-32 dark:text-tertiary text-primary/60 '>
+          <span>No has generado assessment para este equipo. </span>
+          <span className='p-2 bg-secondary cursor-pointer'>Generar assessment.</span>
+        </div>
+      </DashboardLayout>
+    );
+  }
   function formatText(text) {
     // Dividir el texto en un array de líneas
     const lines = text.split("\n");

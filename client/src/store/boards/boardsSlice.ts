@@ -26,15 +26,12 @@ export const boardsSlice = createSlice({
       state.boards = [];
     },
     updateBoard: (state, { payload }) => {
-      // Encuentra el índice del tablero que está siendo actualizado
       const boardIndex = state.boards.findIndex((board) => board._id === payload._id);
 
-      // Si se encuentra el tablero, actualiza sus datos
       if (boardIndex !== -1) {
         state.boards[boardIndex] = payload;
       }
 
-      // Actualiza el tablero activo si es el mismo que se está actualizando
       if (state.activeBoard._id === payload._id) {
         state.activeBoard = payload;
       }

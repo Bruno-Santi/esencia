@@ -39,9 +39,13 @@ const Profile = () => {
                 </Typography>
               </Grid>
               <Grid item xs={12} align='center'>
-                <div className={`${user.avtColor} rounded-full w-24 h-24 flex items-center text-center cursor-pointer`}>
-                  <span className='text-tertiary text-4xl m-auto'>{user.name[0]}</span>
-                </div>
+                {user.method === "Google" ? (
+                  <img src={user.avtColor} alt={`${user.name}'s avatar`} className='rounded-full w-12 h-12' />
+                ) : (
+                  <div className={`${user.avtColor} rounded-full w-12 h-12 flex items-center justify-center`}>
+                    <span className='text-tertiary'>{user.name[0]}</span>
+                  </div>
+                )}
                 <input type='file' accept='image/*' onChange={handleAvatarChange} />
               </Grid>
               <Grid item xs={12}>
