@@ -9,6 +9,8 @@ import { useDashboard } from "../../hooks/useDashboard";
 import { Cuadrants } from "../components/Cuadrants";
 import { DiScrum } from "react-icons/di";
 import { useDocumentTitle } from "../../hooks";
+import { ModalTeam, TeamForm } from "../components";
+import { isObject } from "chart.js/dist/helpers/helpers.core";
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
 // Define los datos del gráfico
@@ -17,8 +19,13 @@ ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, 
 export const Assessment = () => {
   useDocumentTitle("Assessment | Esencia.app");
   const isDarkTheme = localStorage.getItem("theme") === "dark";
+  const [modalOpen, setModalOpen] = useState(false);
+  const toggleModal = () => setModalOpen(!modalOpen);
   const { assessment, activeTeam } = useDashboard();
   console.log(assessment);
+
+  console.log(console.log(Object.entries(assessment).length));
+
   if (!activeTeam) {
     return (
       <DashboardLayout>
@@ -26,12 +33,15 @@ export const Assessment = () => {
       </DashboardLayout>
     );
   }
-  if (!assessment.length) {
+  if (!assessment) {
     return (
       <DashboardLayout>
-        <div className='flex h-screen justify-center text-3xl font-poppins items-center pb-32 dark:text-tertiary text-primary/60 '>
+        <div className='flex h-screen justify-center text-2xl flex-col font-poppins items-center pb-32 dark:text-tertiary text-primary/60 '>
           <span>No has generado assessment para este equipo. </span>
-          <span className='p-2 bg-secondary cursor-pointer'>Generar assessment.</span>
+          <span className='p-2 rounded-md text-tertiary mt-6 bg-secondary cursor-pointer' onClick={toggleModal}>
+            Generar assessment.
+          </span>
+          {modalOpen && <ModalTeam closeModal={toggleModal} generateAssessment={true} />}
         </div>
       </DashboardLayout>
     );

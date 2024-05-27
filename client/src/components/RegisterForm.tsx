@@ -22,13 +22,13 @@ export const RegisterForm = () => {
     <section>
       <form className='flex flex-col space-y-2 pt-4 w-[250px]' onSubmit={handleSubmit(onSubmit)}>
         <label className=' text-tertiary font-poppins  text-lg font-normal' htmlFor='name'>
-          Name <span className='text-sm'>(*)</span>
+          Nombre <span className='text-sm'>(*)</span>
         </label>
         <input
           autoComplete='off'
           className='h-12 w-64 rounded-md p-2 font-poppins  text-sm font-normal  border-2 duration-500 text-primary focus:outline-none focus:border-2 focus:border-secondary/80 '
           type='text'
-          placeholder='Name'
+          placeholder='Nombre'
           {...register("name", {
             required: "This field is required",
             maxLength: 20,
@@ -53,7 +53,7 @@ export const RegisterForm = () => {
         {errors.email && <p className='w-fit text-red-500 font-poppins   m-auto'>{renderErrorMessage(errors.email)}</p>}
         <div className='flex flex-col relative pb-2'>
           <label className=' text-tertiary text-lg font-poppins  font-normal' htmlFor='password'>
-            Password <span className='text-sm'>(*)</span>
+            Contraseña <span className='text-sm'>(*)</span>
           </label>
           <input
             className='h-12 w-64 rounded-md p-2 text-sm font-normal font-poppins  border-2 duration-500 text-primary focus:outline-none focus:border-2 focus:border-secondary/80'
@@ -85,7 +85,7 @@ export const RegisterForm = () => {
               : "btn-primary w-3/4 justify-center items-center text-center mx-auto mt-10 p-2 rounded-lg font-poppins text-lg duration-700 hover:bg-tertiary hover:text-primary"
           }
         >
-          Register
+          Registrarme
         </button>
         {errorMessage && <p className='font-poppins text-red-500 m-auto'>{errorMessage}</p>}
       </form>
@@ -100,7 +100,7 @@ export const RegisterForm = () => {
           }}
           className='text-tertiary font-normal mt-6 font-poppins cursor-pointer text-lg m-auto  duration-500 hover:text-secondary '
         >
-          Have an account? <span>Log In</span>
+          ¿Ya tienes una cuenta? <span>Ingresa</span>
         </span>
       </div>
     </section>

@@ -42,6 +42,7 @@ export const useTeamForm = () => {
       setTeamCreated(true);
       setTeamCreatedData(data);
       handleNext();
+      localStorage.setItem("firstLogging", "1");
       return {
         created: "ok",
       };
@@ -53,6 +54,8 @@ export const useTeamForm = () => {
   };
   const startCreatingAssessment = async (data) => {
     setGeneratingReport(true);
+    console.log(data);
+
     try {
       const resp = await api.post(`/api/agileassessment/${data.teamID}`, data);
       dispatch(onSetAssessment(resp));
@@ -64,7 +67,7 @@ export const useTeamForm = () => {
       setReportGenerated(true);
       startSettingTeams();
       onSetActiveTeam(data.teamId);
-      localStorage.setItem("firstLoggin", JSON.stringify(1));
+      localStorage.setItem("firstLogging", JSON.stringify(1));
       handleNavigate("/dashboard/assessment");
     } catch (error) {
       setGeneratingReport(false);

@@ -21,6 +21,7 @@ import { AgileassessmentModule } from './agileassessment/agileassessment.module'
 
 import { EmailModule } from './email/email.module';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { SlackServiceModule } from './slack-service/slack-service.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
     AgileassessmentModule,
     EmailModule,
     ThrottlerModule,
+    SlackServiceModule,
   ],
   exports: [],
   controllers: [],

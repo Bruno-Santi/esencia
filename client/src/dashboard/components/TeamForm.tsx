@@ -11,35 +11,46 @@ type TeamFormProps = {
   closeModal: () => void;
   handleClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
 };
-export const TeamForm: React.FC<TeamFormProps> = ({ closeModal, handleClose }) => {
+export const TeamForm: React.FC<TeamFormProps> = ({ closeModal, handleClose, generateAssessment = false }) => {
   const { userTeams } = useDashboard();
-  const [step, setStep] = useState(!userTeams.length ? 0 : 1);
+  const [step, setStep] = useState(!userTeams.length ? 0 : generateAssessment ? 2 : 1);
+  const { activeTeam } = useDashboard();
+  console.log(activeTeam);
+
   const { createTeam, loading, teamId, teamCreated, teamCreatedData, startCreatingAssessment, reportGenerated, generatingReport } = useTeamForm();
-  console.log(teamCreated, teamCreatedData);
+
   const { data } = teamCreatedData;
-  console.log(data);
+  useEffect(() => {}, [activeTeam]);
 
   const fileInputRef = useRef(null);
   const { imageSelected, handleImageClick, handleFileChange, isLoading } = useImageUpload(fileInputRef);
 
   const [teamData, setTeamData] = useState({
-    teamID: "",
-    name: "",
-    logo: imageSelected ? imageSelected : "https://res.cloudinary.com/di92lsbym/image/upload/c_thumb,w_200,g_face/v1701895638/team-logo_2_fq5yev.png",
+    teamID: generateAssessment ? activeTeam._id : "",
+    name: generateAssessment ? activeTeam.name : "",
+    logo: generateAssessment
+      ? activeTeam.logo
+      : imageSelected
+        ? imageSelected
+        : "https://res.cloudinary.com/di92lsbym/image/upload/c_thumb,w_200,g_face/v1701895638/team-logo_2_fq5yev.png",
     objectives: "",
     challenges: "",
     culture: "",
     agileAssessment: [],
   });
+  if (generateAssessment) {
+    setTeamData({ ...teamData, teamID: activeTeam._id, name: activeTeam.name });
+  }
   const handleSubmit = async () => {
     const formattedAgileQuestions = agileQuestions.map((question) => ({
       question: question.question,
       area: question.area,
       score: parseInt(teamData.agileAssessment[question.id] || 0),
     }));
+    console.log(formattedAgileQuestions);
 
     const formattedData = {
-      teamID: data._id,
+      teamID: data._id || activeTeam.id,
       teamGoalsAndFunctions: teamData.objectives,
       teamChallenges: teamData.challenges,
       teamCultureAndValues: teamData.culture,
@@ -74,7 +85,9 @@ export const TeamForm: React.FC<TeamFormProps> = ({ closeModal, handleClose }) =
 
     setStep(step - 1);
   };
-
+  const setFirstLoggin = () => {
+    localStorage.setItem("firstLogging", "1");
+  };
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setTeamData({
@@ -89,7 +102,7 @@ export const TeamForm: React.FC<TeamFormProps> = ({ closeModal, handleClose }) =
   };
   useEffect(() => {
     if (reportGenerated) {
-      closeModal();
+      handleCloseModal();
       toastSuccess("Reporte generado exitosamente.");
     }
   }, [reportGenerated]);
@@ -133,13 +146,13 @@ export const TeamForm: React.FC<TeamFormProps> = ({ closeModal, handleClose }) =
   return (
     <div className='min-h-[500px] overflow-y-hidden w-full flex m-auto dark:bg-primary justify-center items-center font-poppins text-center'>
       <div className='flex mx-auto items-center justify-center dark:bg-primary p-8 rounded '>
-        {/* {(step === 0 || step === 1) && (
-          <div className='absolute top-4 right-4 dark:bg-primary'>
-            <button className='text-xl font-semibold text-secondary dark:bg-primary' onClick={handleCloseModal}>
+        {(step === 0 || step === 1) && (
+          <div className='absolute top-4 right-12 dark:bg-primary'>
+            <button className='text-xl font-semibold text-secondary dark:bg-primary' onClick={() => closeModal()}>
               <IoMdClose className='dark:text-teal-50 text-secondary' />
             </button>
           </div>
-        )} */}
+        )}
         {step === 0 && (
           <div className='flex flex-col items-center animate__animated animate__fadeIn animate__slow dark:bg-primary'>
             <h2 className='text-xl font-normal mb-4 dark:text-tertiary/90'>Bienvenido a Esencia, la herramienta de gestión de equipos ágiles.</h2>

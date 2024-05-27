@@ -14,6 +14,7 @@ import { passwordCompare } from 'common/password-compare';
 import { JwtService } from '@nestjs/jwt';
 import { Team } from 'src/team/entities/team.entity';
 import { TeamService } from 'src/team/team.service';
+import { SlackServiceService } from 'src/slack-service/slack-service.service';
 
 @Injectable()
 export class AuthService {
@@ -25,19 +26,29 @@ export class AuthService {
     private readonly teamService: TeamService,
     @InjectModel(Team.name)
     private readonly teamModel: Model<Team>,
+    private readonly slackService: SlackServiceService,
   ) {}
 
   async create(createAuthDto: CreateAuthDto) {
     try {
       const password = await encodePassword(createAuthDto.password);
-      const newUser = await { ...createAuthDto, password };
+      const newUser = { ...createAuthDto, password };
       const user = await this.scrumMasterModel.create(newUser);
+
+      // Enviar notificación a Slack
+      const message = `Un nuevo usuario se ha registrado: ${user.name} (${user.email})`;
+
+      const respslack = await this.slackService.sendNotification(message);
+      console.log(respslack);
+
       return {
         payload: `User ${user.email} created successfully!`,
       };
     } catch (error) {
-      if (error.code === 11000)
-        throw new BadRequestException(`Email already in use`);
+      if (error.code === 11000) {
+        throw new BadRequestException('Email already in use');
+      }
+      throw new BadRequestException(error.message);
     }
   }
 

@@ -25,6 +25,7 @@ const SOCKET_EVENTS = {
 };
 const API_URL = import.meta.env.VITE_API_URL;
 const socket = new Manager(`${API_URL}/socket.io/socket.io.js`).socket("/retro");
+console.log(API_URL);
 
 export const useSocket = () => {
   const [serverStatus, setServerStatus] = useState("");
@@ -237,7 +238,7 @@ export const useSocket = () => {
     console.log(team_id);
     socket.emit("sendRetro", { teamId });
   };
-
+  const RETRO_URL_DEPLOY = import.meta.env.VITE_RETRO_URL_DEPLOY;
   const redirectToRetro = () => {
     const tokenSinComillas = token.replace(/^"|"$/g, "");
     const retroUrl = `${RETRO_URL_DEPLOY}/members/retro?token=${tokenSinComillas}&team_id=${activeTeam._id}&scrum_id=${user.id}`;
@@ -248,6 +249,7 @@ export const useSocket = () => {
     try {
       await sendRetroToServer(team_id);
     } catch (error) {
+      1;
       console.log(error);
     } finally {
       await handleStartRetro(team_id);

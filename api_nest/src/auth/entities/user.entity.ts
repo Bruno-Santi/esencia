@@ -37,7 +37,7 @@ export class ScrumMaster extends Document {
   avatar: string;
   @Prop({
     unique: false,
-    required: true,
+    required: false,
   })
   method: string;
   @Prop({

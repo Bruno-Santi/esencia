@@ -54,6 +54,7 @@ export const NavLanding = () => {
     }
   };
   const handleNavBar = () => setNavBar(!navBar);
+
   return (
     <div>
       <nav className='min-w-full  bg-primary text-lg h-[90px] text-tertiary font-poppins flex items-center justify-between'>

@@ -12,7 +12,7 @@ import { BadRequestError } from 'openai';
 import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 
 @UseGuards(ThrottlerGuard)
-@Throttle({ default: { limit: 2, ttl: 60000 } })
+@Throttle({ default: { limit: 50, ttl: 60000 } })
 @Injectable()
 export class EmailService {
   constructor(@InjectSendGrid() private readonly client: SendGridService) {}

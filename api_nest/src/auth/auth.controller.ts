@@ -9,7 +9,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @UseGuards(ThrottlerGuard)
-  @Throttle({ default: { limit: 15, ttl: 60000 } })
+  @Throttle({ default: { limit: 500, ttl: 60000 } })
   @Post('login')
   findOne(@Body() getUserDto: GetUserDto) {
     console.log(getUserDto);
@@ -18,7 +18,7 @@ export class AuthController {
   }
 
   @UseGuards(ThrottlerGuard)
-  @Throttle({ default: { limit: 10, ttl: 60000 } })
+  @Throttle({ default: { limit: 500, ttl: 60000 } })
   @Post('register')
   create(@Body() createAuthDto: CreateAuthDto) {
     console.log(createAuthDto);

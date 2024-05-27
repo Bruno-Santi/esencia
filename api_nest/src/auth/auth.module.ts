@@ -7,6 +7,7 @@ import { ScrumMaster, ScrumMasterSchema } from './entities/user.entity';
 import { MongooseModule } from '@nestjs/mongoose';
 import { JwtModule } from '@nestjs/jwt';
 import { TeamModule } from 'src/team/team.module';
+import { SlackServiceModule } from '../slack-service/slack-service.module';
 
 @Module({
   controllers: [AuthController],
@@ -27,6 +28,7 @@ import { TeamModule } from 'src/team/team.module';
     ]),
     JwtModule,
     TeamModule,
+    SlackServiceModule,
     ThrottlerModule.forRoot([
       {
         ttl: 60000,

@@ -80,12 +80,12 @@ export const useAuthSlice = () => {
 
       // await startCheckingUser();
       localStorage.setItem("isAuthenticated", true);
-      const firstLog = localStorage.getItem("firstLoggin");
+      const firstLog = localStorage.getItem("firstLogging");
       dispatch(onSetUser(resp.data.user));
       console.log(resp.data.user);
 
       dispatch(onLogin(resp.data.user));
-      if (!firstLog) localStorage.setItem("firstLoggin", "0");
+      if (!firstLog) localStorage.setItem("firstLogging", "0");
       handleNavigate("/dashboard");
     } catch (error) {
       console.log(error.response.data);

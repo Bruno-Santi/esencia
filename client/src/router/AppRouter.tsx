@@ -62,7 +62,7 @@ export const AppRouter = () => {
   //   }
   // }, [token, userToken, status]);
 
-  const firstLogging = localStorage.getItem("firstLoggin");
+  const firstLogging = localStorage.getItem("firstLogging");
   const isAuthenticated1 = localStorage.getItem("isAuthenticated");
 
   return (

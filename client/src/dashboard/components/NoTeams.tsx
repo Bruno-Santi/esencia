@@ -11,9 +11,10 @@ export const NoTeams = () => {
   const { isOpen, openModal, closeModal } = useModal();
   const [isOpenModal, setIsOpenModal] = useState(true);
   const toggleModal = () => setIsOpenModal(!isOpenModal);
-  const firstLogging = localStorage.getItem("firstLoggin");
+  const firstLogging = localStorage.getItem("firstLogging");
   console.log(firstLogging);
   console.log(activeTeam);
+  console.log(isOpenModal);
 
   return (
     <div className='flex flex-col justify-center mx-auto text-3xl w-2/4 font-light text-center pt-48 text-primary/70 font-poppins dark:text-tertiary'>

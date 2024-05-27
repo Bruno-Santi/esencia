@@ -5,7 +5,7 @@ import { useDashboard } from "../../hooks/useDashboard";
 
 export const ModalTeam: React.FC<{
   closeModal: () => void;
-}> = ({ closeModal }) => {
+}> = ({ closeModal, generateAssessment = false }) => {
   const theme = localStorage.getItem("theme");
   const { startToggleModal } = useDashboard();
 
@@ -28,7 +28,7 @@ export const ModalTeam: React.FC<{
       </DialogTitle>
       <DialogContent className='dark:bg-primary overflow-y-hidden'>
         <div className='flex flex-col dark:bg-primary w-full'>
-          <TeamForm closeModal={closeModal} handleClose={handleClose} />
+          <TeamForm closeModal={handleClose} handleClose={handleClose} generateAssessment={generateAssessment} />
         </div>
       </DialogContent>
     </Dialog>
