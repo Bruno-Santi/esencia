@@ -39,7 +39,7 @@ export const Boards = () => {
           <BoardAccordion boards={boards} />
         </div>
 
-        <div className='flex justify-end'>
+        <div className={`${!activeTeam ? "hidden" : "flex justify-end"}`}>
           <ul className='flex space-x-3'>
             <MembersList members={membersActiveTeam} />
             <li>

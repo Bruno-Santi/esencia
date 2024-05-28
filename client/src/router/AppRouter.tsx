@@ -17,6 +17,9 @@ import { FaqsLanding } from "../components/FaqsLanding";
 export const AppRouter = () => {
   const [searchParams1] = useSearchParams();
   const { status, startLogingOut } = useAuthSlice();
+  const { user } = useAuthSlice();
+  console.log(user);
+
   const searchParams = new URLSearchParams(location.search);
   const [tokenParams, setTokenParams] = useState("");
   const [loading, setLoading] = useState(true);
@@ -62,7 +65,6 @@ export const AppRouter = () => {
   //   }
   // }, [token, userToken, status]);
 
-  const firstLogging = localStorage.getItem("firstLogging");
   const isAuthenticated1 = localStorage.getItem("isAuthenticated");
 
   return (
@@ -98,16 +100,14 @@ export const AppRouter = () => {
               {userToken && <Route element={<MembersRoutes />} path={`/members/*`} />}
               {userTokenLocal && <Route element={<MembersRoutes />} path={`/members/*`} />}
               <Route element={<OnBoardingRoutes />} path={`/onboarding/*`} />
+              {!user.role && <Route element={<Navigate to='/dashboard' />} path={`/dashboard/retro`} />}
               <Route element={<DashboardRoutes />} path={`/dashboard/*`} />
               <Route element={<Faqs />} path={`/faqs`} />
+              {!user.role && <Route element={<Navigate to='/dashboard' />} path={`/dashboard/assessment`} />}
+
               <Route element={<TeamsRoutes />} path={`/teams/*`} />
               <Route element={<Navigate to='/dashboard' />} path={`/teams/login`} />
               <Route path='/profile' element={<Profile />} />
-              {/* {firstLogging === "0" ? (
-                <Route element={<Navigate to={"/onboarding"} />} path={`/auth/*`} />
-              ) : (
-                <Route element={<Navigate to={"/dashboard"} />} path={`/auth/*`} />
-              )} */}
             </>
           ) : (
             <>

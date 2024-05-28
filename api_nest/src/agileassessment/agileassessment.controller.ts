@@ -27,6 +27,7 @@ export class AgileassessmentController {
     @Body('teamChallenges') teamChallenges: string,
     @Body('teamCultureAndValues') teamCultureAndValues: string,
     @Body('agileQuestions') agileQuestions: any[],
+    @Body('userId') userId: string,
   ) {
     return this.agileassessmentService.createAgileAssessment(
       teamId,
@@ -34,6 +35,7 @@ export class AgileassessmentController {
       teamChallenges,
       teamCultureAndValues,
       agileQuestions,
+      userId,
     );
   }
 

@@ -5,20 +5,21 @@ import { useDashboard } from "../../hooks/useDashboard";
 import { useEffect, useState } from "react";
 import { fi } from "date-fns/locale";
 import { DashboardUi } from "./DashboardUi";
+import { useAuthSlice } from "../../hooks/useAuthSlice";
 
 export const NoTeams = () => {
   const { userTeams, activeTeam } = useDashboard();
+  const { user } = useAuthSlice();
   const { isOpen, openModal, closeModal } = useModal();
   const [isOpenModal, setIsOpenModal] = useState(true);
   const toggleModal = () => setIsOpenModal(!isOpenModal);
-  const firstLogging = localStorage.getItem("firstLogging");
-  console.log(firstLogging);
+
   console.log(activeTeam);
   console.log(isOpenModal);
 
   return (
     <div className='flex flex-col justify-center mx-auto text-3xl w-2/4 font-light text-center pt-48 text-primary/70 font-poppins dark:text-tertiary'>
-      {firstLogging != 1 && <ModalTeam closeModal={toggleModal} />}
+      {user.firstLoggin === true && <ModalTeam closeModal={toggleModal} />}
 
       <div className='mx-auto justify-center flex flex-col mb-8 space-y-6'>
         <div className='mx-auto space-y-6'>

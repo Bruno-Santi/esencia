@@ -15,6 +15,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Team } from 'src/team/entities/team.entity';
 import { TeamService } from 'src/team/team.service';
 import { SlackServiceService } from 'src/slack-service/slack-service.service';
+import { convertStringToObj } from 'common/utils/converStringToObj';
 
 @Injectable()
 export class AuthService {
@@ -51,7 +52,21 @@ export class AuthService {
       throw new BadRequestException(error.message);
     }
   }
+  async setFirstLoggin(userId: string) {
+    const convertedUserId = convertStringToObj(userId);
+    try {
+      const user = await this.scrumMasterModel.findByIdAndUpdate(
+        convertedUserId,
+        { firstLoggin: false },
+        { new: true },
+      );
 
+      return user;
+    } catch (error) {
+      console.log(error);
+      throw new Error('Error al actualizar el estado de firstLoggin');
+    }
+  }
   async findOne(getUserDto: GetUserDto) {
     const { email, password, method, uid, name, avatar } = getUserDto;
     console.log(getUserDto);
@@ -85,6 +100,9 @@ export class AuthService {
           uid,
           role: 'admin',
         });
+        const message = `Un nuevo usuario se ha registrado: ${user.name} (${user.email})`;
+
+        await this.slackService.sendNotification(message);
         await user.save();
       }
 
@@ -103,6 +121,7 @@ export class AuthService {
           avtColor: user.avtColor,
           role: user.role,
           method: user.method || null,
+          firstLoggin: user.firstLoggin,
         },
         teams,
       };

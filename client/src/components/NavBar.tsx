@@ -32,6 +32,8 @@ export const NavBar = () => {
   const { startLogingOut } = useAuthSlice();
   const { activeTeam, user, startGettingMembers, startToggleModal } = useDashboard();
   const { isOpen, closeModal, openModal } = useModal();
+  console.log(user);
+
   const { startCleaningBoards } = useBoards();
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -86,6 +88,7 @@ export const NavBar = () => {
               <SideBarItem icon={<GrMapLocation />} text='Roadmap' />
             </span>
             <span
+              className={`${!user.role ? "hidden" : ""}`}
               onClick={() => {
                 handleNavigate("/dashboard/retro");
               }}
@@ -95,7 +98,7 @@ export const NavBar = () => {
             <span onClick={() => handleNavigate("/dashboard/reports")}>
               <SideBarItem icon={<TbReportSearch />} text='Reportes' />
             </span>
-            <span onClick={() => handleNavigate("/dashboard/assessment")}>
+            <span className={`${!user.role ? "hidden" : ""}`} onClick={() => handleNavigate("/dashboard/assessment")}>
               <SideBarItem icon={<MdOutlineInsertChart />} text='Assessment' />
             </span>
             <hr />

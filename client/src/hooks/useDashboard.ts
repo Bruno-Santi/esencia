@@ -108,14 +108,14 @@ export const useDashboard = () => {
       console.log(sprint);
       console.log(activeTeam);
       console.log(id);
-
+      await startGettingAssessment(id);
       const members = await startGettingMembers(id);
       console.log(members.members.length);
 
       const surveyData = await getTeamData(id, members.members.length);
       await startGettingReports(id, sprint);
       console.log(surveyData);
-      await startGettingAssessment(id);
+
       if (surveyData === "No existe data de este equipo") toast.warning("No existe data de este equipo 😢");
       const datalocal = localStorage.getItem("surveyData");
       if (datalocal) localStorage.removeItem("surveyData");
@@ -182,8 +182,6 @@ export const useDashboard = () => {
       dispatch(onSetAssessment(resp));
 
       console.log(resp);
-
-      localStorage.setItem("firstLoggin", JSON.stringify(1));
     } catch (error) {
       console.log(error);
     }
@@ -214,9 +212,10 @@ export const useDashboard = () => {
       })
     );
     const sprint = userTeams.find((team) => team._id === id).sprint;
+    await startSettingTeams();
     await starGettingData(String(id), sprint);
+    await startGettingAssessment(id);
     await startGettingReports(String(id), sprint);
-    console.log(id, String(activeTeam.sprint));
   };
   const startGettingReports = async (team_id, sprint) => {
     setLoadingReports(true);

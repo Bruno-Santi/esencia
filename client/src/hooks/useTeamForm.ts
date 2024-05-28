@@ -18,7 +18,7 @@ export const useTeamForm = () => {
   const [generatingReport, setGeneratingReport] = useState(false);
   const { handleNavigate } = useNavigateTo();
   const { user } = useAuthSlice();
-  const { startSettingTeams } = useDashboard();
+  const { startSettingTeams, startSettingActiveTeam } = useDashboard();
   const createTeam = async (
     name,
     logo = "https://res.cloudinary.com/di92lsbym/image/upload/c_thumb,w_200,g_face/v1701895638/team-logo_2_fq5yev.png",
@@ -65,14 +65,14 @@ export const useTeamForm = () => {
 
       setGeneratingReport(false);
       setReportGenerated(true);
-      startSettingTeams();
-      onSetActiveTeam(data.teamId);
-      localStorage.setItem("firstLogging", JSON.stringify(1));
-      handleNavigate("/dashboard/assessment");
+      await startSettingTeams();
+      await startSettingActiveTeam(data.teamID);
     } catch (error) {
       setGeneratingReport(false);
       setReportGenerated(false);
       console.log(error);
+    } finally {
+      handleNavigate("/dashboard/assessment");
     }
   };
   return {

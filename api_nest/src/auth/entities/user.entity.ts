@@ -36,6 +36,11 @@ export class ScrumMaster extends Document {
   })
   avatar: string;
   @Prop({
+    default: true,
+    required: false,
+  })
+  firstLoggin: boolean;
+  @Prop({
     unique: false,
     required: false,
   })

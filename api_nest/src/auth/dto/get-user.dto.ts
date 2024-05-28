@@ -13,23 +13,27 @@ export class GetUserDto {
   @IsEmail()
   email: string;
 
-  @ValidateIf((o) => o.method !== 'Google')
+  @ValidateIf((o) => !o.method || o.method !== 'Google')
   @IsNotEmpty()
   @IsString()
   @MinLength(8)
   password: string;
 
+  @ValidateIf((o) => o.method)
   @IsString()
-  @IsNotEmpty()
   method: string;
 
+  @ValidateIf((o) => o.method === 'Google')
   @IsString()
   @IsNotEmpty()
   uid: string;
 
+  @ValidateIf((o) => o.method === 'Google')
   @IsString()
   @IsNotEmpty()
   name: string;
+
+  @ValidateIf((o) => o.method === 'Google')
   @IsString()
   avatar: string;
 }

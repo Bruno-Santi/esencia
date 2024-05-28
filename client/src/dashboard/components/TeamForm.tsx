@@ -7,6 +7,7 @@ import { IoMdClose } from "react-icons/io";
 import { Select, SelectItem } from "@tremor/react";
 import { toastSuccess } from "../../helpers";
 import { useDashboard } from "../../hooks/useDashboard";
+import { useAuthSlice } from "../../hooks/useAuthSlice";
 type TeamFormProps = {
   closeModal: () => void;
   handleClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
@@ -16,7 +17,7 @@ export const TeamForm: React.FC<TeamFormProps> = ({ closeModal, handleClose, gen
   const [step, setStep] = useState(!userTeams.length ? 0 : generateAssessment ? 2 : 1);
   const { activeTeam } = useDashboard();
   console.log(activeTeam);
-
+  const { user } = useAuthSlice();
   const { createTeam, loading, teamId, teamCreated, teamCreatedData, startCreatingAssessment, reportGenerated, generatingReport } = useTeamForm();
 
   const { data } = teamCreatedData;
@@ -55,6 +56,7 @@ export const TeamForm: React.FC<TeamFormProps> = ({ closeModal, handleClose, gen
       teamChallenges: teamData.challenges,
       teamCultureAndValues: teamData.culture,
       agileQuestions: formattedAgileQuestions,
+      userId: user.id,
     };
     console.log(formattedAgileQuestions);
 
@@ -63,9 +65,7 @@ export const TeamForm: React.FC<TeamFormProps> = ({ closeModal, handleClose, gen
   };
 
   console.log(imageSelected);
-  const handleFirstLogging = () => {
-    return localStorage.setItem("firstLogging", "1");
-  };
+
   const handleCreateTeam = async (name, logo) => {
     try {
       await createTeam(name, logo, handleNext);
@@ -85,9 +85,7 @@ export const TeamForm: React.FC<TeamFormProps> = ({ closeModal, handleClose, gen
 
     setStep(step - 1);
   };
-  const setFirstLoggin = () => {
-    localStorage.setItem("firstLogging", "1");
-  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setTeamData({

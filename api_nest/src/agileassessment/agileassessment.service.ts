@@ -5,6 +5,8 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { AgilityAssessment } from 'src/agileassessment/entities/agileassessment.entity';
 import * as openai from 'openai';
+import { AuthService } from 'src/auth/auth.service';
+import { convertStringToObj } from 'common/utils/converStringToObj';
 
 @Injectable()
 export class AgileassessmentService {
@@ -12,6 +14,7 @@ export class AgileassessmentService {
   constructor(
     @InjectModel(AgilityAssessment.name)
     private readonly agilityAssessmentModel: Model<AgilityAssessment>,
+    private readonly authService: AuthService,
   ) {
     this.openaiApiKey = process.env.OPENAI_API_KEY; // Set your OpenAI API key here
   }
@@ -21,6 +24,7 @@ export class AgileassessmentService {
     teamDailyChallenges: string,
     teamCultureAndValues,
     agileQuestions: any,
+    userId,
   ): Promise<any> {
     //console.log("Creating Assessment for teamid: ", teamId);
     // console.log("Team Objectives and Functions: ", teamObjectivesAndFunctions);
@@ -65,6 +69,7 @@ export class AgileassessmentService {
       });
 
       await Assessment.save();
+      await this.authService.setFirstLoggin(userId);
       console.log('Assessment saved');
       return Assessment;
     } catch (error) {

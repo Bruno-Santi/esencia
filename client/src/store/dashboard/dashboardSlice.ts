@@ -79,6 +79,8 @@ export const dashboardSlice = createSlice({
         id: number;
       }>
     ) => {
+      console.log(action);
+
       const userTeam = state.userTeams.find((team) => team._id === action.payload.id);
       state.activeTeam = userTeam;
       state.activeReport = [];
@@ -117,6 +119,8 @@ export const dashboardSlice = createSlice({
       state.isLoading = false;
     },
     onSetAssessment: (state, { payload }) => {
+      console.log(payload);
+
       state.assessment = payload;
     },
     onToggleModal: (state, { payload }) => {
