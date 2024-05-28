@@ -15,7 +15,7 @@ export const BoardAccordion = ({ boards }) => {
   return (
     <Accordion expanded={expanded} onClick={() => setExpanded(!expanded)} className='w-full dark:bg-quaternary dark:text-tertiary relative z-50'>
       <AccordionSummary expandIcon={<FaChevronDown className={`w-7 p-1 h-7 rounded-full ml-3 shadow-sm cursor-pointer ${expandIconClass}`} />}>
-        {activeBoard.length ? activeBoard[0]?.title : "Tableros"}
+        {activeBoard.length ? activeBoard[0]?.title : "Épicas"}
       </AccordionSummary>
       <BoardAccordionList boards={boards} />
     </Accordion>

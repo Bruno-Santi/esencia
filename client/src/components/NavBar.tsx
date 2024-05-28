@@ -15,6 +15,7 @@ import { deepPurple } from "@mui/material/colors";
 // import { SideBar } from "./SideBar";
 import { GrGroup } from "react-icons/gr";
 import { PiDeviceTabletSpeakerBold } from "react-icons/pi";
+import { GrMapLocation } from "react-icons/gr";
 import { MdOutlineInsertChart } from "react-icons/md";
 import { IoSettingsOutline } from "react-icons/io5";
 import { CiCircleQuestion } from "react-icons/ci";
@@ -79,7 +80,10 @@ export const NavBar = () => {
               <SideBarItem icon={<MdOutlineDashboard />} text='Dashboard' />
             </span>
             <span onClick={() => handleNavigate("/teams/boards")}>
-              <SideBarItem icon={<PiDeviceTabletSpeakerBold />} text='Tableros' />
+              <SideBarItem icon={<PiDeviceTabletSpeakerBold />} text='Épicas' />
+            </span>
+            <span onClick={() => handleNavigate("/teams/roadmap")}>
+              <SideBarItem icon={<GrMapLocation />} text='Roadmap' />
             </span>
             <span
               onClick={() => {

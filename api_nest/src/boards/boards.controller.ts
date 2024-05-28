@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { BoardsService } from './boards.service';
 import { CardService } from './card.service';
-import { CreateBoardDto, UpdateBoardDto } from './dto/create-board.dto';
+import { CreateBoardDto, UpdateBoardDto, UpdateBoardDatesDto } from './dto/create-board.dto';
 import { CreateCardDto, UpdateCardDto } from './dto/create-card.dto';
 
 import { Socket } from 'socket.io';
@@ -39,6 +39,14 @@ export class BoardController {
     console.log(team_id);
     return this.boardsService.findAll(team_id);
   }
+
+  @Get('roadmap/:team_id/')
+  findforRoadmap(@Param('team_id') team_id: string) {
+    console.log("Requesting for roadmap data",team_id);
+    return this.boardsService.findforRoadmap(team_id);
+  }
+
+
   @Get('/one/:id')
   findOne(@Param('id') id: string) {
     console.log(id);
@@ -71,9 +79,7 @@ export class BoardController {
   @Post('cards')
   async createCard(@Body() createCardDto: CreateCardDto, client: Socket) {
     console.log(createCardDto);
-
     const createdCard = await this.cardService.create(createCardDto, client);
-
     return createdCard;
   }
 
@@ -83,9 +89,7 @@ export class BoardController {
     @Body() updateCardDto: UpdateCardDto,
   ) {
     console.log(updateCardDto);
-
     const updatedCard = await this.cardService.updateStatus(id, updateCardDto);
-
     return updatedCard;
   }
 
@@ -163,6 +167,25 @@ export class BoardController {
     } catch (error) {
       throw new NotFoundException(
         `Error toggling item status: ${error.message}`,
+      );
+    }
+  }
+
+  @Put('dates/:id')
+  async updateBoardDates(
+    @Param('id') id: string,
+    @Body() updateBoardDatesDto: UpdateBoardDatesDto,
+  ){
+    console.log(updateBoardDatesDto, id)
+    try {
+      const updatedBoard = await this.boardsService.updateBoardDates(id, updateBoardDatesDto);
+      return {
+        message: 'Board dates updated successfully',
+        item: updatedBoard,
+      };
+    } catch (error) {
+      throw new NotFoundException(
+        `Error updating dates: ${error.message}`,
       );
     }
   }

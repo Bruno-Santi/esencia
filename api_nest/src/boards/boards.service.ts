@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateBoardDto, UpdateBoardDto } from './dto/create-board.dto';
+import { CreateBoardDto, UpdateBoardDto, UpdateBoardDatesDto } from './dto/create-board.dto';
 
 import { Board } from './entities/board.entity';
 import { InjectModel } from '@nestjs/mongoose';
@@ -12,7 +12,7 @@ export class BoardsService {
   constructor(
     @InjectModel(Board.name) private boardModel,
     private readonly teamService: TeamService,
-  ) {}
+  ) { }
   private async checkTeam(team_id: string) {
     console.log(team_id);
     try {
@@ -114,5 +114,62 @@ export class BoardsService {
     } catch (error) {
       throw new BadRequestException(error.message);
     }
+  }
+
+  async findforRoadmap(team_id) {
+    try {
+      await this.checkTeam(team_id);
+
+      const boards = await this.boardModel.find({ team_id }).populate({
+        path: 'columns.cards',
+        model: 'Card',
+      });
+
+      const result = boards.map(board => {
+        const totalCards = board.columns.reduce((sum, column) => sum + column.cards.length, 0);
+        const totalFinishedCards = board.columns.reduce((sum, column) => {
+          return sum + column.cards.filter(card => card.status === 'Finished').length;
+        }, 0);
+
+        const allCards = board.columns.flatMap(column => column.cards.map(card => ({
+          title: card.title,
+          column: column.name
+        })));
+
+        return {
+          title: board.title,
+          sprint: board.sprint,
+          totalCards,
+          totalFinishedCards,
+          cards: allCards,
+          startDate: board.start_date,
+          endDate: board.end_date
+        };
+      });
+
+
+      console.log("Response Data", result);
+
+      // Send the response
+      return { result };
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  async updateBoardDates(board_id: string, updateBoardDatesDto: UpdateBoardDatesDto): Promise<Board> {
+    try {
+      await this.checkBoard(board_id);
+      const updatedBoard = await this.boardModel.findOneAndUpdate(
+        { _id: board_id },
+        updateBoardDatesDto,
+        { new: true },
+      );
+      return updatedBoard;
+
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+    
   }
 }

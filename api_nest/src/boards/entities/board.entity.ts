@@ -42,6 +42,12 @@ export class Board extends Document {
 
   @Prop({ default: Date.now })
   updated_at: Date;
+
+  @Prop({ default: Date.now })
+  start_date: Date;
+
+  @Prop({ default: Date.now })
+  end_date: Date;
 }
 
 export const BoardsSchema = SchemaFactory.createForClass(Board);
