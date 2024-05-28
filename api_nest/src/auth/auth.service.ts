@@ -36,18 +36,16 @@ export class AuthService {
       const newUser = { ...createAuthDto, password };
       const user = await this.scrumMasterModel.create(newUser);
 
-      // Enviar notificación a Slack
       const message = `Un nuevo usuario se ha registrado: ${user.name} (${user.email})`;
 
-      const respslack = await this.slackService.sendNotification(message);
-      console.log(respslack);
+      await this.slackService.sendNotification(message);
 
       return {
         payload: `User ${user.email} created successfully!`,
       };
     } catch (error) {
       if (error.code === 11000) {
-        throw new BadRequestException('Email already in use');
+        throw new BadRequestException('El correo ya se encuentra registrado.');
       }
       throw new BadRequestException(error.message);
     }
@@ -72,38 +70,46 @@ export class AuthService {
     console.log(getUserDto);
 
     try {
-      let user = await this.scrumMasterModel.findOne({
-        email: email,
-        method: method,
-      });
+      let user;
 
-      if (user) {
-        if (method === 'Google') {
-          // Autentica al usuario con Google
+      // Si el método no es Google, primero busca al usuario por email
+      if (method !== 'Google') {
+        user = await this.scrumMasterModel.findOne({ email });
+
+        // Si se encuentra el usuario, verifica la contraseña
+        if (user) {
+          const passwordValid = await passwordCompare(password, user.password);
+          if (!passwordValid) {
+            throw new BadRequestException('Credenciales inválidas.');
+          }
+        } else {
+          throw new BadRequestException('Credenciales inválidas.');
+        }
+      } else {
+        // Si el método es Google, busca al usuario por email y método
+        user = await this.scrumMasterModel.findOne({ email, method });
+
+        if (user) {
+          // Verifica el UID para autenticación con Google
           if (user.uid !== uid) {
             throw new BadRequestException('Invalid UID for Google method');
           }
         } else {
-          // Verifica la contraseña para métodos diferentes a Google
-          const passwordValid = await passwordCompare(password, user.password);
-          if (!passwordValid) {
-            throw new BadRequestException('Invalid email or password');
-          }
-        }
-      } else {
-        // Si no se encuentra un usuario con ese correo y método, registra un nuevo usuario
-        user = new this.scrumMasterModel({
-          email,
-          name,
-          avtColor: avatar,
-          method,
-          uid,
-          role: 'admin',
-        });
-        const message = `Un nuevo usuario se ha registrado: ${user.name} (${user.email})`;
+          // Si no se encuentra un usuario con ese correo y método, registra un nuevo usuario
+          user = new this.scrumMasterModel({
+            email,
+            name,
+            avtColor: avatar,
+            method,
+            uid,
+            role: 'admin',
+          });
 
-        await this.slackService.sendNotification(message);
-        await user.save();
+          const message = `Un nuevo usuario se ha registrado: ${user.name} (${user.email})`;
+          await this.slackService.sendNotification(message);
+
+          await user.save();
+        }
       }
 
       const token = this.jwtService.sign(

@@ -108,7 +108,7 @@ export const useAuthSlice = () => {
     const role = "admin";
     try {
       const resp = await api.post(`/api/auth/register`, { name, email, password, avtColor, role });
-      toastSuccess(`Successfully registered. Redirecting to login. 👍`);
+      toastSuccess(`Registro exitoso. Redireccionando a login.`);
       handleNavigate("/auth/login");
       dispatch(clearErrorMessage());
       console.log(resp);

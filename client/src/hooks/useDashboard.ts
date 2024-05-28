@@ -361,12 +361,12 @@ export const useDashboard = () => {
       const data = { user_id: memberId, team_id: teamId };
 
       const resp = await api.delete(`/api/members/${memberId}`);
-      toast.success(`${memberName} deleted successfully`);
+      toast.success(`${memberName} eliminado correctamente.`);
       await startGettingMembers(teamId);
       console.log(resp);
     } catch (error) {
       console.log(error);
-      toast.warning("Error deleting member");
+      toast.warning("Hubo un problema al eliminar al miembro.");
     }
   };
   const startInvitingMember = async (memberId, memberName) => {
