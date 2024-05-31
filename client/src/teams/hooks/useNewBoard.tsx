@@ -40,7 +40,7 @@ export const useNewBoard = () => {
     }
   };
   const boardCreated = async (data) => {
-    toastSuccess(`Board ${boardTitle} created`);
+    toastSuccess(`Épica ${boardTitle} creada.`);
     setBoardTitle("");
     toggleModalBoard();
 

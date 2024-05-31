@@ -1,35 +1,30 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { Chart } from "react-google-charts";
-import { baseURL } from "../../helpers/apiToken";
+import api from "../../helpers/apiToken";
 import { useAuthSlice } from "../../hooks/useAuthSlice";
 import { useDashboard } from "../../hooks/useDashboard";
 import { useDocumentTitle } from "../../hooks";
 import { DashboardLayout } from "../../layaout/DashboardLayout";
-import { useBoards } from "../hooks/useBoards";
-import { NoSelectedBoard } from "../components/NoSelectedBoard";
+import moment from "moment";
+import "moment/locale/es";
 
 export const Roadmap = () => {
   useDocumentTitle("Roadmap | Esencia.app");
 
   const { user } = useAuthSlice();
   const { activeTeam } = useDashboard();
-  const { activeBoard } = useBoards();
-  console.log(activeBoard);
-
   const [tasks, setTasks] = useState([]);
-  if (!activeBoard.length) {
-    return <NoSelectedBoard />;
-  }
+  const [boards, setBoards] = useState([]); // Estado local para almacenar boards
+
   const columns = [
-    { type: "string", label: "Task ID" },
-    { type: "string", label: "Task Name" },
-    { type: "string", label: "Resource" },
-    { type: "date", label: "Start Date" },
-    { type: "date", label: "End Date" },
-    { type: "number", label: "Duration" },
-    { type: "number", label: "Percent Complete" },
-    { type: "string", label: "Dependencies" },
+    { type: "string", label: "ID de Tarea" },
+    { type: "string", label: "Nombre de Tarea" },
+    { type: "string", label: "Recurso" },
+    { type: "date", label: "Fecha de Inicio" },
+    { type: "date", label: "Fecha de Fin" },
+    { type: "number", label: "Duración" },
+    { type: "number", label: "Porcentaje Completado" },
+    { type: "string", label: "Dependencias" },
   ];
 
   const options = {
@@ -40,35 +35,53 @@ export const Roadmap = () => {
   };
 
   useEffect(() => {
-    console.log("activeTeam", activeTeam);
+    moment.locale("es"); // Establecer la localización en español
+
     const fetchBoards = async () => {
       try {
-        const response = await axios.get(baseURL + "/api/boards/roadmap/" + activeTeam._id);
-        const boards = response.data.result;
-        console.log("Roadmap Data", boards);
+        const response = await api.get("/api/boards/roadmap/" + activeTeam._id);
+        const boardsData = response.data.result;
+        setBoards(boardsData); // Guardar boards en el estado local
+        console.log("Datos del Roadmap", boardsData);
 
-        const ganttTasks = await boards.map((board, index) => {
-          const startDate = new Date(board.startDate);
-          const endDate = new Date(board.endDate);
-          return [`board-${index}`, board.title, "board", startDate, endDate, null, ((board.totalFinishedCards / board.totalCards) * 100).toFixed(2), null];
+        const ganttTasks = boardsData.map((board, index) => {
+          const startDate = moment(board.startDate).toDate();
+          const endDate = moment(board.endDate).toDate();
+          const totalCards = board.totalCards || 0;
+          const totalFinishedCards = board.totalFinishedCards || 0;
+          const percentComplete = totalCards > 0 ? ((totalFinishedCards / totalCards) * 100).toFixed(2) : 0;
+
+          return [`board-${index}`, board.title, "board", startDate, endDate, null, percentComplete, null];
         });
 
-        console.log("ganttTasks", ganttTasks);
+        console.log("Tareas del Gantt", ganttTasks);
 
         const data = [columns, ...ganttTasks];
         setTasks(data);
       } catch (error) {
-        console.error("Error fetching data", error);
+        console.error("Error al obtener datos", error);
       }
     };
 
-    fetchBoards();
-  }, []);
+    if (activeTeam) {
+      fetchBoards();
+    }
+  }, [activeTeam]);
+
+  if (!activeTeam) {
+    return (
+      <DashboardLayout>
+        <h1 className='flex justify-normal items-center m-auto'>Selecciona un equipo</h1>
+      </DashboardLayout>
+    );
+  }
 
   return (
     <div className='pl-10'>
-      <h1>Epic Roadmap</h1>
-      <Chart chartType='Gantt' width='100%' height='50%' data={tasks} options={options} />
+      <h1 className='flex justify-center font-poppins text-2xl text-primary mb-20'>Epic Roadmap</h1>
+      <div className='px-2 mr-6'>
+        <Chart chartType='Gantt' width='100%' height='50%' data={tasks} options={options} />
+      </div>
     </div>
   );
 };
