@@ -8,8 +8,8 @@ import { CreateEmailDto } from './dto/create-email.dto';
 import { UpdateEmailDto } from './dto/update-email.dto';
 import { InjectSendGrid, SendGridService } from '@ntegral/nestjs-sendgrid';
 import { subscribeMail } from 'common/utils/subscribeMail';
-import { BadRequestError } from 'openai';
 import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
+import { sendVerifyEmail } from 'common/utils/sendVerifyEmail';
 
 @UseGuards(ThrottlerGuard)
 @Throttle({ default: { limit: 50, ttl: 60000 } })
@@ -42,5 +42,14 @@ export class EmailService {
 
   remove(id: number) {
     return `This action removes a #${id} email`;
+  }
+
+  async sendVerificationEmail(user, token: string) {
+    try {
+      const emailData = await sendVerifyEmail(user.name, user.email, token);
+      await this.client.send(emailData);
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

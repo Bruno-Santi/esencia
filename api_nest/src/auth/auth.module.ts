@@ -8,6 +8,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { JwtModule } from '@nestjs/jwt';
 import { TeamModule } from 'src/team/team.module';
 import { SlackServiceModule } from '../slack-service/slack-service.module';
+import { EmailModule } from 'src/email/email.module';
 
 @Module({
   controllers: [AuthController],
@@ -29,6 +30,7 @@ import { SlackServiceModule } from '../slack-service/slack-service.module';
     JwtModule,
     TeamModule,
     SlackServiceModule,
+    EmailModule,
     ThrottlerModule.forRoot([
       {
         ttl: 60000,

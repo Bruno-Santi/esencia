@@ -50,6 +50,11 @@ export class ScrumMaster extends Document {
     required: false,
   })
   uid: string;
+  @Prop({
+    unique: false,
+    default: false,
+  })
+  emailVerified: boolean;
 }
 
 export const ScrumMasterSchema = SchemaFactory.createForClass(ScrumMaster);

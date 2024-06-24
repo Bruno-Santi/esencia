@@ -16,6 +16,7 @@ import { Team } from 'src/team/entities/team.entity';
 import { TeamService } from 'src/team/team.service';
 import { SlackServiceService } from 'src/slack-service/slack-service.service';
 import { convertStringToObj } from 'common/utils/converStringToObj';
+import { EmailService } from 'src/email/email.service';
 
 @Injectable()
 export class AuthService {
@@ -28,6 +29,7 @@ export class AuthService {
     @InjectModel(Team.name)
     private readonly teamModel: Model<Team>,
     private readonly slackService: SlackServiceService,
+    private readonly emailService: EmailService,
   ) {}
 
   async create(createAuthDto: CreateAuthDto) {
@@ -36,18 +38,85 @@ export class AuthService {
       const newUser = { ...createAuthDto, password };
       const user = await this.scrumMasterModel.create(newUser);
 
-      const message = `Un nuevo usuario se ha registrado: ${user.name} (${user.email})`;
-
-      await this.slackService.sendNotification(message);
+      const token = this.jwtService.sign(
+        {
+          email: user.email,
+        },
+        {
+          secret: process.env.JWT_SECRET_KEY,
+          expiresIn: '1d',
+        },
+      );
+      await this.emailService.sendVerificationEmail(user, token);
 
       return {
-        payload: `User ${user.email} created successfully!`,
+        payload: `Usuario ${user.email} creado correctamente!`,
       };
     } catch (error) {
       if (error.code === 11000) {
         throw new BadRequestException('El correo ya se encuentra registrado.');
       }
       throw new BadRequestException(error.message);
+    }
+  }
+
+  async verifyEmail(token: string) {
+    const cleanToken = token.replace(/[^a-zA-Z0-9-_.]/g, '');
+
+    try {
+      // Verificar el token JWT
+      const payload = this.jwtService.verify(cleanToken, {
+        secret: process.env.JWT_SECRET_KEY,
+      });
+
+      const user = await this.scrumMasterModel.findOneAndUpdate(
+        { email: payload.email },
+        { emailVerified: true },
+        { new: true },
+      );
+
+      if (!user) {
+        throw new BadRequestException(
+          'Token inválido o usuario no encontrado.',
+        );
+      }
+
+      const message = `Un nuevo usuario se ha registrado: ${user.name} (${user.email})`;
+      await this.slackService.sendNotification(message);
+
+      return {
+        message: 'El correo se ha validado correctamente.',
+      };
+    } catch (error) {
+      console.error('Error en la verificación del token:', error);
+      throw new BadRequestException('Token inválido o expirado.');
+    }
+  }
+
+  async resendVerificationEmail(token: string) {
+    try {
+      const payload = this.jwtService.verify(token, {
+        secret: process.env.JWT_SECRET_KEY,
+      });
+
+      const user = await this.scrumMasterModel.findOne({
+        email: payload.email,
+      });
+
+      if (!user) {
+        throw new BadRequestException('User not found.');
+      }
+
+      const newToken = this.jwtService.sign(
+        { email: user.email },
+        { secret: process.env.JWT_SECRET_KEY, expiresIn: '1d' },
+      );
+
+      await this.emailService.sendVerificationEmail(user.email, newToken);
+
+      return { message: 'Verification email resent.' };
+    } catch (error) {
+      throw new BadRequestException('Error resending verification email.');
     }
   }
   async setFirstLoggin(userId: string) {
@@ -76,12 +145,13 @@ export class AuthService {
       if (method !== 'Google') {
         user = await this.scrumMasterModel.findOne({ email });
 
-        // Si se encuentra el usuario, verifica la contraseña
         if (user) {
           const passwordValid = await passwordCompare(password, user.password);
           if (!passwordValid) {
             throw new BadRequestException('Credenciales inválidas.');
           }
+          if (!user.emailVerified)
+            throw new BadRequestException('Correo no verificado.');
         } else {
           throw new BadRequestException('Credenciales inválidas.');
         }
@@ -102,6 +172,7 @@ export class AuthService {
             avtColor: avatar,
             method,
             uid,
+            emailVerified: true,
             role: 'admin',
           });
 

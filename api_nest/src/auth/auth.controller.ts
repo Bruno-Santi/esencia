@@ -1,4 +1,11 @@
-import { Controller, Post, Body, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseGuards,
+  Param,
+  Query,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { GetUserDto } from './dto/get-user.dto';
@@ -24,5 +31,18 @@ export class AuthController {
     console.log(createAuthDto);
 
     return this.authService.create(createAuthDto);
+  }
+  @Post('verify-email')
+  verify(@Query('token') token: string) {
+    console.log(token);
+
+    return this.authService.verifyEmail(token);
+  }
+
+  @Post('resend-verification-email')
+  resend(@Query('token') token: string) {
+    console.log(token);
+
+    return this.authService.resendVerificationEmail(token);
   }
 }

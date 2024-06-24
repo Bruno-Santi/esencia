@@ -7,6 +7,7 @@ import { onLogOutUser, onSetUser } from "../store/dashboard/dashboardSlice";
 import api from "../helpers/apiToken";
 import { getRandomColor, toastSuccess } from "../helpers";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export const useAuthSlice = () => {
   //@ts-expect-error 'efefe'
@@ -109,6 +110,12 @@ export const useAuthSlice = () => {
     try {
       const resp = await api.post(`/api/auth/register`, { name, email, password, avtColor, role });
       toastSuccess(`Registro exitoso. Redireccionando a login.`);
+      toast.info("Te hemos enviado un email de confirmación.", {
+        autoClose: false,
+        closeOnClick: false,
+        closeButton: true,
+      });
+
       handleNavigate("/auth/login");
       dispatch(clearErrorMessage());
       console.log(resp);

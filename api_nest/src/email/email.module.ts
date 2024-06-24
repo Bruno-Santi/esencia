@@ -21,5 +21,6 @@ import { APP_GUARD } from '@nestjs/core';
       },
     ]),
   ],
+  exports: [EmailService],
 })
 export class EmailModule {}
