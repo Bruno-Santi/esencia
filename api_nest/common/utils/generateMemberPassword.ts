@@ -1,6 +1,6 @@
 export const generatePassword = () => {
   let password: string = '';
-  const PASSWORD_LENGTH = 4;
+  const PASSWORD_LENGTH = 6;
   const CHARACTERS =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 

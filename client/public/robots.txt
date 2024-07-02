@@ -1,0 +1,15 @@
+
+User-agent: *
+Disallow: /auth/*
+Disallow: /dashboard/*
+
+
+User-agent: *
+Allow: /
+
+
+User-agent: BadBot
+Disallow: /
+
+# Sitemap location
+Sitemap: https://www.esencia.app/sitemap.xml

@@ -24,6 +24,8 @@ export const useTeamForm = () => {
     logo = "https://res.cloudinary.com/di92lsbym/image/upload/c_thumb,w_200,g_face/v1701895638/team-logo_2_fq5yev.png",
     handleNext
   ) => {
+    console.log(name);
+
     setLoading(true);
     if (!name) {
       setLoading(false);
@@ -32,9 +34,9 @@ export const useTeamForm = () => {
     try {
       setLoading(false);
       if (!name.trim().length) return toastWarning("Debe ingresar un nombre de equipo.");
-      const newTeamData = { name, logo };
+      const newTeamData = { name, logo, members: [{ id: user.id, role: "admin" }] };
 
-      const data = await api.post(`/api/team/${user.id}`, newTeamData);
+      const data = await api.post(`/api/team`, newTeamData);
       console.log(data);
 
       await startSettingTeams();

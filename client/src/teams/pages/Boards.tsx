@@ -9,12 +9,14 @@ import { NoSelectedBoard } from "../components/NoSelectedBoard";
 import { ActiveBoardHeader } from "../components/ActiveBoardHeader";
 import { useAuthSlice } from "../../hooks/useAuthSlice";
 import { useDocumentTitle } from "../../hooks";
+import { useDashboard } from "../../hooks/useDashboard";
 
 export const Boards = () => {
   useDocumentTitle("Tableros | Esencia.app");
 
   const { startGettingTeamBoards, boards, activeTeam, activeBoard, membersActiveTeam, moveCardAndUpdateStatus, startDeletingBoard } = useBoards();
   const { user } = useAuthSlice();
+  const isAdmin = activeTeam?.members?.some((member) => member.id === user.id && member.role === "admin");
   useEffect(() => {
     startGettingTeamBoards();
   }, [activeTeam]);
@@ -68,7 +70,7 @@ export const Boards = () => {
           </div>
         </DragDropContext>
       )}
-      {activeBoard.length && user.role ? (
+      {activeBoard.length && isAdmin ? (
         <div
           onClick={() => startDeletingBoard(activeBoard[0]._id)}
           className='flex p-2 dark:text-tertiary text-bold font-poppins rounded-md text-primary btn-primary w-[150px] mt-20 m-auto justify-center hover:bg-tertiary hover:text-primary dark:hover:text-primary duration-300'

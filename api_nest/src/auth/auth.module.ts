@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common';
-import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
-import { APP_GUARD } from '@nestjs/core';
+
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { ScrumMaster, ScrumMasterSchema } from './entities/user.entity';
+import { User, UserSchema } from './entities/user.entity';
 import { MongooseModule } from '@nestjs/mongoose';
 import { JwtModule } from '@nestjs/jwt';
 import { TeamModule } from 'src/team/team.module';
@@ -12,31 +11,19 @@ import { EmailModule } from 'src/email/email.module';
 
 @Module({
   controllers: [AuthController],
-  providers: [
-    AuthService,
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
-  ],
+  providers: [AuthService],
   imports: [
     MongooseModule.forFeature([
       {
-        name: ScrumMaster.name,
-        schema: ScrumMasterSchema,
-        collection: 'scrumMaster',
+        name: User.name,
+        schema: UserSchema,
+        collection: 'user',
       },
     ]),
     JwtModule,
     TeamModule,
     SlackServiceModule,
     EmailModule,
-    ThrottlerModule.forRoot([
-      {
-        ttl: 60000,
-        limit: 10,
-      },
-    ]),
   ],
   exports: [AuthService, MongooseModule],
 })

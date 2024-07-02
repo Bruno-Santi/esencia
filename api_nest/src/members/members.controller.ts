@@ -17,11 +17,15 @@ export class MembersController {
   @UseGuards(JwtAuthGuard)
   @Post()
   create(@Body() createMemberDto: CreateMemberDto) {
+    console.log(createMemberDto);
+
     return this.membersService.create(createMemberDto);
   }
   @UseGuards(JwtAuthGuard)
   @Get(':teamId')
   get(@Param('teamId') teamId: string) {
+    console.log(teamId);
+
     return this.membersService.getTeamMembers(teamId);
   }
   @UseGuards(JwtAuthGuard)
@@ -35,15 +39,15 @@ export class MembersController {
     return this.membersService.inviteMember(memberId, teamid);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Get('/teams/:memberId')
-  getTeam(@Param('memberId') memberId: string) {
-    return this.membersService.getMemberTeam(memberId);
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Get('/teams/:memberId')
+  // getTeam(@Param('memberId') memberId: string) {
+  //   return this.membersService.getMemberTeam(memberId);
+  // }
 
-  @Post('/login') // Ruta para el inicio de sesión
-  async loginUser(@Body() messageBody: any) {
-    const { email, password } = messageBody;
-    return this.membersService.login(email, password);
-  }
+  // @Post('/login') // Ruta para el inicio de sesión
+  // async loginUser(@Body() messageBody: any) {
+  //   const { email, password } = messageBody;
+  //   return this.membersService.login(email, password);
+  // }
 }

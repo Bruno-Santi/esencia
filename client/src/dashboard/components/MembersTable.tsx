@@ -12,6 +12,8 @@ export const MembersTable = () => {
   const handleAccept = (userId, memberName) => {
     startDeletingMember(userId, activeTeam._id, memberName);
   };
+  console.log(membersActiveTeam[0]);
+  const isAdmin = activeTeam?.members?.some((member) => member.id === user.id && member.role === "admin");
 
   const handleCancel = () => toast.error("Cancelled");
   const handleInvite = (memberId, memberName) => {
@@ -51,7 +53,7 @@ export const MembersTable = () => {
               <span className='dark:text-tertiary'>Nombre</span>
             </TableCell>
 
-            {user.role ? (
+            {isAdmin ? (
               <>
                 {" "}
                 <TableCell>
@@ -88,7 +90,7 @@ export const MembersTable = () => {
                 <span className='dark:text-tertiary'>{member.name}</span>
               </TableCell>
 
-              {user.role ? (
+              {isAdmin ? (
                 <>
                   {" "}
                   <TableCell>

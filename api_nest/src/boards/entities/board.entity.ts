@@ -18,9 +18,6 @@ export class Board extends Document {
   team_id: string;
 
   @Prop({ required: true })
-  scrum_id: string;
-
-  @Prop({ required: true })
   title: string;
 
   @Prop({

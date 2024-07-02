@@ -138,31 +138,47 @@ export class RetroService {
     console.log(data);
 
     try {
-      const { token, team_id, scrum_id } = data;
+      const { token, team_id, user_id } = data;
       this.startRetro(team_id);
-      console.log(scrum_id);
+      console.log(user_id);
       const convertedTeamId = new Types.ObjectId(team_id);
       const tokenWithoutQuotes = token.replace(/^"|"$/g, '');
 
+      // Buscar el equipo
       const team = await this.teamService.searchTeam(convertedTeamId);
 
       console.log(team);
 
       if (team) {
-        const { scrumId } = team;
-        this.scrumMasterTeamMap[scrumId] = team_id;
+        // Buscar el miembro con rol 'admin'
+        const adminMember = team.members.find(
+          (member) => member.role === 'admin',
+        );
+
+        if (!adminMember) {
+          throw new Error('No admin found in the team');
+        }
+
+        // Verificar si el user_id coincide con el admin
+        if (adminMember.id !== user_id) {
+          throw new Error('User ID is not an admin');
+        }
+
+        const { _id } = team; // Usando el ID del equipo directamente
+        this.scrumMasterTeamMap[_id] = team_id;
         const teamIdString = team_id.toString();
         this.retros.set(teamIdString, teamIdString);
 
         console.log(this.retros);
       }
 
-      const retroUrl = `https://esencia.app/members/retro?token=${tokenWithoutQuotes}&team_id=${team_id}&scrum_id=${scrum_id}`;
+      const retroUrl = `https://esencia.app/members/retro?token=${tokenWithoutQuotes}&team_id=${team_id}&user_id=${user_id}`;
       console.log(retroUrl);
 
       return retroUrl;
     } catch (error) {
       console.log(error);
+      throw new Error(error.message); // Asegúrate de lanzar el error para manejarlo adecuadamente en el contexto del llamador
     }
   }
 

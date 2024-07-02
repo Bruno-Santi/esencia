@@ -3,11 +3,14 @@ import { useBoards } from "../hooks/useBoards";
 import { useNewBoard } from "../hooks/useNewBoard";
 import { IoSaveSharp } from "react-icons/io5";
 import { useAuthSlice } from "../../hooks/useAuthSlice";
+import { useDashboard } from "../../hooks/useDashboard";
 
 export const BoardAccordionList = ({ boards }) => {
-  const { startSettingActiveBoard } = useBoards();
+  const { startSettingActiveBoard, activeTeam } = useBoards();
+
   const { handleTitleChange, toggleModalBoard, boardTitle, modalBoard, handleClick, errorMessage, handleCreateBoard } = useNewBoard();
   const { user } = useAuthSlice();
+  const isAdmin = activeTeam?.members?.some((member) => member.id === user.id && member.role === "admin");
   const handleActiveBoard = (boardId) => {
     startSettingActiveBoard(boardId);
   };
@@ -25,7 +28,7 @@ export const BoardAccordionList = ({ boards }) => {
           <div className='hover:bg-gray-500 hover:text-tertiary duration-300 p-2'>Sin tableros aún</div>
         )}
       </AccordionDetails>
-      {user.role ? (
+      {isAdmin ? (
         <AccordionDetails onClick={toggleModalBoard} className='cursor-pointer btn-primary hover:bg-gray-500 hover:text-tertiary duration-300'>
           <span className='flex items-center justify-center mt-2'>+ Nuevo tablero</span>
         </AccordionDetails>

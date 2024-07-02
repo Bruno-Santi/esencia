@@ -27,7 +27,6 @@ export const useNewBoard = () => {
 
     try {
       const { data } = await api.post(`/api/boards`, {
-        scrum_id: activeTeam.scrumId,
         team_id: activeTeam._id,
         sprint: activeTeam.sprint,
         title: boardTitle,

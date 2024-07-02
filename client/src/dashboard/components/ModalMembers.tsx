@@ -15,6 +15,7 @@ export const ModalMembers: React.FC<{
   const [addMember, setAddMember] = useState(false);
   const theme = localStorage.getItem("theme");
 
+  const isAdmin = activeTeam?.members?.some((member) => member.id === user.id && member.role === "admin");
   const toggleAddMember = () => {
     setAddMember((prevState) => !prevState);
   };
@@ -37,7 +38,7 @@ export const ModalMembers: React.FC<{
       </DialogTitle>
       <DialogContent className='dark:bg-gradient-to-br dark:from-zinc-900 dark:to-gray-800  dark:text-tertiary'>
         <div className='flex flex-col'>
-          {user.role ? (
+          {isAdmin ? (
             <div
               onClick={toggleAddMember}
               className={`${
@@ -52,7 +53,7 @@ export const ModalMembers: React.FC<{
           ) : (
             ""
           )}
-          {user.role ? addMember && <AddMemberModal key={addMember.toString()} closeAddMember={toggleAddMember} /> : ""}
+          {isAdmin ? addMember && <AddMemberModal key={addMember.toString()} closeAddMember={toggleAddMember} /> : ""}
 
           {membersActiveTeam.length ? <MembersTable /> : ""}
         </div>

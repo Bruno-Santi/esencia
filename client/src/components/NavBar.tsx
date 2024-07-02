@@ -32,7 +32,8 @@ export const NavBar = () => {
   const { startLogingOut } = useAuthSlice();
   const { activeTeam, user, startGettingMembers, startToggleModal } = useDashboard();
   const { isOpen, closeModal, openModal } = useModal();
-  console.log(user);
+
+  const isAdmin = activeTeam?.members?.some((member) => member.id === user.id && member.role === "admin");
 
   const { startCleaningBoards } = useBoards();
   const handleClick = (event) => {
@@ -88,7 +89,7 @@ export const NavBar = () => {
               <SideBarItem icon={<GrMapLocation />} text='Roadmap' />
             </span>
             <span
-              className={`${!user.role ? "hidden" : ""}`}
+              className={`${!isAdmin ? "hidden" : ""}`}
               onClick={() => {
                 handleNavigate("/dashboard/retro");
               }}
@@ -98,7 +99,7 @@ export const NavBar = () => {
             <span onClick={() => handleNavigate("/dashboard/reports")}>
               <SideBarItem icon={<TbReportSearch />} text='Reportes' />
             </span>
-            <span className={`${!user.role ? "hidden" : ""}`} onClick={() => handleNavigate("/dashboard/assessment")}>
+            <span className={`${!isAdmin ? "hidden" : ""}`} onClick={() => handleNavigate("/dashboard/assessment")}>
               <SideBarItem icon={<MdOutlineInsertChart />} text='Assessment' />
             </span>
             <hr />
@@ -186,27 +187,6 @@ export const NavBar = () => {
                   <span className=' w-full p-2 font-poppins dark:text-tertiary' onClick={() => handleNavigate("/profile")}>
                     Perfil
                   </span>
-                </MenuItem>
-
-                <MenuItem
-                  onClick={handleChangeTheme}
-                  sx={{
-                    "&:hover": {
-                      backgroundColor: "rgba(0, 0, 0, 0.10)",
-                    },
-                  }}
-                >
-                  <IoMoonOutline className='mr-2 text-primary dark:text-tertiary' />
-                  <span className='  p-2 font-poppins dark:text-tertiary'>Tema:</span>
-                  {theme === "light" ? (
-                    <span className=' dark:text-tertiary' onClick={handleChangeTheme}>
-                      Claro
-                    </span>
-                  ) : (
-                    <span onClick={handleChangeTheme} className=' dark:text-tertiary'>
-                      Oscuro
-                    </span>
-                  )}
                 </MenuItem>
 
                 <MenuItem

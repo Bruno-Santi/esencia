@@ -16,9 +16,12 @@ import { TeamService } from 'src/team/team.service';
 
 import { Team } from 'src/team/entities/team.entity';
 import { DaySurvey } from './entities/daySurvey.entity';
+import { User } from 'src/auth/entities/user.entity';
 @Injectable()
 export class SurveyService {
   constructor(
+    @InjectModel(User.name) private readonly userModel: Model<User>,
+
     @InjectModel(Member.name) private readonly memberModel: Model<Member>,
     @InjectModel(Survey.name) private readonly surveyModel: Model<Survey>,
     @InjectModel(Team.name) private readonly teamModel: Model<any>,
@@ -31,33 +34,52 @@ export class SurveyService {
 
   async createNewSurvey(teamId) {
     const convertedTeamId = new Types.ObjectId(teamId);
-    const members = await this.memberModel.find({ teamId: convertedTeamId });
-    const team = await this.teamService.searchTeam(convertedTeamId);
-    console.log(team);
 
     try {
+      // Obtener el equipo
+      const team = await this.teamService.searchTeam(convertedTeamId);
+      if (!team) {
+        throw new Error('Team not found');
+      }
+
+      // Filtrar los miembros que no son administradores
+      const memberIds = team.members
+        .filter((member) => member.role !== 'admin')
+        .map((member) => new Types.ObjectId(member.id));
+
+      if (memberIds.length === 0) {
+        throw new Error('No members found for the team');
+      }
+
+      // Obtener los datos de los usuarios correspondientes a los miembros
+      const members = await this.userModel.find({ _id: { $in: memberIds } });
+
+      if (members.length === 0) {
+        throw new Error('No user data found for the team members');
+      }
+
+      // Enviar encuesta a cada miembro
       for (const member of members) {
         const token = this.jwtService.sign(
           { sub: member._id },
           { secret: process.env.JWT_SECRET_KEY },
         );
-        const convertedUserId = new Types.ObjectId(member._id);
         const emailData = await sendMail(
           token,
           teamId,
           member.name,
           member.email,
-          convertedUserId,
+          member._id,
           team.name,
         );
         await this.client.send(emailData);
       }
+
       return {
-        payload: `Survey sent to ${teamId} successfully`,
+        payload: `Survey sent to team ${teamId} successfully`,
       };
     } catch (error) {
       console.log(error);
-
       throw new BadRequestException(error.message);
     }
   }

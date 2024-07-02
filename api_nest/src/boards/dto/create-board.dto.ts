@@ -7,9 +7,7 @@ export class CreateBoardDto {
   @IsNotEmpty()
   @IsString()
   team_id: string;
-  @IsNotEmpty()
-  @IsString()
-  scrum_id: string;
+
   @IsNotEmpty()
   @IsNumber()
   sprint: number;
@@ -21,8 +19,6 @@ export class UpdateBoardDto extends CreateBoardDto {
   title: string;
 }
 
-
-
 export class UpdateBoardDatesDto {
   @IsISO8601()
   start_date: string;
@@ -30,4 +26,3 @@ export class UpdateBoardDatesDto {
   @IsISO8601()
   end_date: string;
 }
-

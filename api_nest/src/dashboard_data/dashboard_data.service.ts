@@ -302,6 +302,7 @@ export class DashboardDataService {
         .exec();
 
       const short_recommendation = await this.shortRecommendation(teamId);
+      console.log(short_recommendation);
 
       const dashboard = {
         pie_chart: pieChart,
@@ -403,7 +404,7 @@ export class DashboardDataService {
       const response = await client.chat.completions.create({
         messages: [{ role: 'system', content: prompt }],
         model: 'gpt-3.5-turbo',
-        temperature: 0.8,
+        temperature: 0.5,
       });
       console.log(response);
 
@@ -442,6 +443,7 @@ export class DashboardDataService {
         answers: data[0].answers,
         content: JSON.stringify(formattedRecommendations),
       });
+      console.log(formattedRecommendations);
 
       return formattedRecommendations;
     } catch (error) {

@@ -6,21 +6,8 @@ import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   controllers: [EmailController],
-  providers: [
-    EmailService,
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
-  ],
-  imports: [
-    ThrottlerModule.forRoot([
-      {
-        ttl: 60000,
-        limit: 30,
-      },
-    ]),
-  ],
+  providers: [EmailService],
+
   exports: [EmailService],
 })
 export class EmailModule {}

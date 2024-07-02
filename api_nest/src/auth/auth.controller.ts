@@ -9,14 +9,11 @@ import {
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { GetUserDto } from './dto/get-user.dto';
-import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @UseGuards(ThrottlerGuard)
-  @Throttle({ default: { limit: 500, ttl: 60000 } })
   @Post('login')
   findOne(@Body() getUserDto: GetUserDto) {
     console.log(getUserDto);
@@ -24,8 +21,6 @@ export class AuthController {
     return this.authService.findOne(getUserDto);
   }
 
-  @UseGuards(ThrottlerGuard)
-  @Throttle({ default: { limit: 500, ttl: 60000 } })
   @Post('register')
   create(@Body() createAuthDto: CreateAuthDto) {
     console.log(createAuthDto);

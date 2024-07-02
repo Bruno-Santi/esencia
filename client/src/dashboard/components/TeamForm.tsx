@@ -144,13 +144,13 @@ export const TeamForm: React.FC<TeamFormProps> = ({ closeModal, handleClose, gen
   return (
     <div className='min-h-[500px] overflow-y-hidden w-full flex m-auto dark:bg-primary justify-center items-center font-poppins text-center'>
       <div className='flex mx-auto items-center justify-center dark:bg-primary p-8 rounded '>
-        {(step === 0 || step === 1) && (
+        {/* {(step === 0 || step === 1) && (
           <div className='absolute top-4 right-12 dark:bg-primary'>
             <button className='text-xl font-semibold text-secondary dark:bg-primary' onClick={() => closeModal()}>
               <IoMdClose className='dark:text-teal-50 text-secondary' />
             </button>
           </div>
-        )}
+        )} */}
         {step === 0 && (
           <div className='flex flex-col items-center animate__animated animate__fadeIn animate__slow dark:bg-primary'>
             <h2 className='text-xl font-normal mb-4 dark:text-tertiary/90'>Bienvenido a Esencia, la herramienta de gestión de equipos ágiles.</h2>

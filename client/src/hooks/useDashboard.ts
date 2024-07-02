@@ -32,6 +32,7 @@ export const useDashboard = () => {
   const [surveyLoading, setSurveyLoading] = useState(false);
   const [creatingLoading, setCreatingLoading] = useState(false);
   const [loadingReports, setLoadingReports] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const dispatch = useDispatch();
   const { closeModal, isOpen } = useModal();
   const [loading, setLoading] = useState(true);
@@ -59,18 +60,10 @@ export const useDashboard = () => {
     console.log(user);
 
     try {
-      if (user.role) {
-        const { data } = await api.get(`/api/team/${user.id}`);
-        console.log(data);
-        dispatch(onSetUserTeams({ userTeams: data }));
-        localStorage.setItem("userTeams", JSON.stringify(data.teams));
-      } else {
-        const { data } = await api.get(`/api/members/teams/${user.id}`);
-        console.log(data);
-
-        dispatch(onSetUserTeams({ userTeams: data }));
-        localStorage.setItem("userTeams", JSON.stringify(data.teams));
-      }
+      const { data } = await api.get(`/api/team/${user.id}`);
+      console.log(data);
+      dispatch(onSetUserTeams({ userTeams: data }));
+      localStorage.setItem("userTeams", JSON.stringify(data.teams));
 
       setLoading(false);
     } catch (error) {
@@ -263,9 +256,7 @@ export const useDashboard = () => {
     try {
       const formData = {
         teamId: teamId,
-
         name: userData.first_name,
-
         email: userData.email,
         avtColor: avtColor,
       };
@@ -273,7 +264,7 @@ export const useDashboard = () => {
 
       const response = await api.post(`/api/members/`, formData);
       if (response.data.created) {
-        toast.success(`${formData.name} added to the team `, {
+        toast.success(`${formData.name} agregado al equipo! `, {
           position: "bottom-center",
           autoClose: 5000,
           hideProgressBar: false,
@@ -286,7 +277,7 @@ export const useDashboard = () => {
         return startGettingMembers(teamId);
       }
 
-      toast.warning(`${formData.email} has already been added to the some team`);
+      toast.warning(`${formData.email} ya existe en el equipo.`);
 
       await startGettingMembers(teamId);
       setCreatingLoading(false);
@@ -419,5 +410,6 @@ export const useDashboard = () => {
     task,
     startCleaningActiveTeam,
     assessment,
+    isAdmin,
   };
 };

@@ -15,3 +15,4 @@ export * from "./PricingList";
 export * from "./WhyUs";
 export * from "./Assessment";
 export * from "./FaqItem";
+export * from "./NewAssessment";

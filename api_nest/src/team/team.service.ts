@@ -19,12 +19,31 @@ export class TeamService {
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
   ) {}
-  async create(createTeamDto: CreateTeamDto, scrumId) {
+  async create(createTeamDto: CreateTeamDto) {
     try {
-      await this.searchScrumMaster(scrumId);
+      console.log(createTeamDto);
+
+      if (
+        !Array.isArray(createTeamDto.members) ||
+        createTeamDto.members.length === 0
+      ) {
+        throw new BadRequestException('Members array cannot be empty');
+      }
+
+      const adminMember = createTeamDto.members.find(
+        (member) => member.role === 'admin',
+      );
+      if (!adminMember) {
+        throw new BadRequestException('An admin member is required');
+      }
+
+      const userId = adminMember.id;
+
+      await this.searchScrumMaster(userId);
+
       const existingTeam = await this.teamModel.findOne({
         name: createTeamDto.name,
-        scrumId: scrumId,
+        'members.id': userId,
       });
 
       if (existingTeam) {
@@ -32,11 +51,11 @@ export class TeamService {
           `Team ${createTeamDto.name} already exists`,
         );
       }
+
       console.log(createTeamDto.logo);
 
       const team = await this.teamModel.create({
         ...createTeamDto,
-        scrumId: scrumId,
         logo: createTeamDto.logo,
       });
 
@@ -60,10 +79,13 @@ export class TeamService {
       throw new BadRequestException(error.message);
     }
   }
-  async findAllTeams(scrumId) {
+  async findAllTeams(userId: string) {
+    console.log(userId);
+
     try {
-      await this.searchScrumMaster(scrumId);
-      const teams = await this.teamModel.find({ scrumId: scrumId });
+      // Buscar equipos donde el array de miembros contenga un objeto con id igual a userId
+      const teams = await this.teamModel.find({ 'members.id': userId });
+      console.log(teams);
 
       return teams;
     } catch (error) {
@@ -71,10 +93,10 @@ export class TeamService {
     }
   }
 
-  searchScrumMaster = async (scrumId) => {
-    const user = await this.authService.findScrumMaster(scrumId);
+  searchScrumMaster = async (userId) => {
+    const user = await this.authService.findScrumMaster(userId);
 
-    if (!user) throw new BadRequestException(`User ${scrumId} doesn't exist`);
+    if (!user) throw new BadRequestException(`User ${userId} doesn't exist`);
   };
   searchTeam = async (teamId) => {
     console.log(teamId);

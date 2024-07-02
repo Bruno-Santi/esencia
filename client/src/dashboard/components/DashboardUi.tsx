@@ -1,21 +1,21 @@
+import React, { useEffect, useRef, useState } from "react";
+import { IoRefreshCircleOutline } from "react-icons/io5";
+import { CiCircleQuestion } from "react-icons/ci";
+import { ClipLoader } from "react-spinners";
+import { toast } from "react-toastify";
+import { Button, IconButton, Tooltip, Typography, Container, Grid, Paper, Box, Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
 import { Charts } from "./Charts";
 import { LineCharts } from "./LineCharts";
 import { useDashboard } from "../../hooks/useDashboard";
 import { DataCollectionReport } from "./DataCollectionReport";
 import { useNavigateTo, useModal } from "../../hooks";
-
-import { IoRefreshCircleOutline } from "react-icons/io5";
-import { CiCircleQuestion } from "react-icons/ci";
-
-import { useEffect, useRef } from "react";
-import { UsePagination } from "../../helpers/UsePagination";
 import { BoardReport, ModalMembers, TrendingTopics } from ".";
 import { toastSuccess } from "../../helpers/toastSuccess";
-import { ClipLoader } from "react-spinners";
 import { useAuthSlice } from "../../hooks/useAuthSlice";
 import { TaskTable } from "./TaskTable";
-import { IconButton, Tooltip, Zoom } from "@mui/material";
-import { toast } from "react-toastify";
+import { UsePagination } from "../../helpers/UsePagination";
 import api from "../../helpers/apiToken";
 
 export const DashboardUi = () => {
@@ -43,9 +43,9 @@ export const DashboardUi = () => {
   const handleCancelTeam = () => {
     toast.warning(`Action cancelled`);
   };
-  console.log(cards);
-  console.log(metricsForToday);
-  console.log(Object.keys(shortRecomendation).length);
+
+  const isAdmin = activeTeam?.members?.some((member) => member.id === user.id && member.role === "admin");
+  console.log(isAdmin);
 
   const handleAcceptTeam = async (teamId) => {
     try {
@@ -59,268 +59,254 @@ export const DashboardUi = () => {
       toast.error(`Error while deleting board`);
     }
   };
+
   const startDeletingTeam = (teamId) => {
     toast.info(
       <div className='flex flex-col'>
-        <p className='font-poppins mb-2'>¿Estás seguro de eliminar este equipo?</p>
+        <Typography variant='body1' className='font-poppins mb-2'>
+          ¿Estás seguro de eliminar este equipo?
+        </Typography>
         <div className='flex space-x-2'>
-          <button onClick={handleCancelTeam} className='btn-secondary w-2/3 space-x-2 p-1 font-poppins rounded-md'>
+          <Button variant='outlined' color='secondary' onClick={handleCancelTeam} className='w-2/3'>
             ❌
-          </button>
-
-          <button onClick={() => handleAcceptTeam(teamId)} className='btn-primary w-2/3 p-1 font-poppins rounded-md'>
+          </Button>
+          <Button variant='contained' color='primary' onClick={() => handleAcceptTeam(teamId)} className='w-2/3'>
             ✅
-          </button>
+          </Button>
         </div>
       </div>
     );
   };
-  console.log(cards);
 
   const { handleNavigate } = useNavigateTo();
   const containerRef = useRef();
-  console.log(task);
+
   const englishToSpanish = {
     Backlog: "Pendientes",
     "In Progress": "En Progreso",
     "In Review": "En Revisión",
-
     Finished: "Finalizados",
   };
 
   const handleNavigateToFeedBack = () => {
     if (Object.entries(longRecommendation).length > 0 === false) return;
-    console.log(!Object.entries(longRecommendation));
     handleNavigate("/dashboard/feedback");
   };
+
   useEffect(() => {
     console.log(dataLoading);
   }, []);
+
   const handleVote = () => {
     toastSuccess("Thanks for your feedback! 🤗");
   };
 
   return (
-    <section className='lg:mt-2 md:mt-2'>
-      <div className='items-center lg:flex sm:flex sm:flex-col lg:flex-col md:flex md:flex-col md:space-y-2 lg:space-y-2 lg:items-center font-poppins lg:justify-center md:justify-center md:flex mt-2 lg:ml-6 md:mr-2 '>
-        <span
-          onClick={() => buttonGetData(activeTeam._id, activeTeam.sprint, true)}
-          disabled={dataLoading}
-          className={
-            dataLoading
-              ? "btn-secondary w-fit"
-              : "btn-primary w-fit  flex lg:p-2 md:p-2 sm:p-2  space-x-2 mb-3 lg:text-2xl rounded-lg font-bold hover:text-primary  dark:font-bold hover:bg-tertiary duration-700"
-          }
-        >
-          {dataLoading ? <ClipLoader /> : <span className='lg:text-sm '>Actualizar datos </span>}
-          <i className='my-auto lg:text-2xl md:text-lg sm:text-lg dark:font-bold font-bold '>
-            {" "}
-            <IoRefreshCircleOutline />
-          </i>
-        </span>
-
-        <DataCollectionReport />
-      </div>
-      <div className=' w-full  lg:-mt-14 md:mt-2 sm:max-w-screen sm:p-6 md:grid lg:grid lg:px-6 md:px-6 sm:px-0 sm:my-6 lg:ml-2 md:ml-2 sm:ml-0 sm:flex sm:flex-col sm:items-center sm:justify-center lg:py-2 md:py-2 lg:grid-cols-12 md:grid-cols-12 md:grid-rows-3 lg:grid-rows-2 lg:gap-y-0 md:gap-2 md:gap-y-0 '>
-        <div
-          className='bg-tertiary/20 shadow-lg 
-         shadow-black/30  lg:min-h-[400px] md:h-[320px] sm:h-[350px] sm:w-[360px]  sm:mb-6 md:w-full lg:w-full
-         dark:bg-quaternary/40 lg:row-span-1
-   lg:col-span-6 md:col-span-6   rounded-md'
-        >
-          <div className='flex justify-between relative'>
-            <span className='font-poppins text-primary dark:text-tertiary flex mt-4 ml-4 lg:text-2xl md:text-xl sm:text-lg font-bold'>
-              Indicador clave de equipo
-              <div className=''>
-                <Tooltip
-                  title='
-"Indicador clave de equipo" se refiere a una medida importante utilizada para evaluar el rendimiento y la salud de un equipo. Estas métricas ayudan a los líderes a entender cómo está funcionando el equipo y guían las acciones para mejorar su eficiencia y colaboración.'
-                  className='ml-2 mb-4 text-2xl'
-                >
-                  <IconButton sx={{ marginBottom: 4, fontSize: 28 }}>
-                    <CiCircleQuestion className='dark:text-tertiary relative -top-1' />
-                  </IconButton>
-                </Tooltip>
-              </div>
-            </span>
-          </div>
-          <div className='flex items-center -z-10 justify-center h-full'>
-            <span className='text-center font-poppins w-full mt-8 my-auto text-primary/50 font-bold text-5xl'>
-              <div className='flex justify-center  m-auto  text-center'></div>
-              {Object.keys(metricsForToday).length > 0 ? (
-                <div>
-                  <Charts />
-                </div>
-              ) : (
-                <p className='lg:text-2xl md:text-xl sm:text-base sm:p-2 sm:relative  sm:bottom-14 sm:justify-center lg:align-center lg:justify-center lg:my-auto lg:inset-0 lg:relative lg:top-16 dark:text-tertiary md:inset-0 md:align-center md:justify-center md:my-auto md:bottom-20 relative font-normal font-poppins mt-20'>
-                  Sin datos, intenta primero con una encuesta de pulso.
-                </p>
-              )}
-            </span>
-          </div>
-        </div>
-        <div className='bg-quaternary lg:min-h-[400px] dark:bg-gradient-to-br dark:bg-quaternary/40   shadow-lg shadow-primary/50 lg:h-[400px] md:h-[320px] sm:h-[350px] sm:w-[360px]  sm:mb-6 md:w-full lg:w-full w-full lg:row-span-1 lg:col-span-3 md:col-span-3 rounded-md '>
-          <div className=''>
-            <div className='lg:flex lg:flex-col '>
-              <span className=' lg:pb-4 md:pb-6 font-poppins text-tertiary w-full my-auto place-items-center md:text-sm  lg:text-2xl  sm:text-lg ml-4 mt-4 font-bold'>
-                Recomendaciones Generales.
-                <Tooltip
-                  title={`
-      Las Recomendaciones Generales resumen los datos recopilados de las encuestas diarias y ofrecen recomendaciones concretas y útiles. Estas recomendaciones están diseñadas para ayudar al equipo a tomar medidas específicas y efectivas para abordar áreas de mejora identificadas en las encuestas.
-    `}
-                  className='ml-2 mb-4 md:relative md:top-1.5 lg:top-1'
-                  arrow
-                  TransitionComponent={Zoom}
-                >
-                  <span style={{ fontSize: "36px" }}>
-                    <IconButton sx={{ marginBottom: 0, fontSize: 28 }}>
-                      <CiCircleQuestion className='text-tertiary ' />
-                    </IconButton>
-                  </span>
-                </Tooltip>
-              </span>
-            </div>
-          </div>
-          <div
-            ref={containerRef}
-            className='bg-tertiary  dark:bg-gray-900 w-5/6 mt-1  place-items-center align-bottom lg:h-4/6 md:h-[13em] sm:h-5/6 mx-auto rounded-lg overflow-y-scroll'
-          >
-            <div ref={containerRef} className='font-poppin p-3 w-6/6 scroll-p-12 overflow-x-hidden my-auto   bg-tertiary  dark:bg-gray-900 m-auto'>
-              {shortRecomendation !== "There is not enought data." ? (
-                <UsePagination shortRecommendation={shortRecomendation} containerRef={containerRef} />
-              ) : (
-                <p className='lg:text-xl md:text-lg  text-primary/50  inset-0 text-center font-normal font-poppins dark:text-tertiary'>
-                  Sin datos, intenta primero con una encuesta de pulso.
-                </p>
-              )}
-            </div>
-          </div>
-        </div>
-        <div className='flex justify-center w-full md:-mt-40  lg:-mt-0 lg:row-span-1 md:row-start-2 md:row-span-2 md:col-start-7  md:mr-24 md:-mt-56 lg:col-span-3 md:col-span-4 lg:h-[400px] lg:space-y-2 items-center sm:mt-0 flex-col -mt-16 mb-20'>
-          <div className='flex mb-2 mt-6'>
-            <div className='flex mb-2 mt-6'>
-              {Object.keys(englishToSpanish).map((key, index) => {
-                const matchingCard = cards.find((card) => card._id === key);
-                const value = matchingCard ? matchingCard.count : 0;
-                return <BoardReport key={index} title={englishToSpanish[key]} value={value} />;
-              })}
-            </div>
-          </div>
-          <div>{task && <TaskTable tasks={task} />}</div>
-        </div>
-
-        <div
-          className=' shadow-lg
-         shadow-primary/50  lg:h-[400px] md:h-[400px] md:-mt-48 sm:h-[350px] sm:w-[360px]  sm:mb-6 md:w-full lg:w-full 
-         dark:bg-quaternary/40
-      w-full lg:col-span-6 md:col-span-6 lg:row-span-2 md:row-start-2 md:row-span-2  rounded-md '
-        >
-          <span className='font-poppins text-primary flex items-center mt-4 ml-4 lg:text-2xl md:text-xl dark:text-tertiary font-bold'>
-            Reporte Global del Equipo{" "}
-            <div className=''>
+    <Container maxWidth='false' className='mt-4'>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <DataCollectionReport />
+        </Grid>
+        {isAdmin && (
+          <Grid item xs={12}>
+            <Accordion>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls='panel1a-content' id='panel1a-header'>
+                <Typography variant='h7' sx={{ color: "#3cba5e" }} className='font-bold'>
+                  Acciones Disponibles
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Grid container spacing={2} className='mt-4'>
+                  <Grid item xs={12}>
+                    <Button
+                      fullWidth
+                      variant='contained'
+                      sx={{
+                        backgroundColor: "#3cba5e",
+                        "&:hover": {
+                          backgroundColor: "#31a851", // Color que quieres para el hover
+                        },
+                      }}
+                      onClick={() => buttonGetData(activeTeam._id, activeTeam.sprint, true)}
+                      disabled={dataLoading}
+                    >
+                      {dataLoading ? "Loading..." : "Actualizar datos"}
+                    </Button>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button
+                      fullWidth
+                      variant='contained'
+                      sx={{
+                        backgroundColor: "#3cba5e",
+                        "&:hover": {
+                          backgroundColor: "#31a851", // Color que quieres para el hover
+                        },
+                      }}
+                      onClick={() => startCreatingSurvey(activeTeam.name, activeTeam._id)}
+                      disabled={surveyLoading}
+                    >
+                      Encuesta de pulso
+                    </Button>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button
+                      fullWidth
+                      variant='contained'
+                      sx={{
+                        backgroundColor: "#3cba5e",
+                        "&:hover": {
+                          backgroundColor: "#31a851", // Color que quieres para el hover
+                        },
+                      }}
+                      onClick={() => handleNavigate("/dashboard/retro")}
+                      disabled={surveyLoading}
+                    >
+                      Retrospectivas
+                    </Button>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button
+                      fullWidth
+                      variant='contained'
+                      sx={{
+                        backgroundColor: "#3cba5e",
+                        "&:hover": {
+                          backgroundColor: "#31a851", // Color que quieres para el hover
+                        },
+                      }}
+                      onClick={() => {
+                        openModal();
+                        startGettingMembers(activeTeam._id);
+                        startToggleModal();
+                      }}
+                      disabled={surveyLoading}
+                    >
+                      Miembros
+                    </Button>
+                    {isOpen && <ModalMembers closeModal={closeModal} />}
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button
+                      fullWidth
+                      variant='contained'
+                      sx={{
+                        backgroundColor: "#f47200",
+                        "&:hover": {
+                          backgroundColor: "#ce6509", // Color que quieres para el hover
+                        },
+                      }}
+                      onClick={() => startDeletingTeam(activeTeam._id)}
+                      disabled={surveyLoading}
+                    >
+                      Eliminar equipo
+                    </Button>
+                  </Grid>
+                </Grid>
+              </AccordionDetails>
+            </Accordion>
+          </Grid>
+        )}
+        <Grid item xs={12} md={6}>
+          <Paper elevation={3} className='p-4 h-full'>
+            <Box display='flex' justifyContent='space-between' alignItems='center'>
+              <Typography variant='h6' sx={{ color: "#3cba5e" }} className='font-bold'>
+                Indicador clave de equipo
+              </Typography>
               <Tooltip
                 title='
-                  El "Reporte Global del Equipo" resume datos recolectados de encuestas diarias de pulso, ofreciendo insights sobre la satisfacción, colaboración, compromiso y bienestar laboral del equipo. Esto permite a líderes y miembros del equipo tener una visión general del desempeño y áreas de mejora para impulsar el éxito colectivo.'
-                className='ml-2 mb-4 text-2xl'
+                "Indicador clave de equipo" se refiere a una medida importante utilizada para evaluar el rendimiento y la salud de un equipo. Estas métricas ayudan a los líderes a entender cómo está funcionando el equipo y guían las acciones para mejorar su eficiencia y colaboración.'
+                arrow
               >
-                <IconButton sx={{ fontSize: 28 }}>
-                  <CiCircleQuestion className='dark:text-tertiary' />
+                <IconButton sx={{ color: "#3cba5e" }}>
+                  <CiCircleQuestion />
                 </IconButton>
               </Tooltip>
-            </div>
-          </span>
-          <div className='flex items-center m-auto justify-center h-3/6'>
-            <span className='text-center mt-28 font-poppins w-full text-primary/50 font-bold text-4xl'>
+            </Box>
+            <Box display='flex' justifyContent='center' alignItems='center' height='300px'>
+              {Object.keys(metricsForToday).length > 0 ? (
+                <Charts />
+              ) : (
+                <Typography variant='body1' color='textSecondary'>
+                  Sin datos, intenta primero con una encuesta de pulso.
+                </Typography>
+              )}
+            </Box>
+          </Paper>
+        </Grid>
+
+        <Grid item xs={12} md={6}>
+          <Paper elevation={3} className='p-4 h-full'>
+            <Typography variant='h6' sx={{ color: "#3cba5e" }} className='font-bold'>
+              Reporte Global del Equipo
+            </Typography>
+            <Box display='flex' justifyContent='center' alignItems='center' height='300px'>
               {Object.keys(linesMetrics).length > 0 ? (
                 <LineCharts />
               ) : (
-                <p className='lg:text-2xl md:text-xl sm:text-base sm:p-2 sm:relative  sm:bottom-14 sm:justify-center lg:align-center lg:justify-center lg:my-auto lg:inset-0 lg:relative lg:top-1 dark:text-tertiary md:inset-0 md:align-center md:justify-center md:my-auto md:bottom-20 md:relative font-normal font-poppins mt-20'>
+                <Typography variant='body1' color='textSecondary'>
                   Sin datos, intenta primero con una encuesta de pulso.
-                </p>
+                </Typography>
               )}
-            </span>
-          </div>
-        </div>
-        <div className='lg:h-[400px] md:h-[380px]  lg:w-full md:w-[300px] lg:space-y-28 md:space-y-32  lg:mt-16 sm:h-[350px] sm:w-[350px]  lg:col-start-7 lg:row-start-2 lg:col-span-3  md:col-span-2 md:col-start-10 md:row-span-2 md:row-start-1 sm:my-16 rounded-md justify-center my-auto gap-y-4'>
-          <TrendingTopics />
-        </div>
-        <div
-          className='bg-tertiary/20 shadow-lg
-         shadow-primary/50 md:-mt-[500px]  lg:h-[400px] md:h-[320px]  sm:h-[320px] sm:w-[360px]  sm:mb-6 md:w-full lg:w-full 
-         dark:bg-quaternary/40
-     lg:col-span-3 md:row-start-3 md:col-start-11 md:col-span-2 lg:row-start-2 lg:row-span-2 lg:col-start-10  rounded-md  lg:place-content-start lg:self-start lg:items-start lg:justify-start lg:-my-12'
-        >
-          {" "}
-          {user.role ? (
-            <span className=''>
-              <span className='font-poppins  text-primary flex sm:text-lg mt-4 lg:ml-4 md:ml-4 sm:ml-4 lg:text-2xl dark:text-tertiary font-bold'>
-                Acciones Disponibles
-              </span>
-              <div className='md:flex md:flex-col sm:justify-center sm:m-auto sm:flex sm:flex-col sm:items-center md:justify-center md:items-center md:mt-4'>
-                <span
-                  disabled={surveyLoading}
-                  onClick={() => startCreatingSurvey(activeTeam.name, activeTeam._id)}
-                  className={
-                    !surveyLoading
-                      ? "btn-primary sm:w-2/3 sm:flex md:w-5/6 sm:items-center p-2 sm:justify-center font-poppins dark:hover:border-white dark:hover:border-1 dark:hover:duration-500 md:text-base md:p-1 lg:text-xl rounded-md lg:p-2 duration-700 hover:bg-amber-100 hover:text-primary mt-4"
-                      : "btn-secondary font-poppins  md:w-5/6 text-xl rounded-md p-2 duration-700 sm:flex sm:items-center sm:justify-center mt-4"
-                  }
-                >
-                  <span className='sm:flex sm:items-center sm:justify-center'> Encuesta de pulso</span>
-                </span>
-                <span
-                  disabled={surveyLoading}
-                  className={
-                    !surveyLoading
-                      ? "btn-primary sm:w-2/3 sm:flex md:w-5/6 sm:items-center p-2 sm:justify-center font-poppins dark:hover:border-white dark:hover:border-1 dark:hover:duration-500 md:text-base md:p-1 lg:text-xl rounded-md lg:p-2 duration-700 hover:bg-amber-100 hover:text-primary mt-4"
-                      : "btn-secondary font-poppins md:w-5/6 text-xl rounded-md p-2 duration-700 sm:flex sm:items-center sm:justify-center mt-4"
-                  }
-                >
-                  <span onClick={() => handleNavigate("/dashboard/retro")} className='sm:flex sm:items-center sm:justify-center'>
-                    {" "}
-                    Retrospectivas
-                  </span>
-                </span>
-                <span
-                  disabled={surveyLoading}
-                  className={
-                    !surveyLoading
-                      ? "btn-primary sm:w-2/3 sm:flex  md:w-5/6 sm:items-center p-2 sm:justify-center font-poppins dark:hover:border-white dark:hover:border-1 dark:hover:duration-500 md:text-base md:p-1 lg:text-xl rounded-md lg:p-2 duration-700 hover:bg-amber-100 hover:text-primary mt-4"
-                      : "btn-secondary font-poppins text-xl md:w-5/6 rounded-md p-2 duration-700 sm:flex sm:items-center sm:justify-center mt-4"
-                  }
-                >
-                  {isOpen && <ModalMembers closeModal={closeModal} />}
-                  <span
-                    onClick={() => {
-                      openModal();
-                      startGettingMembers(activeTeam._id);
-                      startToggleModal();
-                    }}
-                    className='sm:flex sm:items-center sm:justify-center'
-                  >
-                    Miembros
-                  </span>
-                </span>
-                <span
-                  disabled={surveyLoading}
-                  className={
-                    !surveyLoading
-                      ? "btn-primary sm:w-2/3  sm:flex md:w-5/6 sm:items-center p-2 sm:justify-center font-poppins dark:hover:border-white dark:hover:border-1 dark:hover:duration-500 md:text-base md:p-1 lg:text-xl rounded-md lg:p-2 duration-700 hover:bg-amber-100 hover:text-primary mt-4"
-                      : "btn-secondary font-poppins text-xl  md:w-5/6 rounded-md p-2 duration-700 sm:flex sm:items-center sm:justify-center mt-4"
-                  }
-                >
-                  <span onClick={() => startDeletingTeam(activeTeam._id)} className='sm:flex sm:items-center sm:justify-center'>
-                    {" "}
-                    Eliminar equipo
-                  </span>
-                </span>
-              </div>
-            </span>
-          ) : (
-            ""
-          )}
-        </div>
-      </div>
-    </section>
+            </Box>
+          </Paper>
+        </Grid>
+
+        <Grid item xs={12} md={4}>
+          <Paper elevation={3} className='p-4 h-full'>
+            <Box display='flex' justifyContent='space-between' alignItems='center'>
+              <Typography variant='h6' sx={{ color: "#3cba5e" }} className='font-bold'>
+                Recomendaciones Generales
+              </Typography>
+              <Tooltip
+                title='
+                Las Recomendaciones Generales resumen los datos recopilados de las encuestas diarias y ofrecen recomendaciones concretas y útiles. Estas recomendaciones están diseñadas para ayudar al equipo a tomar medidas específicas y efectivas para abordar áreas de mejora identificadas en las encuestas.'
+                arrow
+              >
+                <IconButton sx={{ color: "#3cba5e" }}>
+                  <CiCircleQuestion />
+                </IconButton>
+              </Tooltip>
+            </Box>
+            <Box display='flex' justifyContent='center' alignItems='center' height='300px'>
+              {shortRecomendation !== "There is not enought data." ? (
+                <UsePagination shortRecommendation={shortRecomendation} containerRef={containerRef} />
+              ) : (
+                <Typography variant='body1' color='textSecondary'>
+                  Sin datos, intenta primero con una encuesta de pulso.
+                </Typography>
+              )}
+            </Box>
+          </Paper>
+        </Grid>
+
+        <Grid item xs={12} md={4}>
+          <Paper elevation={3} className='p-4 h-full'>
+            <Typography variant='h6' sx={{ color: "#3cba5e" }} className='font-bold'>
+              Tareas
+            </Typography>
+            {task && <TaskTable tasks={task} />}
+          </Paper>
+        </Grid>
+
+        <Grid item xs={12} md={4}>
+          <Paper elevation={3} className='p-4 h-full'>
+            <Typography variant='h6' sx={{ color: "#3cba5e" }} className='font-bold'>
+              Temas de Tendencia
+              <Tooltip
+                title='Las Tendencias resumen los temas destacados en los comentarios durante las retrospectivas, proporcionando una visión general de los aspectos más discutidos por el equipo. Estos datos ayudan a identificar áreas clave de enfoque para mejorar la colaboración y el desempeño del equipo.'
+                arrow
+              >
+                <IconButton sx={{ color: "#3cba5e" }}>
+                  <CiCircleQuestion />
+                </IconButton>
+              </Tooltip>
+            </Typography>
+
+            <TrendingTopics />
+          </Paper>
+        </Grid>
+      </Grid>
+    </Container>
   );
 };

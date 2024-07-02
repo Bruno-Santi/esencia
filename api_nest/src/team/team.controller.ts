@@ -23,16 +23,17 @@ export class TeamController {
     private readonly ParseMongoIdPipe: ParseMongoIdPipe,
   ) {}
 
-  @Post(':scrumId')
-  create(
-    @Body() createTeamDto: CreateTeamDto,
-    @Param('scrumId', ParseMongoIdPipe) scrumId: Types.ObjectId,
-  ) {
-    return this.teamService.create(createTeamDto, scrumId);
+  @Post()
+  create(@Body() createTeamDto: CreateTeamDto) {
+    console.log(createTeamDto);
+
+    return this.teamService.create(createTeamDto);
   }
-  @Get(':scrumId')
-  GetTeams(@Param('scrumId', ParseMongoIdPipe) scrumId: Types.ObjectId) {
-    return this.teamService.findAllTeams(scrumId);
+  @Get(':userId')
+  GetTeams(@Param('userId') userId: string) {
+    console.log(userId);
+
+    return this.teamService.findAllTeams(userId);
   }
   @Delete(':teamId')
   deleteTeam(@Param('teamId') teamId: string) {

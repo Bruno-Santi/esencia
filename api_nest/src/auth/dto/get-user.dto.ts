@@ -17,7 +17,7 @@ export class GetUserDto {
   @ValidateIf((o) => !o.method || o.method !== 'Google')
   @IsNotEmpty()
   @IsString()
-  @MinLength(8)
+  @MinLength(3)
   password: string;
 
   @ValidateIf((o) => o.method)

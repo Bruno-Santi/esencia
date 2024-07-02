@@ -11,8 +11,6 @@ import { subscribeMail } from 'common/utils/subscribeMail';
 import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import { sendVerifyEmail } from 'common/utils/sendVerifyEmail';
 
-@UseGuards(ThrottlerGuard)
-@Throttle({ default: { limit: 50, ttl: 60000 } })
 @Injectable()
 export class EmailService {
   constructor(@InjectSendGrid() private readonly client: SendGridService) {}

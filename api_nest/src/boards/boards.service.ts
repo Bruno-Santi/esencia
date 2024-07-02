@@ -1,5 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateBoardDto, UpdateBoardDto, UpdateBoardDatesDto } from './dto/create-board.dto';
+import {
+  CreateBoardDto,
+  UpdateBoardDto,
+  UpdateBoardDatesDto,
+} from './dto/create-board.dto';
 
 import { Board } from './entities/board.entity';
 import { InjectModel } from '@nestjs/mongoose';
@@ -12,7 +16,7 @@ export class BoardsService {
   constructor(
     @InjectModel(Board.name) private boardModel,
     private readonly teamService: TeamService,
-  ) { }
+  ) {}
   private async checkTeam(team_id: string) {
     console.log(team_id);
     try {
@@ -39,6 +43,8 @@ export class BoardsService {
       const newBoard = await this.boardModel.create(createBoardDto);
       return newBoard;
     } catch (error) {
+      console.log(error);
+
       throw new BadRequestException(error.message);
     }
   }
@@ -125,16 +131,24 @@ export class BoardsService {
         model: 'Card',
       });
 
-      const result = boards.map(board => {
-        const totalCards = board.columns.reduce((sum, column) => sum + column.cards.length, 0);
+      const result = boards.map((board) => {
+        const totalCards = board.columns.reduce(
+          (sum, column) => sum + column.cards.length,
+          0,
+        );
         const totalFinishedCards = board.columns.reduce((sum, column) => {
-          return sum + column.cards.filter(card => card.status === 'Finished').length;
+          return (
+            sum +
+            column.cards.filter((card) => card.status === 'Finished').length
+          );
         }, 0);
 
-        const allCards = board.columns.flatMap(column => column.cards.map(card => ({
-          title: card.title,
-          column: column.name
-        })));
+        const allCards = board.columns.flatMap((column) =>
+          column.cards.map((card) => ({
+            title: card.title,
+            column: column.name,
+          })),
+        );
 
         return {
           title: board.title,
@@ -143,12 +157,11 @@ export class BoardsService {
           totalFinishedCards,
           cards: allCards,
           startDate: board.start_date,
-          endDate: board.end_date
+          endDate: board.end_date,
         };
       });
 
-
-      console.log("Response Data", result);
+      console.log('Response Data', result);
 
       // Send the response
       return { result };
@@ -157,7 +170,10 @@ export class BoardsService {
     }
   }
 
-  async updateBoardDates(board_id: string, updateBoardDatesDto: UpdateBoardDatesDto): Promise<Board> {
+  async updateBoardDates(
+    board_id: string,
+    updateBoardDatesDto: UpdateBoardDatesDto,
+  ): Promise<Board> {
     try {
       await this.checkBoard(board_id);
       const updatedBoard = await this.boardModel.findOneAndUpdate(
@@ -166,10 +182,8 @@ export class BoardsService {
         { new: true },
       );
       return updatedBoard;
-
     } catch (error) {
       throw new BadRequestException(error.message);
     }
-    
   }
 }

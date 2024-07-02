@@ -16,10 +16,11 @@ export const NoTeams = () => {
 
   console.log(activeTeam);
   console.log(isOpenModal);
+  console.log(userTeams);
 
   return (
     <div className='flex flex-col justify-center mx-auto text-3xl w-2/4 font-light text-center pt-48 text-primary/70 font-poppins dark:text-tertiary'>
-      {user.firstLoggin === true && <ModalTeam closeModal={toggleModal} />}
+      {!userTeams === true && <ModalTeam closeModal={toggleModal} />}
 
       <div className='mx-auto justify-center flex flex-col mb-8 space-y-6'>
         <div className='mx-auto space-y-6'>

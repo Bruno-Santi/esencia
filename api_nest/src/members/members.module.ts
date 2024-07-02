@@ -7,6 +7,8 @@ import { Member, MemberSchema } from './entities/member.entity';
 import { JwtAuthGuard } from 'common/jwt-guard/jwt-guard.guard';
 import { SendGridModule } from '@ntegral/nestjs-sendgrid';
 import { JwtModule } from '@nestjs/jwt';
+import { User, UserSchema } from 'src/auth/entities/user.entity';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   controllers: [MembersController],
@@ -17,6 +19,13 @@ import { JwtModule } from '@nestjs/jwt';
     }),
     MongooseModule.forFeature([
       {
+        name: User.name,
+        schema: UserSchema,
+        collection: 'user',
+      },
+    ]),
+    MongooseModule.forFeature([
+      {
         name: Member.name,
         schema: MemberSchema,
         collection: 'members',
@@ -24,6 +33,7 @@ import { JwtModule } from '@nestjs/jwt';
     ]),
     JwtModule,
     TeamModule,
+    AuthModule,
   ],
   exports: [MembersModule, MongooseModule, MembersService],
 })

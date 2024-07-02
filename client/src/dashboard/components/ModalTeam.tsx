@@ -20,7 +20,7 @@ export const ModalTeam: React.FC<{
         <Box sx={{ position: "absolute", top: 4, right: 4 }}>
           <IconButton
             className={`text-5xl ${theme !== "dark" ? `text-primary/60` : `text-tertiary`} z-1 cursor-pointer duration-700 hover:text-secondary `}
-            onClick={handleClose}
+            onClick={closeModal}
           >
             <IoMdClose className='dark:text-teal-50 text-secondary' />
           </IconButton>
@@ -28,7 +28,7 @@ export const ModalTeam: React.FC<{
       </DialogTitle>
       <DialogContent className='dark:bg-primary overflow-y-hidden'>
         <div className='flex flex-col dark:bg-primary w-full'>
-          <TeamForm closeModal={handleClose} handleClose={handleClose} generateAssessment={generateAssessment} />
+          <TeamForm closeModal={closeModal} handleClose={handleClose} generateAssessment={generateAssessment} />
         </div>
       </DialogContent>
     </Dialog>

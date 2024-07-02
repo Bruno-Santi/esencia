@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes, useParams, useSearchParams } from "react-router-dom";
-import { LandingPage } from "../components";
+import { LandingPage, NewAssessment } from "../components";
 import { AuthRoutes } from "../auth/routes/AuthRoutes";
 import { DashboardRoutes } from "../dashboard/routes/DashboardRoutes";
 import { useAuthSlice } from "../hooks/useAuthSlice";
@@ -13,13 +13,16 @@ import { NewLandingPage } from "../components/NewLandingPage";
 import Profile from "../auth/pages/Profile";
 import { Faqs } from "../components/Faqs";
 import { FaqsLanding } from "../components/FaqsLanding";
+import { useDashboard } from "../hooks/useDashboard";
 
 export const AppRouter = () => {
   const [searchParams1] = useSearchParams();
   const { status, startLogingOut } = useAuthSlice();
   const { user } = useAuthSlice();
-  console.log(user);
+  const { activeTeam } = useDashboard();
 
+  const isAdmin = activeTeam?.members?.some((member) => member.id === user.id && member.role === "admin");
+  console.log(isAdmin);
   const searchParams = new URLSearchParams(location.search);
   const [tokenParams, setTokenParams] = useState("");
   const [loading, setLoading] = useState(true);
@@ -100,10 +103,10 @@ export const AppRouter = () => {
               {userToken && <Route element={<MembersRoutes />} path={`/members/*`} />}
               {userTokenLocal && <Route element={<MembersRoutes />} path={`/members/*`} />}
               <Route element={<OnBoardingRoutes />} path={`/onboarding/*`} />
-              {!user.role && <Route element={<Navigate to='/dashboard' />} path={`/dashboard/retro`} />}
+              {!isAdmin && <Route element={<Navigate to='/dashboard' />} path={`/dashboard/retro`} />}
               <Route element={<DashboardRoutes />} path={`/dashboard/*`} />
               <Route element={<Faqs />} path={`/faqs`} />
-              {!user.role && <Route element={<Navigate to='/dashboard' />} path={`/dashboard/assessment`} />}
+              {!isAdmin && <Route element={<Navigate to='/dashboard' />} path={`/dashboard/assessment`} />}
 
               <Route element={<TeamsRoutes />} path={`/teams/*`} />
               <Route element={<Navigate to='/dashboard' />} path={`/teams/login`} />
@@ -115,7 +118,7 @@ export const AppRouter = () => {
               <Route element={<Login />} path={"/teams/login"} />
               {userToken && <Route element={<MembersRoutes />} path={`/members/*`} />}
               {userTokenLocal && <Route element={<MembersRoutes />} path={`/members/*`} />}
-
+              <Route element={<NewAssessment />} path={"/new-assessment"} />
               <Route element={<NewLandingPage />} path={"/"} />
               <Route element={<FaqsLanding />} path={"/faqs"} />
               <Route element={<AuthRoutes />} path={`/auth/*`} />

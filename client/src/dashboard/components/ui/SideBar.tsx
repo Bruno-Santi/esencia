@@ -10,6 +10,7 @@ import { ModalTeam } from "../ModalTeam";
 import { useModal } from "../../../hooks";
 import AddIcon from "@mui/icons-material/Add";
 import { useAuthSlice } from "../../../hooks/useAuthSlice";
+import { useDashboard } from "../../../hooks/useDashboard";
 
 export const SideBarContext = createContext({ expanded: false, setExpanded: () => {}, teamsOpen: false, setTeamsOpen: () => {} });
 
@@ -17,7 +18,7 @@ export const SideBar = ({ children }) => {
   const [expanded, setExpanded] = useState(false);
   const [teamsOpen, setTeamsOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-
+  const { isAdmin } = useDashboard();
   const theme = localStorage.getItem("theme");
 
   React.useEffect(() => {
@@ -112,15 +113,12 @@ export const SideBarItem = ({ icon, text, active, alert }) => {
             <AccordionDetails>
               <Typography>
                 <Teams />
-                {user?.role ? (
-                  <ListItemIcon onClick={openModal}>
-                    <span className='font-poppins justify-center text-center m-auto dark:text-tertiary'>
-                      <AddIcon /> Nuevo equipo
-                    </span>
-                  </ListItemIcon>
-                ) : (
-                  ""
-                )}
+
+                <ListItemIcon onClick={openModal}>
+                  <span className='font-poppins justify-center text-center m-auto dark:text-tertiary'>
+                    <AddIcon /> Nuevo equipo
+                  </span>
+                </ListItemIcon>
 
                 <div>{isOpen && <ModalTeam closeModal={closeModal} />}</div>
               </Typography>

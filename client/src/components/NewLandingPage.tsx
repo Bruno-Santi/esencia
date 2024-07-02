@@ -26,10 +26,12 @@ export const NewLandingPage = () => {
   return (
     <LandingLayaout>
       <div>
-        <Home />
-      </div>
-      <div>
-        <WhyUs />
+        <div ref={assessmentRef} id='assessment'>
+          <Assessment />
+        </div>
+        <div>
+          <Home />
+        </div>
         <div className='flex flex-col mt-6 sm:items-center sm:justify-center sm:flex sm:flex-col items-center font-poppins'>
           <h1 className=' sm:text-xl  sm:hidden md:flex lg:flex items-center justify-center m-auto mt-6 lg:text-2xl md:text-2xl font-bold lg:w-full md:w-3/3'>
             Mira este breve video para entender la magia de <br></br>
@@ -55,9 +57,7 @@ export const NewLandingPage = () => {
       <div ref={testimonialsRef} id='testimonials'>
         <Testimonials />
       </div>
-      <div ref={assessmentRef} id='assessment'>
-        <Assessment />
-      </div>
+      <WhyUs />
       <div ref={featuresRef} id='features'>
         <Features />
       </div>

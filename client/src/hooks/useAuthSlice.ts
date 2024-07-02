@@ -106,9 +106,9 @@ export const useAuthSlice = () => {
   const startRegisteringUser = async ({ name, email, password }) => {
     console.log(user);
     const avtColor = getRandomColor();
-    const role = "admin";
+
     try {
-      const resp = await api.post(`/api/auth/register`, { name, email, password, avtColor, role });
+      const resp = await api.post(`/api/auth/register`, { name, email, password, avtColor });
       toastSuccess(`Registro exitoso. Redireccionando a login.`);
       toast.info("Te hemos enviado un email de confirmación.", {
         autoClose: false,

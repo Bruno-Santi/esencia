@@ -13,7 +13,11 @@ import {
 } from '@nestjs/common';
 import { BoardsService } from './boards.service';
 import { CardService } from './card.service';
-import { CreateBoardDto, UpdateBoardDto, UpdateBoardDatesDto } from './dto/create-board.dto';
+import {
+  CreateBoardDto,
+  UpdateBoardDto,
+  UpdateBoardDatesDto,
+} from './dto/create-board.dto';
 import { CreateCardDto, UpdateCardDto } from './dto/create-card.dto';
 
 import { Socket } from 'socket.io';
@@ -30,7 +34,7 @@ export class BoardController {
 
   @Post()
   createBoard(@Body() createBoardDto: CreateBoardDto) {
-    console.info('createBoardDto', createBoardDto);
+    console.log('createBoardDto', createBoardDto);
     return this.boardsService.create(createBoardDto);
   }
 
@@ -42,10 +46,9 @@ export class BoardController {
 
   @Get('roadmap/:team_id/')
   findforRoadmap(@Param('team_id') team_id: string) {
-    console.log("Requesting for roadmap data",team_id);
+    console.log('Requesting for roadmap data', team_id);
     return this.boardsService.findforRoadmap(team_id);
   }
-
 
   @Get('/one/:id')
   findOne(@Param('id') id: string) {
@@ -175,18 +178,19 @@ export class BoardController {
   async updateBoardDates(
     @Param('id') id: string,
     @Body() updateBoardDatesDto: UpdateBoardDatesDto,
-  ){
-    console.log(updateBoardDatesDto, id)
+  ) {
+    console.log(updateBoardDatesDto, id);
     try {
-      const updatedBoard = await this.boardsService.updateBoardDates(id, updateBoardDatesDto);
+      const updatedBoard = await this.boardsService.updateBoardDates(
+        id,
+        updateBoardDatesDto,
+      );
       return {
         message: 'Board dates updated successfully',
         item: updatedBoard,
       };
     } catch (error) {
-      throw new NotFoundException(
-        `Error updating dates: ${error.message}`,
-      );
+      throw new NotFoundException(`Error updating dates: ${error.message}`);
     }
   }
 }
