@@ -35,7 +35,6 @@ export class AgileassessmentController {
       teamChallenges,
       teamCultureAndValues,
       agileQuestions,
-      userId,
     );
   }
 

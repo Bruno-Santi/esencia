@@ -13,7 +13,12 @@ class AgileQuestion {
   @Prop({ required: true })
   score: number;
 }
-
+interface AgileIndex {
+  Resultados: number;
+  Metodología: number;
+  Cultura: number;
+  AgileIndex: number;
+}
 @Schema({ collection: 'tempAgileAssessment' })
 export class TempAgileAssessment {
   @Prop({ required: true })
@@ -26,13 +31,25 @@ export class TempAgileAssessment {
   agileQuestions: AgileQuestion[];
 
   @Prop({ required: true })
-  teamGoalsAndFunctions: string;
+  teamObjectivesAndFunctions: string;
 
   @Prop({ required: true })
-  teamChallenges: string;
+  teamDailyChallenges: string;
 
   @Prop({ required: true })
   teamCultureAndValues: string;
+
+  @Prop({ required: true })
+  teamId: string;
+
+  @Prop()
+  agileindex: AgileIndex[];
+
+  @Prop()
+  analysis: string;
+
+  @Prop()
+  recommendations: string;
 }
 
 export const TempAgileAssessmentSchema =

@@ -10,6 +10,7 @@ import { Model, Types } from 'mongoose';
 import { Team } from './entities/team.entity';
 import { AuthService } from 'src/auth/auth.service';
 import { convertStringToObj } from '../../common/utils/converStringToObj';
+import { log } from 'console';
 
 @Injectable()
 export class TeamService {
@@ -64,7 +65,18 @@ export class TeamService {
       throw new BadRequestException(error.message);
     }
   }
+  async createTempTeam(teamName) {
+    console.log(teamName);
 
+    try {
+      const team = await this.teamModel.create({
+        name: teamName.name,
+      });
+      return team;
+    } catch (error) {
+      console.log(error);
+    }
+  }
   async deleteOne(teamId) {
     const convertedTeam = convertStringToObj(teamId);
     try {
@@ -122,4 +134,24 @@ export class TeamService {
       console.log(error);
     }
   };
+
+  async addAdmin(teamId: string, newAdmin: { id: string; role: string }) {
+    if (newAdmin.role !== 'admin') {
+      throw new BadRequestException('New member role must be admin');
+    }
+
+    const team = await this.searchTeam(teamId);
+
+    const existingAdmin = team.members.find(
+      (member) => member.role === 'admin',
+    );
+    if (existingAdmin) {
+      throw new BadRequestException('Admin member already exists in the team');
+    }
+
+    team.members.push(newAdmin);
+    await team.save();
+
+    return team;
+  }
 }

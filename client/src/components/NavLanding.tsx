@@ -59,7 +59,7 @@ export const NavLanding = () => {
     <div>
       <nav className='min-w-full  bg-primary text-lg h-[90px] text-tertiary font-poppins flex items-center justify-between'>
         <div className='lg:ml-8 md:ml-20 sm:ml-8 object-contain flex lg:items-center'>
-          <img src={logo} className='lg:w-16 lg:h-16 md:h-12 md:w-12 sm:w-12' alt='Logo' />
+          <img onClick={() => handleNavigate("/")} src={logo} className='lg:w-16 lg:h-16 md:h-12 md:w-12 sm:w-12 cursor-pointer' alt='Logo' />
           <div className='flex flex-col -space-y-2'>
             <span className='ml-4 select-none lg:flex lg:items-center md:flex md:items-center md:text-[16px]  sm:hidden'>ESENCIA.APP</span>
             <span className='italic ml-4 text-sm text-secondary select-none sm:hidden md:block lg:block'>Beta</span>

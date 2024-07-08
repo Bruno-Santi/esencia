@@ -24,7 +24,6 @@ export class AgileassessmentService {
     teamDailyChallenges: string,
     teamCultureAndValues,
     agileQuestions: any,
-    userId,
   ): Promise<any> {
     //console.log("Creating Assessment for teamid: ", teamId);
     // console.log("Team Objectives and Functions: ", teamObjectivesAndFunctions);
@@ -32,6 +31,14 @@ export class AgileassessmentService {
     // console.log("Team Culture and Values: ", teamCultureAndValues);
     //console.log("Agile Questions: ", agileQuestions);
     //Validate if teamid already has an assessment
+    console.log(
+      teamId,
+      teamObjectivesAndFunctions,
+      teamDailyChallenges,
+      teamCultureAndValues,
+      agileQuestions,
+    );
+
     const existingAssessment = await this.agilityAssessmentModel.findOne({
       teamId: teamId,
     });
@@ -51,14 +58,18 @@ export class AgileassessmentService {
         agileQuestions,
         AgileIndex,
       );
+      console.log(AssessmentAnalysis);
+
       const AssessmentRecommendations = await generateAssessmentRecommendations(
         AssessmentAnalysis,
         this.openaiApiKey,
       );
+      console.log(AssessmentRecommendations);
+
       const Assessment = new this.agilityAssessmentModel({
         teamId: teamId,
         date: new Date(),
-        teamContext: teamObjectivesAndFunctions,
+        teamObjectivesAndFunctions,
         objectivesAndFunctions: teamObjectivesAndFunctions,
         dailyChallenges: teamDailyChallenges,
         cultureAndValues: teamCultureAndValues,
@@ -69,7 +80,7 @@ export class AgileassessmentService {
       });
 
       await Assessment.save();
-      await this.authService.setFirstLoggin(userId);
+
       console.log('Assessment saved');
       return Assessment;
     } catch (error) {
@@ -87,6 +98,7 @@ export class AgileassessmentService {
         Metodologia: 0,
         Cultura: 0,
       };
+      console.log(agileQuestions);
 
       const possibleScores: { [area: string]: number } = {
         Resultados: 0,
@@ -97,6 +109,7 @@ export class AgileassessmentService {
       // Iterate through each question
       agileQuestions.forEach((question) => {
         const { area, score } = question;
+        console.log(score);
 
         // Accumulate the score for the corresponding area
         areas[area] += score;

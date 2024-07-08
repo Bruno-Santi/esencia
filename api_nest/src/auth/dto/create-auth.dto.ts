@@ -22,6 +22,4 @@ export class CreateAuthDto {
   @ValidateIf((o) => o.method !== 'Google')
   @IsString()
   avtColor: string;
-  @IsString()
-  role: string;
 }

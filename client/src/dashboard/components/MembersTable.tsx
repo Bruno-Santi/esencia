@@ -12,7 +12,6 @@ export const MembersTable = () => {
   const handleAccept = (userId, memberName) => {
     startDeletingMember(userId, activeTeam._id, memberName);
   };
-  console.log(membersActiveTeam[0]);
   const isAdmin = activeTeam?.members?.some((member) => member.id === user.id && member.role === "admin");
 
   const handleCancel = () => toast.error("Cancelled");
@@ -107,7 +106,7 @@ export const MembersTable = () => {
                   </TableCell>
                   <TableCell>
                     <span className='text-red-600 cursor-pointer text-lg lg:text-2xl'>
-                      <FiTrash2 onClick={() => startDeletingMemberInComponent(member._id, member.name)} />
+                      {user.id !== member._id && <FiTrash2 onClick={() => startDeletingMemberInComponent(member._id, member.name)} />}
                     </span>
                   </TableCell>
                 </>

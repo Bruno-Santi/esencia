@@ -17,6 +17,10 @@ import { TeamService } from 'src/team/team.service';
 import { SlackServiceService } from 'src/slack-service/slack-service.service';
 import { convertStringToObj } from 'common/utils/converStringToObj';
 import { EmailService } from 'src/email/email.service';
+import {
+  TempAgileAssessment,
+  TempAgileAssessmentSchema,
+} from 'src/temp-agile-assessment/entities/temp-agile-assessment.entity';
 
 @Injectable()
 export class AuthService {
@@ -30,6 +34,8 @@ export class AuthService {
     private readonly teamModel: Model<Team>,
     private readonly slackService: SlackServiceService,
     private readonly emailService: EmailService,
+    @InjectModel(TempAgileAssessment.name)
+    private readonly tempAgileAssessmentModel: Model<TempAgileAssessment>,
   ) {}
 
   async create(createAuthDto: CreateAuthDto) {
@@ -71,14 +77,23 @@ export class AuthService {
 
       const user = await this.userModel.findOneAndUpdate(
         { email: payload.email },
-        { emailVerified: true },
-        { isRegistered: true },
+        { emailVerified: true, isRegistered: true },
+        { new: true },
       );
 
       if (!user) {
         throw new BadRequestException(
           'Token inválido o usuario no encontrado.',
         );
+      }
+
+      const checkAssessmentTeam = await this.tempAgileAssessmentModel.findOne({
+        email: user.email,
+      });
+
+      if (checkAssessmentTeam) {
+        const newAdmin = { id: user._id.toString(), role: 'admin' };
+        await this.teamService.addAdmin(checkAssessmentTeam.teamId, newAdmin);
       }
 
       const message = `Un nuevo usuario se ha registrado: ${user.name} (${user.email})`;
@@ -92,7 +107,6 @@ export class AuthService {
       throw new BadRequestException('Token inválido o expirado.');
     }
   }
-
   async resendVerificationEmail(token: string) {
     try {
       const payload = this.jwtService.verify(token, {

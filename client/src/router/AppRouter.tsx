@@ -107,7 +107,7 @@ export const AppRouter = () => {
               <Route element={<DashboardRoutes />} path={`/dashboard/*`} />
               <Route element={<Faqs />} path={`/faqs`} />
               {!isAdmin && <Route element={<Navigate to='/dashboard' />} path={`/dashboard/assessment`} />}
-
+              <Route element={<Navigate to='/dashboard' />} path={`/new-assessment`} />
               <Route element={<TeamsRoutes />} path={`/teams/*`} />
               <Route element={<Navigate to='/dashboard' />} path={`/teams/login`} />
               <Route path='/profile' element={<Profile />} />

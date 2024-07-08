@@ -19,11 +19,11 @@ export class CreateTempAgileAssessmentDto {
 
   @IsNotEmpty()
   @IsString()
-  teamGoalsAndFunctions: string;
+  teamObjectivesAndFunctions: string;
 
   @IsNotEmpty()
   @IsString()
-  teamChallenges: string;
+  teamDailyChallenges: string;
 
   @IsNotEmpty()
   @IsString()

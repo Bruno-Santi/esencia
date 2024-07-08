@@ -10,6 +10,7 @@ import { InjectSendGrid, SendGridService } from '@ntegral/nestjs-sendgrid';
 import { subscribeMail } from 'common/utils/subscribeMail';
 import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import { sendVerifyEmail } from 'common/utils/sendVerifyEmail';
+import { sendAssessmentEmail } from 'common/utils/sendAssessmentEmail';
 
 @Injectable()
 export class EmailService {
@@ -45,6 +46,21 @@ export class EmailService {
   async sendVerificationEmail(user, token: string) {
     try {
       const emailData = await sendVerifyEmail(user.name, user.email, token);
+      await this.client.send(emailData);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async sendAssessmentEmail(data) {
+    console.log(data);
+    try {
+      const emailData = await sendAssessmentEmail(
+        data.analysis,
+        data.email,
+        data.agileindex,
+        data.teamName,
+      );
       await this.client.send(emailData);
     } catch (error) {
       console.log(error);

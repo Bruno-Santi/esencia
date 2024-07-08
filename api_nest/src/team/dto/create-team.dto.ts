@@ -31,5 +31,5 @@ export class CreateTeamDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => MemberDto)
-  members?: MemberDto[];
+  members?: MemberDto[] = [];
 }
