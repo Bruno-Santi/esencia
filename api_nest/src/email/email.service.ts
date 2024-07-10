@@ -53,13 +53,13 @@ export class EmailService {
   }
 
   async sendAssessmentEmail(data) {
-    console.log(data);
+    console.log(data[0].email);
     try {
       const emailData = await sendAssessmentEmail(
-        data.analysis,
-        data.email,
-        data.agileindex,
-        data.teamName,
+        data[0].analysis,
+        data[0].email,
+        data[0].agileindex,
+        data[0].teamName,
       );
       await this.client.send(emailData);
     } catch (error) {

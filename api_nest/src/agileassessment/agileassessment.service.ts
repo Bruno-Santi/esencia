@@ -65,7 +65,12 @@ export class AgileassessmentService {
         this.openaiApiKey,
       );
       console.log(AssessmentRecommendations);
-
+      function formatAnalysisText(analysis) {
+        return analysis
+          .split('.')
+          .map((sentence) => sentence.trim())
+          .join('.\n');
+      }
       const Assessment = new this.agilityAssessmentModel({
         teamId: teamId,
         date: new Date(),
@@ -75,7 +80,7 @@ export class AgileassessmentService {
         cultureAndValues: teamCultureAndValues,
         agileQuestions: agileQuestions,
         agileindex: AgileIndex,
-        analysis: AssessmentAnalysis.analysis,
+        analysis: formatAnalysisText(AssessmentAnalysis.analysis),
         recommendations: AssessmentRecommendations,
       });
 

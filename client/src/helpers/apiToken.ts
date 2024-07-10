@@ -10,6 +10,9 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const storedTokenScrum = localStorage.getItem("authToken");
+
+    console.log(storedTokenScrum);
+
     if (storedTokenScrum) {
       const cleanedToken = storedTokenScrum.replace(/^"(.*)"$/, "$1");
       config.headers.Authorization = `Bearer ${cleanedToken}`;

@@ -67,7 +67,12 @@ export class TempAgileAssessmentService {
         );
 
       console.log(assessment);
-
+      function formatAnalysisText(analysis) {
+        return analysis
+          .split('.')
+          .map((sentence) => sentence.trim())
+          .join('.\n');
+      }
       const tempAssessment = new this.tempAgileAssessmentModel({
         email: data.email,
         teamName: teamName,
@@ -77,16 +82,21 @@ export class TempAgileAssessmentService {
         teamCultureAndValues: teamCultureAndValues,
         teamId: teamId,
         agileindex: assessment.agileindex,
-        analysis: assessment.analysis,
+        analysis: formatAnalysisText(assessment.analysis),
         recommendations: assessment.recommendations,
       });
 
       await tempAssessment.save();
-      await this.emailService.sendAssessmentEmail(tempAssessment);
+
       return tempAssessment;
     } catch (error) {
       console.log(error);
       throw new BadRequestException('Error al crear la evaluación.');
+    } finally {
+      const tempAssessment = await this.tempAgileAssessmentModel.find({
+        email: data.email,
+      });
+      await this.emailService.sendAssessmentEmail(tempAssessment);
     }
   }
 

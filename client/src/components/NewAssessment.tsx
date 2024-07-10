@@ -8,11 +8,11 @@ import Typography from "@mui/material/Typography";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import { Backdrop, CircularProgress, TextField } from "@mui/material";
+import { Backdrop, CircularProgress, Grid, Paper, StepConnector, StepIcon, styled, TextField } from "@mui/material";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import api from "../helpers/apiToken";
-import { useNavigateTo } from "../hooks";
+import { useDocumentTitle, useNavigateTo } from "../hooks";
 import { toastSuccess, toastWarning } from "../helpers";
 import { BackButton } from "../dashboard/components";
 import { LandingLayaout } from "../layaout/LandingLayaout";
@@ -109,6 +109,7 @@ const validationSchema = Yup.object().shape({
 });
 
 export const NewAssessment = () => {
+  useDocumentTitle("Nuevo Assessment | Esencia.app");
   const [activeStep, setActiveStep] = React.useState(0);
   const [isLoading, setIsLoading] = React.useState(false);
   const handleNext = () => {
@@ -148,17 +149,41 @@ export const NewAssessment = () => {
     }
     console.log(data);
   };
+  const CustomStepIconRoot = styled("div")(({ theme, ownerState }) => ({
+    color: ownerState.completed ? "#04a43c" : ownerState.active ? "#04a43c" : theme.palette.grey[500],
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  }));
 
+  const CustomStepIcon = (props) => {
+    const { active, completed, className } = props;
+
+    return (
+      <CustomStepIconRoot ownerState={{ completed, active }} className={className}>
+        <StepIcon {...props} />
+      </CustomStepIconRoot>
+    );
+  };
+
+  const CustomStepLabel = styled(StepLabel)(({ theme }) => ({
+    "& .MuiStepLabel-label": {
+      color: "#04a43c",
+    },
+    "& .MuiStepLabel-iconContainer": {
+      color: "#04a43c",
+    },
+  }));
   return (
     <LandingLayaout>
       <section className='w-2/3 flex animate__animated animate__fadeIn animate__slower  justify-center items-center font-poppins  m-auto pb-40 min-h-screen'>
         <Box sx={{ width: "100%" }}>
-          <Stepper activeStep={activeStep}>
-            {steps.map((label) => (
+          <Stepper activeStep={activeStep} alternativeLabel connector={<StepConnector sx={{ "& .MuiStepConnector-line": { borderColor: "#04a43c" } }} />}>
+            {steps.map((label, index) => (
               <Step key={label}>
-                <StepLabel>
+                <CustomStepLabel StepIconComponent={(props) => <CustomStepIcon {...props} />}>
                   <span className='font-poppins text-lg'>{label}</span>
-                </StepLabel>
+                </CustomStepLabel>
               </Step>
             ))}
           </Stepper>
@@ -177,13 +202,72 @@ export const NewAssessment = () => {
                   <React.Fragment>
                     <Box sx={{ mt: 2, mb: 1 }}>
                       {activeStep === 0 && (
-                        <div className='flex flex-col items-center p-16 animate__animated animate__fadeIn animate__slower'>
-                          <Typography variant='h6'>Bienvenido a Esencia, la herramienta de gestión de equipos ágiles.</Typography>
-                          <Typography>
-                            Para comenzar, hemos generado un formulario para crear un assessment para tu equipo, el cual te enviaremos los resultados por
-                            correo.
+                        <Box className='animate__animated animate__fadeIn animate__slower' sx={{ pt: 6, textAlign: "center" }}>
+                          <Typography variant='h6' component='span' sx={{ fontFamily: "Poppins", width: "100%", mb: 3 }}>
+                            En Esencia, comprendemos la importancia de la agilidad en el éxito de los equipos. Nuestro Agile Assessment es una herramienta
+                            poderosa que te permite evaluar el nivel de agilidad de tu equipo y obtener recomendaciones personalizadas para mejorar.
                           </Typography>
-                        </div>
+
+                          <Grid container spacing={3} sx={{ justifyContent: "center", mt: 6 }}>
+                            <Grid item xs={12} md={6} className='text-left'>
+                              <Paper elevation={3} sx={{ p: 2 }}>
+                                <Box sx={{ mb: 3 }}>
+                                  <Typography variant='h5' component='h1' fontWeight='bold'>
+                                    Beneficios:
+                                  </Typography>
+                                  <Typography>
+                                    <strong className='text-secondary'>Mejora</strong> la productividad y la colaboración de tu equipo.
+                                  </Typography>
+                                  <Typography>
+                                    <strong className='text-secondary'>Identifica</strong> áreas de mejora y fortalezas en tu enfoque ágil.
+                                  </Typography>
+                                  <Typography>
+                                    <strong className='text-secondary'>Recibe</strong> recomendaciones personalizadas para impulsar la efectividad de tu equipo.
+                                  </Typography>
+                                  <Typography>
+                                    <strong className='text-secondary'>Accede</strong> a recursos y guías para implementar prácticas ágiles efectivas.
+                                  </Typography>
+                                </Box>
+
+                                <Box className='text-left'>
+                                  <Typography variant='h5' component='h1' fontWeight='bold'>
+                                    ¿Qué evaluamos en el Assessment?:
+                                  </Typography>
+                                  <div className='text-left'>
+                                    <Typography>¿El equipo es capaz de generar resultados de valor para el cliente?</Typography>
+                                    <Typography>¿El equipo utiliza as mejores prácticas de la agilidad?</Typography>
+                                    <Typography>¿El equipo tiene el mindset y cultura necesario para adaptarse a los desafíos del entorno?</Typography>
+                                  </div>
+                                </Box>
+                              </Paper>
+                            </Grid>
+
+                            <Grid item xs={12} md={6} className='text-left'>
+                              <Paper elevation={3} sx={{ p: 4 }}>
+                                <Typography variant='h5' component='h1' fontWeight='bold'>
+                                  Como funciona:
+                                </Typography>
+                                <Typography>
+                                  <strong className='text-secondary'>Registra tu equipo:</strong> Crea tu usuario y equipo para comenzar el camino hacia conocer
+                                  la agilidad de tu equipo.
+                                </Typography>
+                                <Typography>
+                                  <strong className='text-secondary'>Completa el Assessment:</strong> Responde a una serie de preguntas diseñadas para evaluar
+                                  diferentes aspectos de la agilidad en tu equipo.
+                                </Typography>
+                                <Typography>
+                                  <strong className='text-secondary'>Recibe tu Reporte de Agilidad:</strong> Recibirás un informe detallado que resume los
+                                  resultados de tu evaluación, destacando las áreas de mejora y las fortalezas de tu equipo.
+                                </Typography>
+                                <Typography>
+                                  <strong className='text-secondary'>Revisa Recomendaciones Personalizadas:</strong> Basado en tus respuestas, recibirás
+                                  recomendaciones específicas para mejorar la agilidad de tu equipo, junto con recursos útiles para implementar cambios
+                                  efectivos.
+                                </Typography>
+                              </Paper>
+                            </Grid>
+                          </Grid>
+                        </Box>
                       )}
                       {activeStep === 1 && (
                         <div className='space-y-8  animate__animated animate__fadeIn animate__slower '>

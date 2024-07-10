@@ -45,15 +45,10 @@ export class AuthService {
       const user = await this.userModel.create(newUser);
 
       const token = this.jwtService.sign(
-        {
-          email: user.email,
-        },
-        {
-          secret: process.env.JWT_SECRET_KEY,
-          expiresIn: '1d',
-        },
+        { email: user.email },
+        { secret: process.env.JWT_SECRET_KEY, expiresIn: '1d' },
       );
-      await this.emailService.sendVerificationEmail(user, token);
+      await this.emailService.sendVerificationEmail(user.email, token);
 
       return {
         payload: `Usuario ${user.email} creado correctamente!`,
@@ -67,10 +62,8 @@ export class AuthService {
   }
 
   async verifyEmail(token: string) {
-    const cleanToken = token.replace(/[^a-zA-Z0-9-_.]/g, '');
-
     try {
-      // Verificar el token JWT
+      const cleanToken = token.replace(/[^a-zA-Z0-9-_.]/g, '');
       const payload = this.jwtService.verify(cleanToken, {
         secret: process.env.JWT_SECRET_KEY,
       });
@@ -107,6 +100,7 @@ export class AuthService {
       throw new BadRequestException('Token inválido o expirado.');
     }
   }
+
   async resendVerificationEmail(token: string) {
     try {
       const payload = this.jwtService.verify(token, {
@@ -118,7 +112,7 @@ export class AuthService {
       });
 
       if (!user) {
-        throw new BadRequestException('User not found.');
+        throw new BadRequestException('Usuario no encontrado.');
       }
 
       const newToken = this.jwtService.sign(
@@ -128,11 +122,14 @@ export class AuthService {
 
       await this.emailService.sendVerificationEmail(user.email, newToken);
 
-      return { message: 'Verification email resent.' };
+      return { message: 'Correo de verificación reenviado.' };
     } catch (error) {
-      throw new BadRequestException('Error resending verification email.');
+      throw new BadRequestException(
+        'Error al reenviar el correo de verificación.',
+      );
     }
   }
+
   async setFirstLoggin(userId: string) {
     const convertedUserId = convertStringToObj(userId);
     try {
@@ -144,10 +141,13 @@ export class AuthService {
 
       return user;
     } catch (error) {
-      console.log(error);
-      throw new Error('Error al actualizar el estado de firstLoggin');
+      console.error('Error al actualizar el estado de firstLoggin:', error);
+      throw new BadRequestException(
+        'Error al actualizar el estado de firstLoggin.',
+      );
     }
   }
+
   async findOne(getUserDto: GetUserDto) {
     const { email, password, method, uid, name, avatar } = getUserDto;
     console.log(getUserDto);
@@ -155,26 +155,24 @@ export class AuthService {
     try {
       let user;
 
-      // Si el método no es Google, primero busca al usuario por email
       if (method !== 'Google') {
         user = await this.userModel.findOne({ email });
 
-        if (user) {
-          const passwordValid = await passwordCompare(password, user.password);
-          if (!passwordValid) {
-            throw new BadRequestException('Credenciales inválidas.');
-          }
-          if (!user.emailVerified)
-            throw new BadRequestException('Correo no verificado.');
-        } else {
+        if (!user) {
           throw new BadRequestException('Credenciales inválidas.');
         }
+
+        const passwordValid = await passwordCompare(password, user.password);
+
+        if (!passwordValid) {
+          throw new BadRequestException('Credenciales inválidas.');
+        }
+
+        if (!user.emailVerified) {
+          throw new BadRequestException('Correo no verificado.');
+        }
       } else {
-        // Si el método es Google, busca al usuario por email y método
         user = await this.userModel.findOne({ email });
-        if (user)
-          throw new BadRequestException('El correo ya se encuentra en uso.');
-        user = await this.userModel.findOne({ email, method });
 
         if (!user) {
           user = new this.userModel({
@@ -186,22 +184,29 @@ export class AuthService {
             emailVerified: true,
             isRegistered: true,
           });
+          const checkAssessmentTeam =
+            await this.tempAgileAssessmentModel.findOne({ email: user.email });
 
-          // const message = `Un nuevo usuario se ha registrado: ${user.name} (${user.email})`;
-          // await this.slackService.sendNotification(message);
-
+          if (checkAssessmentTeam) {
+            const newAdmin = { id: user._id.toString(), role: 'admin' };
+            await this.teamService.addAdmin(
+              checkAssessmentTeam.teamId,
+              newAdmin,
+            );
+          }
           await user.save();
         }
       }
 
       const token = this.jwtService.sign(
-        { sub: user._id },
-        { secret: process.env.JWT_SECRET_KEY },
+        { email: user.email },
+        { secret: process.env.JWT_SECRET_KEY, expiresIn: '7d' },
       );
+
       const teams = await this.teamService.findAllTeams(user._id);
 
       return {
-        token: token,
+        token,
         user: {
           id: user._id,
           name: user.name,
@@ -215,30 +220,25 @@ export class AuthService {
         teams,
       };
     } catch (error) {
-      console.log(error);
-
+      console.error('Error al autenticar usuario:', error);
       throw new BadRequestException(error.message);
     }
   }
 
-  async findScrumMaster(userId) {
-    console.log(userId);
-
+  async findScrumMaster(userId: string) {
     try {
       const convertedScrumId = new Types.ObjectId(userId);
-
-      const user = await this.userModel.findOne({
-        _id: convertedScrumId,
-      });
+      const user = await this.userModel.findById(convertedScrumId);
 
       if (!user) {
         throw new BadRequestException(
-          `Scrum master with ${userId} doesn't exist`,
+          `Scrum master with id ${userId} not found.`,
         );
       }
 
       return user;
     } catch (error) {
+      console.error('Error al buscar Scrum Master:', error);
       throw new BadRequestException(error.message);
     }
   }

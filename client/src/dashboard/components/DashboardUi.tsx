@@ -111,70 +111,24 @@ export const DashboardUi = () => {
           <Grid item xs={12}>
             <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls='panel1a-content' id='panel1a-header'>
-                <Typography variant='h7' sx={{ color: "#3cba5e" }} className='font-bold'>
+                <Typography variant='h7' className='font-bold text-quaternary'>
                   Acciones Disponibles
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
                 <Grid container spacing={2} className='mt-4'>
                   <Grid item xs={12}>
-                    <Button
-                      fullWidth
-                      variant='contained'
-                      sx={{
-                        backgroundColor: "#3cba5e",
-                        "&:hover": {
-                          backgroundColor: "#31a851", // Color que quieres para el hover
-                        },
-                      }}
+                    <button
+                      className='bg-quaternary text-tertiary hover:bg-quaternary/90 duration-300 font-poppins w-full rounded-md p-2'
                       onClick={() => buttonGetData(activeTeam._id, activeTeam.sprint, true)}
                       disabled={dataLoading}
                     >
                       {dataLoading ? "Loading..." : "Actualizar datos"}
-                    </Button>
+                    </button>
                   </Grid>
                   <Grid item xs={12}>
-                    <Button
-                      fullWidth
-                      variant='contained'
-                      sx={{
-                        backgroundColor: "#3cba5e",
-                        "&:hover": {
-                          backgroundColor: "#31a851", // Color que quieres para el hover
-                        },
-                      }}
-                      onClick={() => startCreatingSurvey(activeTeam.name, activeTeam._id)}
-                      disabled={surveyLoading}
-                    >
-                      Encuesta de pulso
-                    </Button>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Button
-                      fullWidth
-                      variant='contained'
-                      sx={{
-                        backgroundColor: "#3cba5e",
-                        "&:hover": {
-                          backgroundColor: "#31a851", // Color que quieres para el hover
-                        },
-                      }}
-                      onClick={() => handleNavigate("/dashboard/retro")}
-                      disabled={surveyLoading}
-                    >
-                      Retrospectivas
-                    </Button>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Button
-                      fullWidth
-                      variant='contained'
-                      sx={{
-                        backgroundColor: "#3cba5e",
-                        "&:hover": {
-                          backgroundColor: "#31a851", // Color que quieres para el hover
-                        },
-                      }}
+                    <button
+                      className='bg-quaternary text-tertiary hover:bg-quaternary/90 duration-300 font-poppins w-full rounded-md p-2'
                       onClick={() => {
                         openModal();
                         startGettingMembers(activeTeam._id);
@@ -183,24 +137,36 @@ export const DashboardUi = () => {
                       disabled={surveyLoading}
                     >
                       Miembros
-                    </Button>
+                    </button>
                     {isOpen && <ModalMembers closeModal={closeModal} />}
                   </Grid>
                   <Grid item xs={12}>
-                    <Button
-                      fullWidth
-                      variant='contained'
-                      sx={{
-                        backgroundColor: "#f47200",
-                        "&:hover": {
-                          backgroundColor: "#ce6509", // Color que quieres para el hover
-                        },
-                      }}
+                    <button
+                      className='bg-quaternary text-tertiary hover:bg-quaternary/90 duration-300 font-poppins w-full rounded-md p-2'
+                      onClick={() => startCreatingSurvey(activeTeam.name, activeTeam._id)}
+                      disabled={surveyLoading}
+                    >
+                      Encuesta de pulso
+                    </button>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <button
+                      className='bg-quaternary text-tertiary hover:bg-quaternary/90 duration-300 font-poppins w-full rounded-md p-2'
+                      onClick={() => handleNavigate("/dashboard/retro")}
+                      disabled={surveyLoading}
+                    >
+                      Retrospectivas
+                    </button>
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <button
+                      className='bg-red-800 text-tertiary hover:bg-red-600 duration-300 font-poppins w-full rounded-md p-2'
                       onClick={() => startDeletingTeam(activeTeam._id)}
                       disabled={surveyLoading}
                     >
                       Eliminar equipo
-                    </Button>
+                    </button>
                   </Grid>
                 </Grid>
               </AccordionDetails>
@@ -210,7 +176,7 @@ export const DashboardUi = () => {
         <Grid item xs={12} md={6}>
           <Paper elevation={3} className='p-4 h-full'>
             <Box display='flex' justifyContent='space-between' alignItems='center'>
-              <Typography variant='h6' sx={{ color: "#3cba5e" }} className='font-bold'>
+              <Typography variant='h6' className='font-bold text-quaternary'>
                 Indicador clave de equipo
               </Typography>
               <Tooltip
@@ -218,7 +184,8 @@ export const DashboardUi = () => {
                 "Indicador clave de equipo" se refiere a una medida importante utilizada para evaluar el rendimiento y la salud de un equipo. Estas métricas ayudan a los líderes a entender cómo está funcionando el equipo y guían las acciones para mejorar su eficiencia y colaboración.'
                 arrow
               >
-                <IconButton sx={{ color: "#3cba5e" }}>
+                <IconButton className='text-quaternary'>
+                  {" "}
                   <CiCircleQuestion />
                 </IconButton>
               </Tooltip>
@@ -237,7 +204,7 @@ export const DashboardUi = () => {
 
         <Grid item xs={12} md={6}>
           <Paper elevation={3} className='p-4 h-full'>
-            <Typography variant='h6' sx={{ color: "#3cba5e" }} className='font-bold'>
+            <Typography variant='h6' className='font-bold text-quaternary'>
               Reporte Global del Equipo
             </Typography>
             <Box display='flex' justifyContent='center' alignItems='center' height='300px'>
@@ -255,7 +222,7 @@ export const DashboardUi = () => {
         <Grid item xs={12} md={4}>
           <Paper elevation={3} className='p-4 h-full'>
             <Box display='flex' justifyContent='space-between' alignItems='center'>
-              <Typography variant='h6' sx={{ color: "#3cba5e" }} className='font-bold'>
+              <Typography variant='h6' className='font-bold text-quaternary'>
                 Recomendaciones Generales
               </Typography>
               <Tooltip
@@ -263,7 +230,7 @@ export const DashboardUi = () => {
                 Las Recomendaciones Generales resumen los datos recopilados de las encuestas diarias y ofrecen recomendaciones concretas y útiles. Estas recomendaciones están diseñadas para ayudar al equipo a tomar medidas específicas y efectivas para abordar áreas de mejora identificadas en las encuestas.'
                 arrow
               >
-                <IconButton sx={{ color: "#3cba5e" }}>
+                <IconButton className='text-quaternary'>
                   <CiCircleQuestion />
                 </IconButton>
               </Tooltip>
@@ -282,7 +249,8 @@ export const DashboardUi = () => {
 
         <Grid item xs={12} md={4}>
           <Paper elevation={3} className='p-4 h-full'>
-            <Typography variant='h6' sx={{ color: "#3cba5e" }} className='font-bold'>
+            <Typography variant='h6' className='font-bold text-quaternary'>
+              {" "}
               Tareas
             </Typography>
             {task && <TaskTable tasks={task} />}
@@ -291,13 +259,14 @@ export const DashboardUi = () => {
 
         <Grid item xs={12} md={4}>
           <Paper elevation={3} className='p-4 h-full'>
-            <Typography variant='h6' sx={{ color: "#3cba5e" }} className='font-bold'>
+            <Typography variant='h6' className='font-bold text-quaternary'>
+              {" "}
               Temas de Tendencia
               <Tooltip
                 title='Las Tendencias resumen los temas destacados en los comentarios durante las retrospectivas, proporcionando una visión general de los aspectos más discutidos por el equipo. Estos datos ayudan a identificar áreas clave de enfoque para mejorar la colaboración y el desempeño del equipo.'
                 arrow
               >
-                <IconButton sx={{ color: "#3cba5e" }}>
+                <IconButton className='text-quaternary'>
                   <CiCircleQuestion />
                 </IconButton>
               </Tooltip>

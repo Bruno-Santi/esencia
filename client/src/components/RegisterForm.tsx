@@ -5,6 +5,7 @@ import { useAuthSlice } from "../hooks/useAuthSlice";
 import { renderErrorMessage } from "../helpers/renderErrorMessage";
 import { useState } from "react";
 import { MdOutlineVisibility, MdOutlineVisibilityOff } from "react-icons/md";
+import { SignIn } from "../auth/helpers/SignIn";
 
 export const RegisterForm = () => {
   const { loading, startRegisteringUser, errorMessage, cleanErrorMessage } = useAuthSlice();
@@ -88,7 +89,12 @@ export const RegisterForm = () => {
           Registrarme
         </button>
         {errorMessage && <p className='font-poppins text-red-500 m-auto'>{errorMessage}</p>}
+        <span className='text-tertiary font-poppins text-xl justify-center pt-4 flex'>O</span>
       </form>
+
+      <div className='mr-8'>
+        <SignIn />
+      </div>
       <div className='m-auto flex flex-col'>
         <div className='mt-6'>
           <Divider width={"w-[400px]"} />

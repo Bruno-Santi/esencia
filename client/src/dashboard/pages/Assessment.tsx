@@ -24,7 +24,7 @@ export const Assessment = () => {
   console.log(assessment);
 
   const [showRecommendations, setShowRecommendations] = useState(true);
-  const [showAnalysis, setShowAnalysis] = useState(false);
+  const [showAnalysis, setShowAnalysis] = useState(true);
 
   useEffect(() => {}, [isDarkTheme]);
 
@@ -74,7 +74,7 @@ export const Assessment = () => {
               Math.round(assessment.data.agileindex[0].Metodologia),
               Math.round(assessment.data.agileindex[0].Cultura),
             ],
-            backgroundColor: "rgba(255, 99, 132, 0.2)",
+            backgroundColor: "#04a43c80",
             borderColor: "rgba(255, 99, 132, 1)",
             borderWidth: 2,
           },
@@ -120,7 +120,7 @@ export const Assessment = () => {
                 </Typography>
               </AccordionDetails>
             </Accordion>
-            <Accordion expanded={showRecommendations} sx={{ mt: 2 }} className='dark:bg-black dark:text-tertiary'>
+            {/* <Accordion expanded={showRecommendations} sx={{ mt: 2 }} className='dark:bg-black dark:text-tertiary'>
               <AccordionSummary
                 onClick={() => setShowRecommendations(!showRecommendations)}
                 className='dark:text-tertiary'
@@ -133,7 +133,7 @@ export const Assessment = () => {
               <AccordionDetails>
                 <Typography>{newText}</Typography>
               </AccordionDetails>
-            </Accordion>
+            </Accordion> */}
           </div>
         </div>
       </div>

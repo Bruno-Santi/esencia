@@ -196,18 +196,14 @@ export const NavBar = () => {
                       backgroundColor: "rgba(0, 0, 0, 0.10)",
                     },
                   }}
+                  onClick={() => {
+                    startLogingOut();
+                    handleClose();
+                    startCleaningBoards();
+                  }}
                 >
                   <IoLogOutOutline className='mr-2 text-secondary dark:text-red-700' />
-                  <span
-                    onClick={() => {
-                      startLogingOut();
-                      handleClose();
-                      startCleaningBoards();
-                    }}
-                    className='p-2 font-poppins text-secondary dark:text-red-700 duration-700 hover:text-primary cursor-pointer'
-                  >
-                    Salir
-                  </span>
+                  <span className='p-2 font-poppins text-secondary dark:text-red-700 duration-700 hover:text-primary cursor-pointer'>Salir</span>
                 </MenuItem>
               </Menu>
             </div>

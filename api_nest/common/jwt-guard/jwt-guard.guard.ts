@@ -13,6 +13,7 @@ export class JwtAuthGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
     const token = request.headers.authorization;
+    console.log(token);
 
     if (!token) {
       throw new BadRequestException(`You must provide a token`);
@@ -21,6 +22,8 @@ export class JwtAuthGuard implements CanActivate {
     try {
       const decoded = this.jwtService.verify(token.replace('Bearer ', ''));
       request.user = decoded;
+      console.log(decoded);
+
       return true;
     } catch (error) {
       throw new BadRequestException(`Invalid token`);

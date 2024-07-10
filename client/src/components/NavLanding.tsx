@@ -75,7 +75,7 @@ export const NavLanding = () => {
         >
           <span className='relative duration-300 hover:text-secondary cursor-pointer' onClick={() => handleMenuClick("assessment")}>
             Assessment
-            <span className='absolute -top-2 right-0 text-yellow-500 text-xs font-bold'>¡Nuevo!</span>
+            <span className='absolute -top-2 right-0 text-secondary text-xs font-bold'>¡Nuevo!</span>
           </span>
           <span className='duration-300 hover:text-secondary cursor-pointer' onClick={() => handleMenuClick("features")}>
             Features

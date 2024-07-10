@@ -14,12 +14,13 @@ export const AuthLayout: React.FC<LayoutProps> = ({ children }) => {
             </h1>
             <div className='w-5/6 m-auto space-y-6 pt-6'>
               <p className='text-tertiary font-light text-xl'>
-                <span className='importantWord'>Esencia</span> es la innovadora plataforma SaaS diseñada para llevar tu liderazgo ágil al siguiente nivel.
+                <span className='text-secondary font-bold'>Esencia</span> es la innovadora plataforma SaaS diseñada para llevar tu liderazgo ágil al siguiente
+                nivel.
               </p>
               <p className='text-tertiary font-light text-xl'>
                 Rompe la barrera de las herramientas centradas en procesos y descubre una solución impulsada por{" "}
-                <span className='importantWord'>inteligencia artificial</span> que mejora tu liderazgo para mejorar la cultura, emociones e interacciones dentro
-                de tus equipos. <br></br>
+                <span className='text-secondary font-bold'>inteligencia artificial</span> que mejora tu liderazgo para mejorar la cultura, emociones e
+                interacciones dentro de tus equipos. <br></br>
               </p>
             </div>
           </section>

@@ -18,7 +18,12 @@ export const ActiveBoardHeader = ({ activeBoard }) => {
 
   const handleStartDateChange = async (newDate) => {
     setStartDate(newDate);
-    await updateBoardDates(newDate, endDate);
+    if (newDate > endDate) {
+      setEndDate(newDate); // Ajustar la fecha de fin si es necesario
+      await updateBoardDates(newDate, newDate);
+    } else {
+      await updateBoardDates(newDate, endDate);
+    }
   };
 
   const handleEndDateChange = async (newDate) => {
@@ -38,24 +43,26 @@ export const ActiveBoardHeader = ({ activeBoard }) => {
   };
 
   return (
-    <div className="flex justify-center font-poppins text-primary dark:text-tertiary space-x-20 text-xl">
+    <div className='flex justify-center font-poppins text-primary dark:text-tertiary space-x-20 text-xl'>
       <div style={{ display: "flex", alignItems: "center" }}>
-        Sprint:&ensp; <span className="text-secondary">{activeTeam.sprint}</span>
+        Sprint:&ensp; <span className='text-secondary'>{activeTeam.sprint}</span>
         &ensp;&ensp;
         <LocalizationProvider dateAdapter={AdapterDateFns}>
-          Start:&ensp;
+          Comienzo:&ensp;
           <DatePicker
             value={startDate}
             onChange={handleStartDateChange}
             renderInput={(params) => <TextField {...params} />}
-            format="dd/MM/yyyy"
+            format='dd/MM/yyyy'
+            maxDate={endDate} // Limitar la fecha máxima de inicio
           />
-          &ensp;End:&ensp;
+          &ensp;Final:&ensp;
           <DatePicker
             value={endDate}
             onChange={handleEndDateChange}
             renderInput={(params) => <TextField {...params} />}
-            format="dd/MM/yyyy"
+            format='dd/MM/yyyy'
+            minDate={startDate} // Limitar la fecha mínima de fin
           />
         </LocalizationProvider>
       </div>

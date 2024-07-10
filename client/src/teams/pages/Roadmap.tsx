@@ -7,6 +7,7 @@ import { useDocumentTitle } from "../../hooks";
 import { DashboardLayout } from "../../layaout/DashboardLayout";
 import moment from "moment";
 import "moment/locale/es";
+import boardData from "../mocks/board-data";
 
 export const Roadmap = () => {
   useDocumentTitle("Roadmap | Esencia.app");
@@ -79,9 +80,7 @@ export const Roadmap = () => {
   return (
     <div className='pl-10'>
       <h1 className='flex justify-center font-poppins text-2xl text-primary mb-20'>Epic Roadmap</h1>
-      <div className='px-2 mr-6'>
-        <Chart chartType='Gantt' width='100%' height='50%' data={tasks} options={options} />
-      </div>
+      <div className='px-2 mr-6'>{boards.length > 0 && <Chart chartType='Gantt' width='100%' height='50%' data={tasks} options={options} />}</div>
     </div>
   );
 };

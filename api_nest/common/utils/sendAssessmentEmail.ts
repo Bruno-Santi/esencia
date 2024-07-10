@@ -147,35 +147,6 @@ table, td { color: #000000; } #u_body a { color: #0000ee; text-decoration: under
     </tr>
   </tbody>
 </table>
-
-<table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-  <tbody>
-    <tr>
-      <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:arial,helvetica,sans-serif;" align="left">
-        
-  <!--[if mso]><table width="100%"><tr><td><![endif]-->
-    <h1 style="margin: 0px; line-height: 140%; text-align: left; word-wrap: break-word; font-size: 22px; font-weight: 400;"><span><span>Análisis y recomendaciones:</span></span></h1>
-  <!--[if mso]></td></tr></table><![endif]-->
-
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-  <tbody>
-    <tr>
-      <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:arial,helvetica,sans-serif;" align="left">
-        
-  <div style="font-size: 14px; line-height: 140%; text-align: left; word-wrap: break-word;">
-    <p style="line-height: 140%;">${analysis}</p>
-  </div>
-
-      </td>
-    </tr>
-  </tbody>
-</table>
-
 <table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
   <tbody>
     <tr>
@@ -206,6 +177,35 @@ table, td { color: #000000; } #u_body a { color: #0000ee; text-decoration: under
     </tr>
   </tbody>
 </table>
+<table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+  <tbody>
+    <tr>
+      <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:arial,helvetica,sans-serif;" align="left">
+        
+  <!--[if mso]><table width="100%"><tr><td><![endif]-->
+    <h1 style="margin: 0px; line-height: 140%; text-align: left; word-wrap: break-word; font-size: 22px; font-weight: 400;"><span><span>Análisis y recomendaciones:</span></span></h1>
+  <!--[if mso]></td></tr></table><![endif]-->
+
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
+  <tbody>
+    <tr>
+      <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:arial,helvetica,sans-serif;" align="left">
+        
+  <div style="font-size: 14px; line-height: 140%; text-align: left; word-wrap: break-word;">
+    <p style="line-height: 140%;">${analysis}</p>
+  </div>
+
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
 
 <table style="font-family:arial,helvetica,sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
   <tbody>
@@ -248,8 +248,8 @@ table, td { color: #000000; } #u_body a { color: #0000ee; text-decoration: under
         
   <!--[if mso]><style>.v-button {background: transparent !important;}</style><![endif]-->
 <div align="center">
-  <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://esencia.app/auth/register" style="height:37px; v-text-anchor:middle; width:97px;" arcsize="11%"  stroke="f" fillcolor="#9da421"><w:anchorlock/><center style="color:#FFFFFF;"><![endif]-->
-    <a href="https://esencia.app/auth/register" target="_blank" class="v-button" style="box-sizing: border-box;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #9da421; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-size: 14px;">
+  <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://esencia.app/auth/register" style="height:37px; v-text-anchor:middle; width:97px;" arcsize="11%"  stroke="f" fillcolor="#04a43c"><w:anchorlock/><center style="color:#FFFFFF;"><![endif]-->
+    <a href="https://esencia.app/auth/register" target="_blank" class="v-button" style="box-sizing: border-box;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #04a43c; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-size: 14px;">
       <span style="display:block;padding:10px 20px;line-height:120%;"><strong><span style="line-height: 16.8px;">Registro</span></strong></span>
     </a>
     <!--[if mso]></center></v:roundrect><![endif]-->

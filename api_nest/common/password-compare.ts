@@ -4,10 +4,22 @@ export const passwordCompare = async (
   rawPassword: string,
   encodedPasswordDB: string,
 ) => {
-  const passwordValid = await bcrypt.compareSync(
-    rawPassword,
-    encodedPasswordDB,
-  );
+  if (!rawPassword || !encodedPasswordDB) {
+    throw new Error(
+      'Both rawPassword and encodedPasswordDB are required for comparison',
+    );
+  }
 
-  return passwordValid;
+  console.log('Raw Password:', rawPassword);
+  console.log('Encoded Password from DB:', encodedPasswordDB);
+
+  try {
+    const passwordValid = await bcrypt.compare(rawPassword, encodedPasswordDB);
+    console.log('Password valid:', passwordValid);
+
+    return passwordValid;
+  } catch (error) {
+    console.error('Error comparing passwords:', error);
+    throw error;
+  }
 };

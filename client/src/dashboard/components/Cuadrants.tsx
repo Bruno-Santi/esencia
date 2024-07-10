@@ -8,7 +8,7 @@ export const Cuadrants = ({ icon, label, value, color }) => {
         {icon}
       </i>
       <span className='text-[12px] font-bold font-poppins text-tertiary p-2 shadow-xl shadow-black/30 rounded-b-lg'>{label}</span>
-      <span className='text-lg font-poppins font-bold text-tertiary'>{formattedValue.includes("-") ? `${formattedValue}%` : `+${formattedValue}%`}</span>
+      <span className='text-lg font-poppins font-bold text-tertiary'>{formattedValue.includes("-") ? `${formattedValue}%` : `${formattedValue}%`}</span>
     </div>
   );
 };
