@@ -87,7 +87,7 @@ export const sendLoginEmail = (
                       <p class='subtitle'><strong>Email:</strong> ${memberEmail}</p>
                       <p class='subtitle'><strong>Password:</strong> ${memberPassword}</p>
                       <div class='button-container'>
-                         <a class='access-button' href='https://esencia.app/teams/login' target='_blank'>Iniciar sesión</a>
+                         <a class='access-button' href='https://esencia.app/auth/login' target='_blank'>Iniciar sesión</a>
                       </div>
                       <div class='logo-container'>
                           <img class='logo' src='https://res.cloudinary.com/di92lsbym/image/upload/c_thumb,w_200,g_face/v1704312320/ESENCIA_LOGO_mbsjht.png' />
